@@ -1,9 +1,18 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "usbw", "databasetcc");
+$host = 'localhost';
+$dbname = 'databasetcc';
+$username = 'root';
+$password = 'usbw';
 
-mysqli_set_charset($conn, "utf8");
+$conn = new mysqli($host, $username, 
+$password, $dbname);
 
-if (!$conn) {
-    die("Erro na conexão!");
+
+if ($conn->connect_error) {
+    die("Falha na conexão: " . 
+    $conn->connect_error);
+} else {
+   /* echo "Banco de dados Conectado com 
+    Sucesso!!!"; */
 }
 ?>
