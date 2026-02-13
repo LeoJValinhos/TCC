@@ -7,21 +7,28 @@
     <title>Home</title>
 </head>
 <body>
-    <p class="titulo"> Bem vindo</P>
+    <center class="container">
+    <p>Registre-se</P>
+
+
      <form action="registro.php" method="POST">
         <label>
-        Nome:
-        <input type="text" name="nome">
+        <p> nome: </p>
+        <input type="text" name="nome" required>
+
         <br>
-        Tipo de cadastro:
+
+         <p>Tipo de cadastro: </p>
         <select id="opcao" name="tipo">
                     <option value="adm"> adm
                         <option value="funcionario"> funcionario
                         </option>
                     </option>
                 </select>
+                
 </label>
         <input type="submit" value="Cadastrar">
     </form>
+    </center>
 </body>
 </html>

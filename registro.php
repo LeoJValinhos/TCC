@@ -2,24 +2,22 @@
 require_once "conexao.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-$nome = trim($_POST["nome"]);
-$tipo = trim($_POST["tipo"]);
+    $nome = trim($_POST["nome"]);
+    $tipo = trim($_POST["tipo"]);
 
-if (!empty($nome) && !empty($tipo)) {
+    if (!empty($nome) && !empty($tipo)) {
         $stmt = $conn->prepare("INSERT INTO funcionarios (NomeFuncionario, TipoCadastro) VALUES (?, ?)");
         $stmt->bind_param("ss", $nome, $tipo);
 
         if ($stmt->execute()) {
-            echo "Cadastrado com sucesso!";
+            // Redireciona na hora com um parâmetro de sucesso na URL
+            header("Location: login.html?status=sucesso");
+            exit; 
         } else {
-            echo "Erro ao cadastrar: " . $stmt->error;
+            // Em caso de erro, você pode voltar com um parâmetro de erro
+            header("Location: registro.html?status=erro");
+            exit;
         }
-
-        $stmt->close();
-    } else {
-        echo "Preencha todos os campos.";
     }
 }
-
-$conn->close(); 
 ?>

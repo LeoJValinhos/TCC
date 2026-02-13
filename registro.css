@@ -1,5 +1,16 @@
-.titulo {
- font-size: 16;
- font-weight: bold;
- font-family: sans-serif;
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    margin-top: 100px;
+    background: #1e293b;
+    padding: 30px;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
 }
