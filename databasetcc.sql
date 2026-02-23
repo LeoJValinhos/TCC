@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 25/01/2026 às 20:58
--- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- Host: localhost
+-- Tempo de geração: 22-Fev-2026 às 20:17
+-- Versão do servidor: 5.7.36
+-- versão do PHP: 8.1.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,31 +24,24 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `empresa`
+-- Estrutura da tabela `cadastros`
 --
 
-CREATE TABLE `empresa` (
-  `IDEmpresa` int(11) NOT NULL,
-  `NomeEmpresa` varchar(80) NOT NULL,
-  `CodEMPRESA` varchar(9) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `cadastros` (
+  `idCadastro` int(11) NOT NULL,
+  `nome` varchar(30) NOT NULL,
+  `sobrenome` varchar(60) NOT NULL,
+  `email` varchar(60) NOT NULL,
+  `datanasc` date NOT NULL,
+  `cpf` varchar(11) NOT NULL,
+  `celular` varchar(11) NOT NULL,
+  `tipocadastro` enum('EMPRESA/ADM','INDEPENDENTE/USUARIO') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `funcionarios`
---
-
-CREATE TABLE `funcionarios` (
-  `IDFuncionario` int(11) NOT NULL,
-  `NomeFuncionario` varchar(80) NOT NULL,
-  `TipoCadastro` enum('adm','funcionario') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `produtos`
+-- Estrutura da tabela `produtos`
 --
 
 CREATE TABLE `produtos` (
@@ -57,13 +50,13 @@ CREATE TABLE `produtos` (
   `MarcaProduto` varchar(100) NOT NULL,
   `Descricao` varchar(255) DEFAULT NULL,
   `Criadopor` int(11) NOT NULL,
-  `criadoem` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `criadoem` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `produtoslotes`
+-- Estrutura da tabela `produtoslotes`
 --
 
 CREATE TABLE `produtoslotes` (
@@ -71,28 +64,21 @@ CREATE TABLE `produtoslotes` (
   `idproduto` int(11) NOT NULL,
   `quantidade` int(11) NOT NULL,
   `validade` date DEFAULT NULL,
-  `criado_em` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `criado_em` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Índices para tabelas despejadas
 --
 
 --
--- Índices de tabela `empresa`
+-- Índices para tabela `cadastros`
 --
-ALTER TABLE `empresa`
-  ADD PRIMARY KEY (`IDEmpresa`),
-  ADD UNIQUE KEY `CodEMPRESA` (`CodEMPRESA`);
+ALTER TABLE `cadastros`
+  ADD PRIMARY KEY (`idCadastro`);
 
 --
--- Índices de tabela `funcionarios`
---
-ALTER TABLE `funcionarios`
-  ADD PRIMARY KEY (`IDFuncionario`);
-
---
--- Índices de tabela `produtos`
+-- Índices para tabela `produtos`
 --
 ALTER TABLE `produtos`
   ADD PRIMARY KEY (`idProduto`),
@@ -100,27 +86,21 @@ ALTER TABLE `produtos`
   ADD KEY `Criadopor` (`Criadopor`);
 
 --
--- Índices de tabela `produtoslotes`
+-- Índices para tabela `produtoslotes`
 --
 ALTER TABLE `produtoslotes`
   ADD PRIMARY KEY (`idlote`),
   ADD KEY `idproduto` (`idproduto`);
 
 --
--- AUTO_INCREMENT para tabelas despejadas
+-- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
--- AUTO_INCREMENT de tabela `empresa`
+-- AUTO_INCREMENT de tabela `cadastros`
 --
-ALTER TABLE `empresa`
-  MODIFY `IDEmpresa` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `funcionarios`
---
-ALTER TABLE `funcionarios`
-  MODIFY `IDFuncionario` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `cadastros`
+  MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `produtos`
@@ -135,17 +115,17 @@ ALTER TABLE `produtoslotes`
   MODIFY `idlote` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Restrições para tabelas despejadas
+-- Restrições para despejos de tabelas
 --
 
 --
--- Restrições para tabelas `produtos`
+-- Limitadores para a tabela `produtos`
 --
 ALTER TABLE `produtos`
   ADD CONSTRAINT `produtos_ibfk_1` FOREIGN KEY (`Criadopor`) REFERENCES `funcionarios` (`IDFuncionario`);
 
 --
--- Restrições para tabelas `produtoslotes`
+-- Limitadores para a tabela `produtoslotes`
 --
 ALTER TABLE `produtoslotes`
   ADD CONSTRAINT `produtoslotes_ibfk_1` FOREIGN KEY (`idproduto`) REFERENCES `produtos` (`idProduto`);

@@ -10,25 +10,50 @@
     <center class="container">
     <p>Registre-se</P>
 
-
+<!-- inicio registro-->
      <form action="registro.php" method="POST">
         <label>
-        <p> nome: </p>
-        <input type="text" name="nome" required>
 
-        <br>
+            <!-- nome-->
+        <p>Nome:</p>
+        <input type="text" name="nome" required><br>
 
+<!--sobrenome-->
+<p>sobrenome</p>
+<input type="text" name="sobrenome" required><br>
+
+<!--email-->
+<p>E-mail</p>
+<input type="email" name="email" required><br>
+
+<!-- Data de nascimento-->
+<p>Data de nascimento</p>
+<input type="date" name="datanascimento" required><br>
+
+<!-- CPF-->
+<p>CPF</p>
+<input type="text" name="cpf" minlength="11" maxlength="11" pattern="\d*" required><br>
+
+<!-- CELULAR--> 
+<p>Celular com DDD</p>
+<input type="text" name="celular" minlength="11" maxlength="11" pattern="\d*" required><br>
+
+<!-- TIPO DE CADASTRO-->
          <p>Tipo de cadastro: </p>
         <select id="opcao" name="tipo">
-                    <option value="adm"> adm
-                        <option value="funcionario"> funcionario
+                    <option value="EMPRESA/ADM"> EMPRESA/ADM
+                        <option value="INDEPENDENTE/USUARIO"> INDEPENDENTE/USUARIO
                         </option>
                     </option>
                 </select>
                 
+<!--Fim registro -->        
 </label>
+
         <input type="submit" value="Cadastrar">
     </form>
     </center>
+
+    <script src="registro.js"></script>
 </body>
 </html>
