@@ -1,19 +1,23 @@
 <?php
 session_start();
-
 include 'conexao.php';
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 $email = $_POST['email'];
 $senha = $_POST['senha'];
 
-$sql = "SELECT * FROM cadastros WHERE email = '$email' AND senha = '$senha'";
+$stmt = $conn->prepare("SELECT * FROM cadastros WHERE email = ? AND senha = ?");
+$stmt->bind_param("ss", $email, $senha);
+$stmt->execute();
 
-$resultado = mysqli_query($conn, $sql);
+$resultado = $stmt->get_result();
 
-if(mysqli_num_rows($resultado) > 0){
+if($resultado->num_rows > 0){
 
-    $usuario = mysqli_fetch_assoc($resultado);
+    $usuario = $resultado->fetch_assoc();
 
+    $_SESSION['id_usuario'] = $usuario['id'];
     $_SESSION['nome'] = $usuario['nome'];
 
     header("Location: principal.php");
@@ -22,9 +26,11 @@ if(mysqli_num_rows($resultado) > 0){
 }else{
 
     echo "<script>
-            alert('Email ou senha incorretos');
-            window.location.href='login.html';
-          </script>";
+    alert('Email ou senha incorretos');
+    window.location.href='login.html';
+    </script>";
+
+}
 
 }
 ?>
