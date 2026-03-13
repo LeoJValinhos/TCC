@@ -17,7 +17,7 @@ $data_criacao = date("Y-m-d H:i:s");
 if (!empty($nome_produto)) {
 
 $stmt = $conn->prepare("INSERT INTO produtos 
-(NomeProduto, MarcaProduto, Descricao, criadopor_nome, criadoem, criado_por_id) 
+(NomeProduto, MarcaProduto, Descricao, criadopor_nome, criadoem, criadopor_id) 
 VALUES (?, ?, ?, ?, ?, ?)");
 
 if(!$stmt){
@@ -95,4 +95,4 @@ exit;
 </center>
 
 </body>
-</html>
+</html> 
