@@ -17,7 +17,7 @@ if($resultado->num_rows > 0){
 
     $usuario = $resultado->fetch_assoc();
 
-    $_SESSION['id_usuario'] = $usuario['id'];
+    $_SESSION['idCadastro'] = $usuario['idCadastro'];
     $_SESSION['nome'] = $usuario['nome'];
 
     header("Location: principal.php");

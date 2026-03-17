@@ -4,29 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="login.css">
+    <link rel="icon" type="image/png" href="Carrinho.png "width="70" height="70">
     <title>Home</title>
 </head>
 
 <body>
-    <center class="container">
-        <p> Login</p>
+
+    <header class="topo">
+
+        <img src="carrinho2.png" width="70" height="70" alt="Logo Carrinho" />
+        <h2>INVEX</h2>
+
+    </header>
+
+         <div class="main-login"> <!-- Div principal que contém toda a estrutura da página de login -->
+
+        <div class="login-esquerda"> <!-- Div do lado esquerdo da tela -->
+
+            <h1></h1> <!-- Título principal da página -->
+            
+            <!-- Div do lado direito da tela -->
+
+            <div class="login-direita">   
+
+                <div class="card-login"> <!-- Card onde ficam os campos de login e senha -->  
+
+                    <h1>LOGIN</h1> <!-- Título do formulário -->  
 
 <!-- inicio login-->
      <form action="login.php" method="POST">
         <label>
+            <div class="textfield">
             <!-- e-mail-->
-        <p>Email:</p>
-        <input type="email" name="email" required><br>
+        <p>E-mail:</p>
+        <input type="email" name="email" placeholder="Digite seu e-mail" required><br>
 
 <!--senha-->
 <p>Senha</p>
-<input type="password" placeholder="minimo 8 digitos" minlength="8" name="senha" required><br>
+<input type="password" placeholder="Digite sua senha" minlength="8" name="senha" required><br>
                 
-<!-- Login -->        
+<!-- Login -->   
+ </div>     
 </label>
 
-        <input type="submit" value="login">
+        <input type="submit" value="login" class="btn-login">
+
+        <p>Não tem uma conta? 
+                      <a href="registro.html" class="link-registro">Registre-se</a>
+                     </p>
     </form>
-    </center>
+
+                </div>
+            </div> 
+        </div>
+    </div>
 </body>
 </html>
