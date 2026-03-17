@@ -4,15 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="registro.css">
+    <link rel="icon" type="image/png" href="Carrinho.png "width="70" height="70">
     <title>Home</title>
 </head>
 <body>
-    <center class="container">
-    <p>Registre-se</P>
+    
+     <header class="topo">
+
+        <img src="carrinho2.png" width="70" height="70" alt="Logo Carrinho" />
+        <h2>INVEX</h2>
+
+    </header>
+
+        <div class="main-login"> <!-- Div principal que contém toda a estrutura da página de login -->
+
+        <div class="login-esquerda"> <!-- Div do lado esquerdo da tela -->
+
+        <h1></h1> <!-- Título principal da página -->
+            
+        <!-- Div do lado direito da tela -->
+
+        <div class="login-direita">   
+
+        <div class="card-login"> <!-- Card onde ficam os campos de login e senha -->  
+
+    <h1>Registre-se</h1>
 
 <!-- inicio registro-->
      <form action="registro.php" method="POST">
         <label>
+            <div class="textfield">
 
             <!-- nome-->
         <p>Nome:</p>
@@ -51,13 +72,25 @@
                     </option>
                 </select>
                 
-<!--Fim registro -->        
+<!--Fim registro -->  
+
 </label>
 
-        <input type="submit" value="Cadastrar">
+        <input type="submit" value="Cadastrar" class="btn-login">
+
+        
+        <p>Já tem uma conta? 
+                      <a href="login.html" class="link-registro">Faça Login</a>
+                     </p>
+
+        </div>
     </form>
-    </center>
 
     <script src="registro.js"></script>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
