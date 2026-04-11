@@ -12,37 +12,6 @@ body {
     justify-content: center; /* centraliza horizontalmente */
     align-items: center; /* centraliza verticalmente */
 }
-
-
-
-.login-esquerda{  /* LADO ESQUERDO DA TELA */
-    width: 50vw; /* largura maior que a tela  */
-    height: 100vh; /* altura total da tela */
-    display: flex; /* usa flexbox */
-    justify-content: center; /* centraliza horizontalmente */
-    align-items: center; /* centraliza verticalmente */
-}
-
-/* Estilo do título dentro da parte esquerda */
-.login-esquerda > h1{
-    color: #00e0ff; /* azul neon */
-    font-size: 32px; /* tamanho do texto */
-    text-align: center; /* centraliza o texto */
-}
-
-.login-esquerda img{ /* IMAGEM DA TELA */
-    width: 60%; /* imagem ocupa 60% da largura do container */
-}
-
-.login-direita{  /* LADO DIREITO DA TELA */
-    width: 50vw; /* ocupa metade da largura da tela */
-    height: 100vh; /* altura total da tela */
-    display: flex; /* usa flexbox */
-    justify-content: center; /* centraliza horizontalmente */
-    align-items: center; /* centraliza verticalmente */
-    flex-direction: column;
-}
-
 .card-login{    /* CARD DE LOGIN */
     width: 60%; /* largura do card */
     display: flex; /* usa flexbox */
