@@ -12,19 +12,21 @@ body {
     background: #0b0f1a;
     justify-content: center;
     align-items: center;
-    padding-top: 80px; /* evita sobreposição do topo */
+    padding-top: 80px;
     box-sizing: border-box;
 }
 
 /* Card de login */
 .card-login{    
     width: 60%;
-    max-width: 400px; /* melhora centralização */
+    max-width: 400px;
+    max-height: 90vh; /* garante que não ultrapasse a tela */
+    overflow-y: auto; /* scroll interno se precisar */
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 30px 35px;
+    padding: 20px 25px; /* reduzido */
     background-color:#121a2b;
     border-radius: 20px;
     box-shadow: 0px 10px 40px #00000080;
@@ -34,7 +36,8 @@ body {
 .card-login > h1 { 
     color:  #00e0ff;
     font-weight: 800;
-    margin: 0 0 20px 0;
+    margin: 0 0 10px 0; /* reduzido */
+    font-size: 22px;
 }
 
 /* Campos */
@@ -42,25 +45,26 @@ body {
     width: 100%;
     display: flex;
     flex-direction: column;
-    margin: 10px 0;
+    margin: 6px 0; /* reduzido */
 }
 
 /* Label */
 .textfield > label{ 
     color:#00e0ff;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
+    font-size: 14px;
 }
 
-/* Input */
+/* Input e Select */
 .textfield > input,
 .textfield > select { 
     width: 100%;
     border: none;
     border-radius: 10px;
-    padding: 15px;
+    padding: 10px; /* reduzido */
     background: #1c2740;
     color: #ffffff;
-    font-size: 12pt;
+    font-size: 11pt; /* reduzido */
     box-shadow: 0px 5px 20px #00000050;
     outline: none;
     box-sizing: border-box;
@@ -74,8 +78,8 @@ body {
 /* Botão */
 .btn-login{ 
     width: 100%;
-    padding: 16px 0px;
-    margin-top: 20px;
+    padding: 12px 0px; /* reduzido */
+    margin-top: 15px;
     border: none;
     border-radius: 8px;
     text-transform: uppercase;
@@ -132,4 +136,6 @@ body {
 p{
     color: #00cb6d;
     text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
 }
