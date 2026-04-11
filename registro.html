@@ -1,96 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- CSS -->
     <link rel="stylesheet" href="registro.css">
-    <link rel="icon" type="image/png" href="Carrinho.png "width="70" height="70">
-    <title>Home</title>
+    
+    <!-- Ícone -->
+    <link rel="icon" type="image/png" href="Carrinho.png">
+    
+    <title>Registro</title>
 </head>
 <body>
     
-     <header class="topo">
-
-        <img src="carrinho2.png" width="70" height="70" alt="Logo Carrinho" />
+    <!-- TOPO -->
+    <header class="topo">
+        <img src="carrinho2.png" width="70" height="70" alt="Logo Carrinho">
         <h2>INVEX</h2>
-
     </header>
 
-        <div class="main-login"> <!-- Div principal que contém toda a estrutura da página de login -->
-
-        <div class="login-esquerda"> <!-- Div do lado esquerdo da tela -->
-
-        <h1></h1> <!-- Título principal da página -->
-            
-        <!-- Div do lado direito da tela -->
-
-        <div class="login-direita">   
-
-        <div class="card-login"> <!-- Card onde ficam os campos de login e senha -->  
-
-    <h1>Registre-se</h1>
-
-<!-- inicio registro-->
-     <form action="registro.php" method="POST">
-        <label>
-            <div class="textfield">
-
-            <!-- nome-->
-        <p>Nome:</p>
-        <input type="text" name="nome" required><br>
-
-<!--sobrenome-->
-<p>sobrenome</p>
-<input type="text" name="sobrenome" required><br>
-
-<!--senha-->
-<p>Senha</p>
-<input type="password" placeholder="minimo 8 digitos" minlength="8" name="senha" required><br>
-
-<!--email-->
-<p>E-mail</p>
-<input type="email" name="email" required><br>
-
-<!-- Data de nascimento-->
-<p>Data de nascimento</p>
-<input type="date" name="datanascimento" required><br>
-
-<!-- CPF-->
-<p>CPF</p>
-<input type="text" name="cpf" minlength="11" maxlength="11" pattern="\d*" required><br>
-
-<!-- CELULAR--> 
-<p>Celular com DDD</p>
-<input type="text" name="celular" minlength="11" maxlength="11" pattern="\d*" required><br>
-
-<!-- TIPO DE CADASTRO-->
-         <p>Tipo de cadastro: </p>
-        <select id="opcao" name="tipo">
-                    <option value="EMPRESA/ADM"> EMPRESA/ADM
-                        <option value="INDEPENDENTE/USUARIO"> INDEPENDENTE/USUARIO
-                        </option>
-                    </option>
-                </select>
-                
-<!--Fim registro -->  
-
-</label>
-
-        <input type="submit" value="Cadastrar" class="btn-login">
-
+    <!-- CONTAINER -->
+    <div class="main-login">
         
-        <p>Já tem uma conta? 
-                      <a href="login.html" class="link-registro">Faça Login</a>
-                     </p>
+        <div class="card-login">
+            <h1>Registre-se</h1>
+
+            <!-- FORM -->
+            <form action="registro.php" method="POST">
+
+                <!-- NOME -->
+                <div class="textfield">
+                    <label>Nome</label>
+                    <input type="text" name="nome" required>
+                </div>
+
+                <!-- SOBRENOME -->
+                <div class="textfield">
+                    <label>Sobrenome</label>
+                    <input type="text" name="sobrenome" required>
+                </div>
+
+                <!-- SENHA -->
+                <div class="textfield">
+                    <label>Senha</label>
+                    <input type="password" name="senha" minlength="8" placeholder="mínimo 8 dígitos" required>
+                </div>
+
+                <!-- EMAIL -->
+                <div class="textfield">
+                    <label>E-mail</label>
+                    <input type="email" name="email" required>
+                </div>
+
+                <!-- DATA -->
+                <div class="textfield">
+                    <label>Data de nascimento</label>
+                    <input type="date" name="datanascimento" required>
+                </div>
+
+                <!-- CPF -->
+                <div class="textfield">
+                    <label>CPF</label>
+                    <input type="text" name="cpf" minlength="11" maxlength="11" pattern="\d*" required>
+                </div>
+
+                <!-- CELULAR -->
+                <div class="textfield">
+                    <label>Celular com DDD</label>
+                    <input type="text" name="celular" minlength="11" maxlength="11" pattern="\d*" required>
+                </div>
+
+                <!-- TIPO -->
+                <div class="textfield">
+                    <label>Tipo de cadastro</label>
+                    <select name="tipo">
+                        <option value="EMPRESA/ADM">EMPRESA/ADM</option>
+                        <option value="INDEPENDENTE/USUARIO">INDEPENDENTE/USUARIO</option>
+                    </select>
+                </div>
+
+                <!-- BOTÃO -->
+                <input type="submit" value="Cadastrar" class="btn-login">
+
+                <!-- LINK -->
+                <p>Já tem uma conta? 
+                    <a href="login.html" class="link-registro">Faça Login</a>
+                </p>
+
+            </form>
 
         </div>
-    </form>
+    </div>
 
     <script src="registro.js"></script>
 
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
