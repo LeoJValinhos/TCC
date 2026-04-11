@@ -4,6 +4,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Container principal */
 .main-login {     
     width: 100vw;
     height: 100vh;
@@ -11,13 +12,14 @@ body {
     background: #0b0f1a;
     justify-content: center;
     align-items: center;
-    padding-top: 80px; /* 🔧 ADICIONADO (resolve o topo cobrindo) */
-    box-sizing: border-box; /* 🔧 ADICIONADO */
+    padding-top: 80px; /* evita sobreposição do topo */
+    box-sizing: border-box;
 }
 
+/* Card de login */
 .card-login{    
     width: 60%;
-    max-width: 400px; /* 🔧 ADICIONADO (melhor centralização) */
+    max-width: 400px; /* melhora centralização */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,12 +30,14 @@ body {
     box-shadow: 0px 10px 40px #00000080;
 }
 
+/* Título */
 .card-login > h1 { 
     color:  #00e0ff;
     font-weight: 800;
-    margin: 0;
+    margin: 0 0 20px 0;
 }
 
+/* Campos */
 .textfield{ 
     width: 100%;
     display: flex;
@@ -41,12 +45,15 @@ body {
     margin: 10px 0;
 }
 
+/* Label */
 .textfield > label{ 
     color:#00e0ff;
     margin-bottom: 8px;
 }
 
-.textfield > input { 
+/* Input */
+.textfield > input,
+.textfield > select { 
     width: 100%;
     border: none;
     border-radius: 10px;
@@ -59,10 +66,12 @@ body {
     box-sizing: border-box;
 }
 
+/* Placeholder */
 .textfield > input::placeholder{ 
     color: #9bb3c9;
 }
 
+/* Botão */
 .btn-login{ 
     width: 100%;
     padding: 16px 0px;
@@ -79,10 +88,12 @@ body {
     transition: 0.3s;
 }
 
+/* Hover botão */
 .btn-login:hover{ 
     transform: scale(1.05);
 }
 
+/* Topo */
 .topo{
     position: fixed;
     top: 0;
@@ -96,15 +107,17 @@ body {
     padding-left: 30px;
     border-bottom: 1px solid #2a2e35;
     z-index: 1000;
-    border-radius: 10px;
+    border-radius: 0 0 10px 10px;
     gap: 20px;
 }
 
+/* Título topo */
 .topo > h2{
     font-size: 30px;
     color: #00e0ff;
 }
 
+/* Link */
 .link-registro {
   color:  #009e54;
   font-weight: bold;
@@ -115,6 +128,8 @@ body {
   text-decoration: underline;
 }
 
+/* Texto */
 p{
     color: #00cb6d;
+    text-align: center;
 }
