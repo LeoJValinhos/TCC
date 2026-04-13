@@ -20,13 +20,13 @@ body {
 .card-login{    
     width: 60%;
     max-width: 400px;
-    max-height: 90vh; /* garante que não ultrapasse a tela */
-    overflow-y: auto; /* scroll interno se precisar */
+    max-height: 90vh;
+    overflow-y: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 20px 25px; /* reduzido */
+    padding: 20px 25px;
     background-color:#121a2b;
     border-radius: 20px;
     box-shadow: 0px 10px 40px #00000080;
@@ -36,8 +36,20 @@ body {
 .card-login > h1 { 
     color:  #00e0ff;
     font-weight: 800;
-    margin: 0 0 10px 0; /* reduzido */
+    margin: 0 0 10px 0;
     font-size: 22px;
+}
+
+/* 🔥 LINHAS COM 2 CAMPOS */
+.form-row {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+/* 🔥 CAMPOS DIVIDIDOS IGUAL */
+.form-row .textfield {
+    flex: 1;
 }
 
 /* Campos */
@@ -45,7 +57,7 @@ body {
     width: 100%;
     display: flex;
     flex-direction: column;
-    margin: 6px 0; /* reduzido */
+    margin: 6px 0;
 }
 
 /* Label */
@@ -61,10 +73,10 @@ body {
     width: 100%;
     border: none;
     border-radius: 10px;
-    padding: 10px; /* reduzido */
+    padding: 10px;
     background: #1c2740;
     color: #ffffff;
-    font-size: 11pt; /* reduzido */
+    font-size: 11pt;
     box-shadow: 0px 5px 20px #00000050;
     outline: none;
     box-sizing: border-box;
@@ -78,7 +90,7 @@ body {
 /* Botão */
 .btn-login{ 
     width: 100%;
-    padding: 12px 0px; /* reduzido */
+    padding: 12px 0px;
     margin-top: 15px;
     border: none;
     border-radius: 8px;
