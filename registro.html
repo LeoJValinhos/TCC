@@ -29,40 +29,43 @@
             <!-- FORM -->
             <form action="registro.php" method="POST">
 
-                <!-- NOME -->
-                <div class="textfield">
-                    <label>Nome</label>
-                    <input type="text" name="nome" required>
+                <!-- NOME + SOBRENOME -->
+                <div class="form-row">
+                    <div class="textfield">
+                        <label>Nome</label>
+                        <input type="text" name="nome" required>
+                    </div>
+
+                    <div class="textfield">
+                        <label>Sobrenome</label>
+                        <input type="text" name="sobrenome" required>
+                    </div>
                 </div>
 
-                <!-- SOBRENOME -->
-                <div class="textfield">
-                    <label>Sobrenome</label>
-                    <input type="text" name="sobrenome" required>
+                <!-- EMAIL + SENHA -->
+                <div class="form-row">
+                    <div class="textfield">
+                        <label>E-mail</label>
+                        <input type="email" name="email" required>
+                    </div>
+
+                    <div class="textfield">
+                        <label>Senha</label>
+                        <input type="password" name="senha" minlength="8" placeholder="mínimo 8 dígitos" required>
+                    </div>
                 </div>
 
-                <!-- SENHA -->
-                <div class="textfield">
-                    <label>Senha</label>
-                    <input type="password" name="senha" minlength="8" placeholder="mínimo 8 dígitos" required>
-                </div>
+                <!-- DATA + CPF -->
+                <div class="form-row">
+                    <div class="textfield">
+                        <label>Data de nascimento</label>
+                        <input type="date" name="datanascimento" required>
+                    </div>
 
-                <!-- EMAIL -->
-                <div class="textfield">
-                    <label>E-mail</label>
-                    <input type="email" name="email" required>
-                </div>
-
-                <!-- DATA -->
-                <div class="textfield">
-                    <label>Data de nascimento</label>
-                    <input type="date" name="datanascimento" required>
-                </div>
-
-                <!-- CPF -->
-                <div class="textfield">
-                    <label>CPF</label>
-                    <input type="text" name="cpf" minlength="11" maxlength="11" pattern="\d*" required>
+                    <div class="textfield">
+                        <label>CPF</label>
+                        <input type="text" name="cpf" minlength="11" maxlength="11" pattern="\d*" required>
+                    </div>
                 </div>
 
                 <!-- CELULAR -->
