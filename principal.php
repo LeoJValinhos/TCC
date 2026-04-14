@@ -1,36 +1,50 @@
-<?php
+<?php 
 include 'verifica_login.php';
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="principal.css">
-<title>Página Principal</title>
+<title>INVEX - Painel</title>
 </head>
 
 <body>
 
-<center class="container">
+<div class="layout">
 
-<h2>Seja bem-vindo, <?php echo $_SESSION['nome']; ?>!</h2>
+    <!-- MENU LATERAL -->
+    <aside class="sidebar">
+        <h2 class="logo">INVEX</h2>
 
-<br>
+        <nav>
+            <a href="principal.php" class="active">🏠 Home</a>
+            <a href="cad_list_prods.php">📦 Produtos</a>
+            <a href="#">📊 Relatórios</a>
+            <a href="#">⚙️ Configurações</a>
+        </nav>
 
-<a href="cad_list_prods.php">
-<p>Cadastrar / Lista de produtos</p>
-</a>
+        <a href="logout.php" class="logout">🚪 Sair</a>
+    </aside>
 
-<br>
+    <!-- CONTEÚDO -->
+    <main class="content">
+        <header>
+            <h1>Bem-vindo, <?php echo $_SESSION['nome']; ?> 👋</h1>
+            <p>Gerencie seu sistema INVEX de forma simples e rápida.</p>
+        </header>
 
-<a href="logout.php">
-<p>Sair do sistema</p>
-</a>
+        <section class="card">
+            <h2>📌 Acesso rápido</h2>
+            <p>Utilize o menu lateral para navegar pelas funções do sistema.</p>
+        </section>
 
-</center>
+    </main>
+
+</div>
 
 </body>
 </html>
