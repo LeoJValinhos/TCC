@@ -8,7 +8,7 @@ include 'verifica_login.php';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="principal.css">
-<title>INVEX - Dashboard</title>
+<title>INVEX</title>
 </head>
 
 <body>
@@ -16,8 +16,8 @@ include 'verifica_login.php';
 <div class="layout">
 
     <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar">
-        <h2 class="logo">INVEX</h2>
+    <aside class="sidebar">
+        <h2>INVEX</h2>
 
         <nav>
             <a class="active">🏠 Home</a>
@@ -26,51 +26,32 @@ include 'verifica_login.php';
             <a>⚙️ Configurações</a>
         </nav>
 
-        <div class="bottom">
-            <button onclick="toggleTheme()">🌙 Tema</button>
-            <a href="logout.php">🚪 Sair</a>
-        </div>
+        <a href="logout.php" class="logout">Sair</a>
     </aside>
 
-    <!-- MAIN -->
+    <!-- CONTEÚDO -->
     <main class="main">
 
-        <!-- TOPBAR -->
-        <header class="topbar">
-            <button onclick="toggleMenu()">☰</button>
+        <div class="top">
+            <h1>Bem-vindo, <?php echo $_SESSION['nome']; ?></h1>
+        </div>
 
-            <div class="user">
-                <span><?php echo $_SESSION['nome']; ?></span>
-            </div>
-        </header>
-
-        <!-- DASHBOARD -->
-        <section class="dashboard">
-
-            <div class="cards">
-                <div class="card">
-                    <h4>Produtos</h4>
-                    <p id="prod">0</p>
-                </div>
-
-                <div class="card">
-                    <h4>Entradas</h4>
-                    <p id="ent">0</p>
-                </div>
-
-                <div class="card">
-                    <h4>Saídas</h4>
-                    <p id="sai">0</p>
-                </div>
+        <div class="cards">
+            <div class="card">
+                <span>Produtos</span>
+                <h2 id="prod">0</h2>
             </div>
 
-            <!-- GRÁFICO -->
-            <div class="chart-box">
-                <h3>Movimentação</h3>
-                <canvas id="grafico"></canvas>
+            <div class="card">
+                <span>Entradas</span>
+                <h2 id="ent">0</h2>
             </div>
 
-        </section>
+            <div class="card">
+                <span>Saídas</span>
+                <h2 id="sai">0</h2>
+            </div>
+        </div>
 
     </main>
 
