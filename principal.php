@@ -16,7 +16,7 @@ include 'verifica_login.php';
 <!-- TOPO -->
 <header class="topbar">
     <div class="top-left">
-        <img src="logo.png" class="logo-img"> <!-- você coloca sua imagem -->
+        <img src="carrinho2.png" width="70" height="70" alt="Logo Carrinho">
         <h1>INVEX</h1>
     </div>
 </header>
