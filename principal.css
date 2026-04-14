@@ -5,99 +5,79 @@
     font-family: 'Segoe UI';
 }
 
+/* CORES INVEX */
 :root {
-    --bg: #0f172a;
-    --sidebar: #111827;
-    --card: #1f2937;
-    --text: #fff;
-    --sub: #9ca3af;
-    --primary: #7c3aed;
-}
-
-/* LIGHT MODE */
-.light {
-    --bg: #f9fafb;
-    --sidebar: #ffffff;
-    --card: #ffffff;
-    --text: #111827;
-    --sub: #6b7280;
+    --bg: #0b132b;
+    --sidebar: #111c44;
+    --card: #16213e;
+    --roxo: #7c3aed;
+    --text: #ffffff;
+    --sub: #a0aec0;
 }
 
 body {
     background: var(--bg);
     color: var(--text);
-    transition: .3s;
 }
 
+/* LAYOUT */
 .layout {
     display: flex;
+    height: 100vh;
 }
 
 /* SIDEBAR */
 .sidebar {
-    width: 240px;
-    height: 100vh;
+    width: 230px;
     background: var(--sidebar);
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px;
-    transition: .3s;
 }
 
-.logo {
+.sidebar h2 {
     text-align: center;
-    color: var(--primary);
-    margin-bottom: 20px;
+    color: var(--roxo);
+    margin-bottom: 30px;
 }
 
-.sidebar a {
+/* MENU */
+.sidebar nav a {
     display: block;
-    padding: 10px;
-    color: var(--sub);
+    padding: 12px;
+    margin-bottom: 10px;
     text-decoration: none;
+    color: var(--sub);
     border-radius: 8px;
-    margin-bottom: 8px;
+    transition: 0.3s;
 }
 
-.sidebar a:hover,
+.sidebar nav a:hover,
 .active {
-    background: var(--primary);
-    color: #fff;
-}
-
-.bottom button,
-.bottom a {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 8px;
-}
-
-.bottom button {
-    background: var(--primary);
+    background: var(--roxo);
     color: white;
 }
 
-.bottom a {
-    background: #ef4444;
-    color: white;
+/* BOTÃO SAIR */
+.logout {
     text-align: center;
+    padding: 10px;
+    background: #e63946;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
 }
 
 /* MAIN */
 .main {
     flex: 1;
-    padding: 20px;
+    padding: 30px;
 }
 
-/* TOPBAR */
-.topbar {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+/* TOPO */
+.top {
+    margin-bottom: 30px;
 }
 
 /* CARDS */
@@ -109,32 +89,20 @@ body {
 .card {
     flex: 1;
     background: var(--card);
-    padding: 20px;
+    padding: 25px;
     border-radius: 12px;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .card:hover {
-    transform: scale(1.05);
+    transform: translateY(-5px);
 }
 
-.card h4 {
+.card span {
     color: var(--sub);
 }
 
-.card p {
-    font-size: 28px;
-    color: var(--primary);
-}
-
-/* CHART */
-.chart-box {
-    margin-top: 30px;
-    background: var(--card);
-    padding: 20px;
-    border-radius: 12px;
-}
-
-canvas {
-    margin-top: 20px;
+.card h2 {
+    font-size: 32px;
+    color: var(--roxo);
 }
