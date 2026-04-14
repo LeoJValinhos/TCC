@@ -13,12 +13,18 @@ include 'verifica_login.php';
 
 <body>
 
+<!-- TOPO -->
+<header class="topbar">
+    <div class="top-left">
+        <img src="logo.png" class="logo-img"> <!-- você coloca sua imagem -->
+        <h1>INVEX</h1>
+    </div>
+</header>
+
 <div class="layout">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <h2>INVEX</h2>
-
         <nav>
             <a class="active">🏠 Home</a>
             <a href="cad_list_prods.php">📦 Produtos</a>
@@ -26,14 +32,14 @@ include 'verifica_login.php';
             <a>⚙️ Configurações</a>
         </nav>
 
-        <a href="logout.php" class="logout">Sair</a>
+        <a href="logout.php" class="logout">🚪 Sair</a>
     </aside>
 
     <!-- CONTEÚDO -->
     <main class="main">
 
         <div class="top">
-            <h1>Bem-vindo, <?php echo $_SESSION['nome']; ?></h1>
+            <h2>Bem-vindo, <?php echo $_SESSION['nome']; ?> 👋</h2>
         </div>
 
         <div class="cards">
