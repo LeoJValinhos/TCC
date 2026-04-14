@@ -16,8 +16,8 @@ include 'verifica_login.php';
 
 <div class="layout">
 
-    <!-- MENU LATERAL -->
-    <aside class="sidebar">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
         <h2 class="logo">INVEX</h2>
 
         <nav>
@@ -27,24 +27,51 @@ include 'verifica_login.php';
             <a href="#">⚙️ Configurações</a>
         </nav>
 
+        <button onclick="toggleTheme()" class="theme-btn">🌙 Tema</button>
         <a href="logout.php" class="logout">🚪 Sair</a>
     </aside>
 
     <!-- CONTEÚDO -->
     <main class="content">
-        <header>
-            <h1>Bem-vindo, <?php echo $_SESSION['nome']; ?> 👋</h1>
-            <p>Gerencie seu sistema INVEX de forma simples e rápida.</p>
+
+        <!-- TOPO -->
+        <header class="topbar">
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+            <div>
+                <h1>Bem-vindo, <?php echo $_SESSION['nome']; ?> 👋</h1>
+                <p>Controle seu estoque com o INVEX</p>
+            </div>
         </header>
 
-        <section class="card">
-            <h2>📌 Acesso rápido</h2>
-            <p>Utilize o menu lateral para navegar pelas funções do sistema.</p>
+        <!-- CARDS -->
+        <section class="cards">
+            <div class="card">
+                <h3>📦 Produtos</h3>
+                <p id="produtos">0</p>
+            </div>
+
+            <div class="card">
+                <h3>📈 Entradas</h3>
+                <p id="entradas">0</p>
+            </div>
+
+            <div class="card">
+                <h3>📉 Saídas</h3>
+                <p id="saidas">0</p>
+            </div>
+        </section>
+
+        <!-- INFO -->
+        <section class="info">
+            <h2>📌 Sistema INVEX</h2>
+            <p>Gerencie produtos, entradas e saídas de forma simples e eficiente.</p>
         </section>
 
     </main>
 
 </div>
 
+<script src="script.js"></script>
 </body>
 </html>
