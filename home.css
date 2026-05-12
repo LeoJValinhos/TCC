@@ -1,16 +1,142 @@
-body {
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     font-family: Arial;
-    background: #0f172a;
-    color: white;
-    text-align: center;
 }
 
-.container {
-    margin-top: 100px;
-    background: #1e293b;
-    padding: 30px;
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
+body{
+    background: linear-gradient(to right, #020617, #0f172a);
+    color: white;
+    height: 100vh;
+}
+
+/* HEADER */
+
+header{
+    width: 100%;
+    padding: 25px 80px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo{
+    font-size: 30px;
+    color: #3b82f6;
+}
+
+.buttons-top button{
+    padding: 12px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: 0.3s;
+}
+
+.btn-login{
+    background: transparent;
+    border: 1px solid #3b82f6 !important;
+    color: white;
+}
+
+.btn-register{
+    background: #3b82f6;
+    color: white;
+}
+
+.buttons-top button:hover{
+    transform: scale(1.05);
+}
+
+/* HERO */
+
+.hero{
+    width: 100%;
+    height: 85vh;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    padding: 0 80px;
+}
+
+.text-content{
+    max-width: 500px;
+}
+
+.text-content h1{
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.text-content span{
+    color: #3b82f6;
+}
+
+.text-content p{
+    font-size: 22px;
+    color: #cbd5e1;
+    margin-bottom: 30px;
+    line-height: 35px;
+}
+
+/* BOTÕES PRINCIPAIS */
+
+.main-buttons button{
+    padding: 15px 30px;
     border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin-right: 15px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.btn-main{
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-secondary{
+    background: transparent;
+    border: 1px solid #3b82f6 !important;
+    color: white;
+}
+
+.main-buttons button:hover{
+    transform: scale(1.05);
+}
+
+/* IMAGEM */
+
+.image-content img{
+    width: 450px;
+}
+
+/* RESPONSIVO */
+
+@media(max-width: 900px){
+
+    .hero{
+        flex-direction: column;
+        text-align: center;
+        padding-top: 50px;
+    }
+
+    .text-content h1{
+        font-size: 45px;
+    }
+
+    .image-content img{
+        width: 300px;
+        margin-top: 40px;
+    }
+
+    header{
+        padding: 20px;
+    }
 }
