@@ -1,5 +1,26 @@
 <?php 
 include 'verifica_login.php';
+include 'conexao.php';
+
+// SOMA TODAS AS QUANTIDADES DOS LOTES
+$sql_total = "SELECT SUM(quantidade) AS total_produtos FROM produtoslotes";
+
+$resultado_total = $conn->query($sql_total);
+
+$total_produtos = 0;
+
+if($resultado_total->num_rows > 0){
+
+    $dados = $resultado_total->fetch_assoc();
+
+    $total_produtos = $dados['total_produtos'];
+
+    // CASO ESTEJA NULL
+    if($total_produtos == null){
+        $total_produtos = 0;
+    }
+
+}
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +53,7 @@ include 'verifica_login.php';
             <a>⚙️ Configurações</a>
         </nav>
 
-        <a href="logout.php" class="logout">🚪 Sair</a>
+        <a href="home.html" class="logout">🚪 Sair</a>
     </aside>
 
     <!-- CONTEÚDO -->
@@ -43,9 +64,10 @@ include 'verifica_login.php';
         </div>
 
         <div class="cards">
+
             <div class="card">
                 <span>Produtos</span>
-                <h2 id="prod">0</h2>
+                <h2 id="prod"><?php echo $total_produtos; ?></h2>
             </div>
 
             <div class="card">
@@ -57,6 +79,7 @@ include 'verifica_login.php';
                 <span>Saídas</span>
                 <h2 id="sai">0</h2>
             </div>
+
         </div>
 
     </main>
