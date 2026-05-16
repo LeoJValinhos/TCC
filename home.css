@@ -24,7 +24,7 @@ header{
 
 .logo{
     font-size: 30px;
-    color: #3b82f6;
+    color: #00d084;
 }
 
 .buttons-top button{
@@ -34,21 +34,29 @@ header{
     cursor: pointer;
     margin-left: 10px;
     transition: 0.3s;
+    font-weight: bold;
 }
+
+/* BOTÃO LOGIN */
 
 .btn-login{
     background: transparent;
-    border: 1px solid #3b82f6 !important;
-    color: white;
+    border: 1px solid #00d084 !important;
+    color: #00d084;
 }
 
+/* BOTÃO REGISTER */
+
 .btn-register{
-    background: #3b82f6;
-    color: white;
+    background: linear-gradient(to right, #00d084, #00bfa6);
+    color: #02111b;
 }
+
+/* EFEITO HOVER */
 
 .buttons-top button:hover{
     transform: scale(1.05);
+    opacity: 0.9;
 }
 
 /* HERO */
@@ -74,7 +82,7 @@ header{
 }
 
 .text-content span{
-    color: #3b82f6;
+    color: #00d084;
 }
 
 .text-content p{
@@ -94,21 +102,29 @@ header{
     margin-right: 15px;
     font-size: 16px;
     transition: 0.3s;
+    font-weight: bold;
 }
 
+/* BOTÃO PRINCIPAL */
+
 .btn-main{
-    background: #3b82f6;
-    color: white;
+    background: linear-gradient(to right, #00d084, #00bfa6);
+    color: #02111b;
 }
+
+/* BOTÃO SECUNDÁRIO */
 
 .btn-secondary{
     background: transparent;
-    border: 1px solid #3b82f6 !important;
-    color: white;
+    border: 1px solid #00d084 !important;
+    color: #00d084;
 }
+
+/* HOVER BOTÕES */
 
 .main-buttons button:hover{
     transform: scale(1.05);
+    opacity: 0.9;
 }
 
 /* IMAGEM */
