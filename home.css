@@ -6,9 +6,53 @@
 }
 
 body{
-    background: linear-gradient(to right, #020617, #0f172a);
+    background: linear-gradient(120deg, #020617, #081225, #0f172a);
     color: white;
     height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* EFEITO DE FUNDO */
+
+body::before{
+    content: "";
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(0,208,132,0.12), transparent 70%);
+    top: -200px;
+    left: -200px;
+    z-index: 0;
+}
+
+body::after{
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0,208,132,0.08), transparent 70%);
+    bottom: -250px;
+    right: -200px;
+    z-index: 0;
+}
+
+/* ONDULAÇÕES */
+
+.wave{
+    position: absolute;
+    width: 100%;
+    height: 200px;
+    top: 120px;
+    left: 0;
+    opacity: 0.15;
+    background: 
+    repeating-radial-gradient(
+        circle at 0 100%,
+        transparent 0 40px,
+        rgba(0,208,132,0.15) 41px 42px
+    );
+    z-index: 0;
 }
 
 /* HEADER */
@@ -20,35 +64,48 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    position: relative;
+    z-index: 2;
 }
 
 .logo{
     font-size: 30px;
-    color: #3b82f6;
+    color: #00d084;
+    text-shadow: 0 0 8px rgba(0,208,132,0.3);
 }
 
 .buttons-top button{
     padding: 12px 22px;
     border-radius: 8px;
-    border: none;
     cursor: pointer;
     margin-left: 10px;
     transition: 0.3s;
+    font-weight: bold;
+
+    border: 1px solid rgba(0,208,132,0.6);
+    box-shadow: 0 0 12px rgba(0,208,132,0.15);
 }
+
+/* BOTÃO LOGIN */
 
 .btn-login{
-    background: transparent;
-    border: 1px solid #3b82f6 !important;
-    color: white;
+    background: rgba(0, 0, 0, 0.2);
+    color: #00d084;
 }
 
+/* BOTÃO REGISTER */
+
 .btn-register{
-    background: #3b82f6;
-    color: white;
+    background: linear-gradient(to right, #00d084, #00bfa6);
+    color: #02111b;
 }
+
+/* EFEITO HOVER */
 
 .buttons-top button:hover{
     transform: scale(1.05);
+    box-shadow: 0 0 18px rgba(0,208,132,0.28);
 }
 
 /* HERO */
@@ -62,6 +119,9 @@ header{
     align-items: center;
 
     padding: 0 80px;
+
+    position: relative;
+    z-index: 2;
 }
 
 .text-content{
@@ -71,10 +131,12 @@ header{
 .text-content h1{
     font-size: 60px;
     margin-bottom: 20px;
+    line-height: 1.1;
 }
 
 .text-content span{
-    color: #3b82f6;
+    color: #00d084;
+    text-shadow: 0 0 12px rgba(0,208,132,0.25);
 }
 
 .text-content p{
@@ -89,37 +151,51 @@ header{
 .main-buttons button{
     padding: 15px 30px;
     border-radius: 10px;
-    border: none;
     cursor: pointer;
     margin-right: 15px;
     font-size: 16px;
     transition: 0.3s;
+    font-weight: bold;
+
+    border: 1px solid rgba(0,208,132,0.6);
+    box-shadow: 0 0 14px rgba(0,208,132,0.15);
 }
+
+/* BOTÃO PRINCIPAL */
 
 .btn-main{
-    background: #3b82f6;
-    color: white;
+    background: linear-gradient(to right, #00d084, #00bfa6);
+    color: #02111b;
 }
 
+/* BOTÃO SECUNDÁRIO */
+
 .btn-secondary{
-    background: transparent;
-    border: 1px solid #3b82f6 !important;
-    color: white;
+    background: rgba(0, 0, 0, 0.15);
+    color: #00d084;
 }
+
+/* HOVER BOTÕES */
 
 .main-buttons button:hover{
     transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0,208,132,0.28);
 }
 
 /* IMAGEM */
 
 .image-content img{
     width: 450px;
+    filter: drop-shadow(0 0 12px rgba(0,208,132,0.18));
 }
 
 /* RESPONSIVO */
 
 @media(max-width: 900px){
+
+    body{
+        overflow-y: auto;
+    }
 
     .hero{
         flex-direction: column;
