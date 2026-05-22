@@ -1,4 +1,89 @@
 /* =========================
+RESET
+========================= */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* =========================
+BODY
+========================= */
+
+body{
+
+    background:
+    linear-gradient(
+    to right,
+    #02111f 0%,
+    #02111f 35%,
+    #001437 65%,
+    #02111f 100%);
+
+    color: white;
+
+    min-height: 100vh;
+
+    padding: 30px;
+}
+
+/* =========================
+CONTAINER
+========================= */
+
+.container{
+
+    width: 100%;
+
+    max-width: 1180px;
+
+    margin: auto;
+
+    text-align: left;
+}
+
+/* =========================
+TÍTULO PRINCIPAL
+========================= */
+
+h2{
+
+    font-size: 38px;
+
+    margin-bottom: 10px;
+
+    color: white;
+}
+
+/* TEXTO */
+
+p{
+
+    color: #d1d5db;
+
+    margin-bottom: 8px;
+
+    font-size: 15px;
+}
+
+/* =========================
+USUÁRIO
+========================= */
+
+.usuario{
+
+    margin-bottom: 30px;
+}
+
+.usuario b{
+
+    color: #00f5c4;
+}
+
+/* =========================
 GRID DOS FORMULÁRIOS
 ========================= */
 
@@ -6,39 +91,55 @@ GRID DOS FORMULÁRIOS
 
     display: flex;
 
-    justify-content: flex-start;
-
     align-items: flex-start;
+
+    justify-content: flex-start;
 
     gap: 22px;
 
-    margin-bottom: 30px;
+    margin-bottom: 28px;
 
     flex-wrap: wrap;
 }
 
 /* =========================
-CARD CADASTRO ITEM
+CARDS
+========================= */
+
+.form-card,
+.lista-card{
+
+    background: rgba(2, 17, 31, 0.96);
+
+    border: 1px solid rgba(0, 245, 196, 0.18);
+
+    border-radius: 22px;
+
+    padding: 24px;
+
+    box-shadow:
+    0 0 25px rgba(0, 245, 196, 0.04),
+    inset 0 0 20px rgba(0, 245, 196, 0.02);
+}
+
+/* =========================
+CARD ESQUERDA
 ========================= */
 
 .form-card:first-child{
 
     width: 100%;
-    max-width: 620px;
-
-    flex: unset;
+    max-width: 610px;
 }
 
 /* =========================
-CARD CADASTRO LOTE
+CARD DIREITA
 ========================= */
 
 .form-card:last-child{
 
     width: 100%;
-    max-width: 420px;
-
-    flex: unset;
+    max-width: 400px;
 }
 
 /* =========================
@@ -49,32 +150,40 @@ LISTA PRODUTOS
 
     width: 100%;
 
-    max-width: 1065px;
-
-    margin-top: 10px;
+    max-width: 1032px;
 }
 
 /* =========================
-CONTAINER GERAL
+SUBTÍTULOS
 ========================= */
 
-.container{
+.form-card h3,
+.lista-card h3{
 
-    width: 100%;
+    color: #00f5c4;
 
-    max-width: 1150px;
+    font-size: 28px;
 
-    margin: auto;
+    margin-bottom: 24px;
 }
 
 /* =========================
-FORMULÁRIOS
+LABELS
 ========================= */
 
-.form-card,
-.lista-card{
+label{
 
-    padding: 24px;
+    display: block;
+
+    margin-top: 18px;
+
+    margin-bottom: 10px;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: bold;
 }
 
 /* =========================
@@ -84,9 +193,51 @@ INPUTS
 input,
 textarea{
 
+    width: 100%;
+
+    background: #020b1f;
+
+    border: 1px solid rgba(0, 245, 196, 0.18);
+
+    border-radius: 14px;
+
     padding: 14px;
 
+    color: white;
+
     font-size: 14px;
+
+    outline: none;
+
+    transition: 0.3s;
+}
+
+/* FOCUS */
+
+input:focus,
+textarea:focus{
+
+    border-color: #00f5c4;
+
+    box-shadow:
+    0 0 14px rgba(0, 245, 196, 0.30);
+}
+
+/* PLACEHOLDER */
+
+input::placeholder,
+textarea::placeholder{
+
+    color: #7c8aa5;
+}
+
+/* TEXTAREA */
+
+textarea{
+
+    min-height: 135px;
+
+    resize: none;
 }
 
 /* =========================
@@ -96,24 +247,129 @@ BOTÕES
 input[type="submit"],
 button{
 
-    padding: 13px 22px;
+    margin-top: 22px;
+
+    background:
+    linear-gradient(
+    135deg,
+    #00d9a6,
+    #00f5c4);
+
+    color: #02111f;
+
+    border: none;
+
+    border-radius: 13px;
+
+    padding: 14px 24px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+/* HOVER */
+
+input[type="submit"]:hover,
+button:hover{
+
+    transform: translateY(-2px);
+
+    box-shadow:
+    0 0 18px rgba(0, 245, 196, 0.35);
+}
+
+/* =========================
+TABELA
+========================= */
+
+table{
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 22px;
+
+    overflow: hidden;
+
+    border-radius: 16px;
+}
+
+/* CABEÇALHO */
+
+th{
+
+    background:
+    linear-gradient(
+    135deg,
+    #00d9a6,
+    #00f5c4);
+
+    color: #02111f;
+
+    padding: 15px;
+
+    text-align: left;
 
     font-size: 14px;
 }
 
-/* =========================
-TÍTULOS
-========================= */
+/* COLUNAS */
 
-h2{
+td{
 
-    font-size: 34px;
+    padding: 15px;
+
+    background: rgba(0,0,0,0.12);
+
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+
+    color: #e5e7eb;
+
+    font-size: 14px;
 }
 
-.form-card h3,
-.lista-card h3{
+/* HOVER */
 
-    font-size: 26px;
+tr:hover td{
+
+    background: rgba(0, 245, 196, 0.03);
+}
+
+/* =========================
+LINK
+========================= */
+
+a{
+
+    display: inline-block;
+
+    margin-top: 28px;
+
+    color: #00f5c4;
+
+    text-decoration: none;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+}
+
+/* HOVER LINK */
+
+a:hover{
+
+    color: white;
+
+    text-shadow:
+    0 0 10px rgba(0, 245, 196, 0.7);
 }
 
 /* =========================
@@ -132,6 +388,30 @@ RESPONSIVO
     .lista-card{
 
         max-width: 100%;
+    }
+
+}
+
+@media(max-width: 768px){
+
+    body{
+        padding: 20px;
+    }
+
+    h2{
+        font-size: 32px;
+    }
+
+    .form-card h3,
+    .lista-card h3{
+
+        font-size: 24px;
+    }
+
+    th,
+    td{
+
+        padding: 12px;
     }
 
 }
