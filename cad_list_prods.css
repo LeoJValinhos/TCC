@@ -1,109 +1,80 @@
 /* =========================
-RESET
+GRID DOS FORMULÁRIOS
 ========================= */
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+.forms-grid{
+
+    display: flex;
+
+    justify-content: flex-start;
+
+    align-items: flex-start;
+
+    gap: 22px;
+
+    margin-bottom: 30px;
+
+    flex-wrap: wrap;
 }
 
 /* =========================
-BODY
+CARD CADASTRO ITEM
 ========================= */
 
-body{
-    background: linear-gradient(to right, #020617, #03122b, #020617);
-    color: white;
-    min-height: 100vh;
-    padding: 35px;
+.form-card:first-child{
+
+    width: 100%;
+    max-width: 620px;
+
+    flex: unset;
 }
 
 /* =========================
-CONTAINER
+CARD CADASTRO LOTE
+========================= */
+
+.form-card:last-child{
+
+    width: 100%;
+    max-width: 420px;
+
+    flex: unset;
+}
+
+/* =========================
+LISTA PRODUTOS
+========================= */
+
+.lista-card{
+
+    width: 100%;
+
+    max-width: 1065px;
+
+    margin-top: 10px;
+}
+
+/* =========================
+CONTAINER GERAL
 ========================= */
 
 .container{
+
     width: 100%;
-    max-width: 1450px;
+
+    max-width: 1150px;
+
     margin: auto;
 }
 
 /* =========================
-TÍTULOS
+FORMULÁRIOS
 ========================= */
 
-h2{
-    color: #00f0d0;
-    font-size: 40px;
-    margin-bottom: 12px;
-}
+.form-card,
+.lista-card{
 
-p{
-    color: #dbeafe;
-    margin-bottom: 8px;
-    font-size: 15px;
-}
-
-/* =========================
-LAYOUT DOS FORMULÁRIOS
-========================= */
-
-.forms-grid{
-    width: 100%;
-
-    display: flex;
-    gap: 30px;
-
-    align-items: flex-start;
-
-    margin-top: 30px;
-    margin-bottom: 35px;
-}
-
-/* =========================
-CARDS
-========================= */
-
-.form-card{
-    flex: 1;
-
-    background: rgba(2, 12, 30, 0.95);
-
-    border: 1px solid rgba(0, 240, 208, 0.35);
-
-    border-radius: 22px;
-
-    padding: 30px;
-
-    box-shadow:
-    0 0 25px rgba(0, 240, 208, 0.08),
-    inset 0 0 20px rgba(0, 240, 208, 0.02);
-}
-
-/* =========================
-SUBTÍTULOS
-========================= */
-
-.form-card h3{
-    color: #00f0d0;
-    font-size: 32px;
-    margin-bottom: 30px;
-}
-
-/* =========================
-LABELS
-========================= */
-
-label{
-    display: block;
-    margin-bottom: 10px;
-    margin-top: 18px;
-
-    color: white;
-    font-size: 15px;
-    font-weight: bold;
+    padding: 24px;
 }
 
 /* =========================
@@ -112,41 +83,10 @@ INPUTS
 
 input,
 textarea{
-    width: 100%;
 
-    background: #020b1f;
+    padding: 14px;
 
-    border: 1px solid rgba(0, 240, 208, 0.25);
-
-    border-radius: 14px;
-
-    padding: 16px;
-
-    color: white;
-
-    font-size: 15px;
-
-    outline: none;
-
-    transition: 0.3s;
-}
-
-/* FOCUS */
-
-input:focus,
-textarea:focus{
-
-    border-color: #00f0d0;
-
-    box-shadow:
-    0 0 15px rgba(0, 240, 208, 0.45);
-}
-
-/* TEXTAREA */
-
-textarea{
-    min-height: 140px;
-    resize: none;
+    font-size: 14px;
 }
 
 /* =========================
@@ -156,168 +96,42 @@ BOTÕES
 input[type="submit"],
 button{
 
-    margin-top: 22px;
+    padding: 13px 22px;
 
-    background: linear-gradient(135deg, #00c9b7, #00f0d0);
-
-    color: #02111f;
-
-    border: none;
-
-    padding: 15px 28px;
-
-    border-radius: 14px;
-
-    font-size: 15px;
-    font-weight: bold;
-
-    cursor: pointer;
-
-    transition: 0.3s;
-}
-
-/* HOVER */
-
-input[type="submit"]:hover,
-button:hover{
-
-    transform: translateY(-2px);
-
-    box-shadow:
-    0 0 18px rgba(0, 240, 208, 0.45);
+    font-size: 14px;
 }
 
 /* =========================
-LISTA DE PRODUTOS
+TÍTULOS
 ========================= */
 
-.lista-card{
+h2{
 
-    background: rgba(2, 12, 30, 0.95);
-
-    border: 1px solid rgba(0, 240, 208, 0.35);
-
-    border-radius: 22px;
-
-    padding: 30px;
-
-    box-shadow:
-    0 0 25px rgba(0, 240, 208, 0.08),
-    inset 0 0 20px rgba(0, 240, 208, 0.02);
+    font-size: 34px;
 }
 
-/* =========================
-TABELA
-========================= */
+.form-card h3,
+.lista-card h3{
 
-table{
-    width: 100%;
-
-    border-collapse: collapse;
-
-    margin-top: 25px;
-
-    overflow: hidden;
-
-    border-radius: 18px;
-}
-
-/* CABEÇALHO */
-
-th{
-
-    background: linear-gradient(135deg, #00c9b7, #00f0d0);
-
-    color: #02111f;
-
-    padding: 16px;
-
-    text-align: left;
-
-    font-size: 15px;
-}
-
-/* COLUNAS */
-
-td{
-
-    padding: 16px;
-
-    background: rgba(0,0,0,0.15);
-
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-
-    color: #dbeafe;
-}
-
-/* HOVER */
-
-tr:hover td{
-
-    background: rgba(0, 240, 208, 0.05);
-}
-
-/* =========================
-LINK
-========================= */
-
-a{
-    display: inline-block;
-
-    margin-top: 30px;
-
-    color: #00f0d0;
-
-    text-decoration: none;
-
-    font-size: 17px;
-    font-weight: bold;
-
-    transition: 0.3s;
-}
-
-a:hover{
-
-    color: white;
-
-    text-shadow:
-    0 0 10px rgba(0, 240, 208, 0.8);
+    font-size: 26px;
 }
 
 /* =========================
 RESPONSIVO
 ========================= */
 
-@media(max-width: 1000px){
+@media(max-width: 1100px){
 
     .forms-grid{
 
         flex-direction: column;
     }
 
-}
+    .form-card:first-child,
+    .form-card:last-child,
+    .lista-card{
 
-@media(max-width: 768px){
-
-    body{
-        padding: 20px;
-    }
-
-    h2{
-        font-size: 32px;
-    }
-
-    .form-card h3{
-        font-size: 26px;
-    }
-
-    table{
-        font-size: 13px;
-    }
-
-    th,
-    td{
-        padding: 12px;
+        max-width: 100%;
     }
 
 }
