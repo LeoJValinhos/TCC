@@ -186,7 +186,8 @@ INPUTS
 ========================= */
 
 input,
-textarea{
+textarea,
+select{
 
     width: 100%;
 
@@ -212,7 +213,8 @@ FOCUS
 ========================= */
 
 input:focus,
-textarea:focus{
+textarea:focus,
+select:focus{
 
     border-color: #00f5c4;
 
@@ -287,6 +289,40 @@ button:hover{
 }
 
 /* =========================
+FILTROS
+========================= */
+
+.filtros-form{
+
+    width: 100%;
+
+    display: flex;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 25px;
+}
+
+.filtros-form input{
+
+    flex: 1;
+
+    min-width: 240px;
+}
+
+.filtros-form select{
+
+    width: 260px;
+}
+
+.filtros-form button{
+
+    margin-top: 0;
+}
+
+/* =========================
 TABELA
 ========================= */
 
@@ -348,6 +384,56 @@ HOVER TABELA
 tr:hover td{
 
     background: rgba(0, 245, 196, 0.03);
+}
+
+/* =========================
+PAGINAÇÃO
+========================= */
+
+.paginacao{
+
+    margin-top: 25px;
+
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+.paginacao a{
+
+    padding: 10px 16px;
+
+    background: #02111f;
+
+    border: 1px solid rgba(0, 245, 196, 0.35);
+
+    color: #00f5c4;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+
+    margin-top: 0;
+}
+
+.paginacao a:hover{
+
+    background: #00f5c4;
+
+    color: #02111f;
+
+    box-shadow:
+    0 0 15px rgba(0, 245, 196, 0.35);
+
+    text-shadow: none;
 }
 
 /* =========================
@@ -422,6 +508,16 @@ RESPONSIVO
     td{
 
         padding: 12px;
+    }
+
+    .filtros-form{
+
+        flex-direction: column;
+    }
+
+    .filtros-form select{
+
+        width: 100%;
     }
 
 }
