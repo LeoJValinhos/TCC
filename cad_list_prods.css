@@ -27,7 +27,7 @@ body{
 
     min-height: 100vh;
 
-    padding: 30px;
+    padding: 35px;
 }
 
 /* =========================
@@ -38,7 +38,7 @@ CONTAINER
 
     width: 100%;
 
-    max-width: 1180px;
+    max-width: 1500px;
 
     margin: auto;
 
@@ -51,22 +51,26 @@ TÍTULO PRINCIPAL
 
 h2{
 
-    font-size: 38px;
+    font-size: 55px;
+
+    color: #00f5c4;
 
     margin-bottom: 10px;
 
-    color: white;
+    font-weight: bold;
 }
 
-/* TEXTO */
+/* =========================
+TEXTO
+========================= */
 
 p{
 
-    color: #d1d5db;
+    color: #ffffff;
+
+    font-size: 18px;
 
     margin-bottom: 8px;
-
-    font-size: 15px;
 }
 
 /* =========================
@@ -91,15 +95,11 @@ GRID DOS FORMULÁRIOS
 
     display: flex;
 
+    gap: 28px;
+
     align-items: flex-start;
 
-    justify-content: flex-start;
-
-    gap: 22px;
-
-    margin-bottom: 28px;
-
-    flex-wrap: wrap;
+    margin-bottom: 25px;
 }
 
 /* =========================
@@ -111,15 +111,14 @@ CARDS
 
     background: rgba(2, 17, 31, 0.96);
 
-    border: 1px solid rgba(0, 245, 196, 0.18);
+    border: 1px solid rgba(0, 245, 196, 0.35);
 
-    border-radius: 22px;
+    border-radius: 24px;
 
-    padding: 24px;
+    padding: 30px;
 
     box-shadow:
-    0 0 25px rgba(0, 245, 196, 0.04),
-    inset 0 0 20px rgba(0, 245, 196, 0.02);
+    0 0 20px rgba(0, 245, 196, 0.05);
 }
 
 /* =========================
@@ -128,8 +127,7 @@ CARD ESQUERDA
 
 .form-card:first-child{
 
-    width: 100%;
-    max-width: 610px;
+    width: 58%;
 }
 
 /* =========================
@@ -138,8 +136,7 @@ CARD DIREITA
 
 .form-card:last-child{
 
-    width: 100%;
-    max-width: 400px;
+    width: 42%;
 }
 
 /* =========================
@@ -149,8 +146,6 @@ LISTA PRODUTOS
 .lista-card{
 
     width: 100%;
-
-    max-width: 1032px;
 }
 
 /* =========================
@@ -164,7 +159,7 @@ SUBTÍTULOS
 
     font-size: 28px;
 
-    margin-bottom: 24px;
+    margin-bottom: 30px;
 }
 
 /* =========================
@@ -181,7 +176,7 @@ label{
 
     color: white;
 
-    font-size: 14px;
+    font-size: 16px;
 
     font-weight: bold;
 }
@@ -197,22 +192,24 @@ textarea{
 
     background: #020b1f;
 
-    border: 1px solid rgba(0, 245, 196, 0.18);
+    border: 1px solid rgba(255,255,255,0.15);
 
     border-radius: 14px;
 
-    padding: 14px;
+    padding: 18px;
 
     color: white;
 
-    font-size: 14px;
+    font-size: 16px;
 
     outline: none;
 
     transition: 0.3s;
 }
 
-/* FOCUS */
+/* =========================
+FOCUS
+========================= */
 
 input:focus,
 textarea:focus{
@@ -220,22 +217,26 @@ textarea:focus{
     border-color: #00f5c4;
 
     box-shadow:
-    0 0 14px rgba(0, 245, 196, 0.30);
+    0 0 15px rgba(0, 245, 196, 0.25);
 }
 
-/* PLACEHOLDER */
+/* =========================
+PLACEHOLDER
+========================= */
 
 input::placeholder,
 textarea::placeholder{
 
-    color: #7c8aa5;
+    color: #9ca3af;
 }
 
-/* TEXTAREA */
+/* =========================
+TEXTAREA
+========================= */
 
 textarea{
 
-    min-height: 135px;
+    min-height: 140px;
 
     resize: none;
 }
@@ -247,7 +248,7 @@ BOTÕES
 input[type="submit"],
 button{
 
-    margin-top: 22px;
+    margin-top: 24px;
 
     background:
     linear-gradient(
@@ -259,11 +260,11 @@ button{
 
     border: none;
 
-    border-radius: 13px;
+    border-radius: 14px;
 
-    padding: 14px 24px;
+    padding: 16px 30px;
 
-    font-size: 14px;
+    font-size: 16px;
 
     font-weight: bold;
 
@@ -272,7 +273,9 @@ button{
     transition: 0.3s;
 }
 
-/* HOVER */
+/* =========================
+HOVER BOTÃO
+========================= */
 
 input[type="submit"]:hover,
 button:hover{
@@ -293,14 +296,16 @@ table{
 
     border-collapse: collapse;
 
-    margin-top: 22px;
+    margin-top: 25px;
 
     overflow: hidden;
 
-    border-radius: 16px;
+    border-radius: 18px;
 }
 
-/* CABEÇALHO */
+/* =========================
+CABEÇALHO
+========================= */
 
 th{
 
@@ -312,29 +317,33 @@ th{
 
     color: #02111f;
 
-    padding: 15px;
+    padding: 18px;
 
     text-align: left;
 
-    font-size: 14px;
+    font-size: 16px;
 }
 
-/* COLUNAS */
+/* =========================
+COLUNAS
+========================= */
 
 td{
 
-    padding: 15px;
+    padding: 18px;
 
     background: rgba(0,0,0,0.12);
 
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
 
-    color: #e5e7eb;
+    color: #ffffff;
 
-    font-size: 14px;
+    font-size: 15px;
 }
 
-/* HOVER */
+/* =========================
+HOVER TABELA
+========================= */
 
 tr:hover td{
 
@@ -349,20 +358,22 @@ a{
 
     display: inline-block;
 
-    margin-top: 28px;
+    margin-top: 30px;
 
     color: #00f5c4;
 
     text-decoration: none;
 
-    font-size: 16px;
+    font-size: 18px;
 
     font-weight: bold;
 
     transition: 0.3s;
 }
 
-/* HOVER LINK */
+/* =========================
+HOVER LINK
+========================= */
 
 a:hover{
 
@@ -384,10 +395,9 @@ RESPONSIVO
     }
 
     .form-card:first-child,
-    .form-card:last-child,
-    .lista-card{
+    .form-card:last-child{
 
-        max-width: 100%;
+        width: 100%;
     }
 
 }
@@ -399,7 +409,7 @@ RESPONSIVO
     }
 
     h2{
-        font-size: 32px;
+        font-size: 38px;
     }
 
     .form-card h3,
