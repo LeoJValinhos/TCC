@@ -1,5 +1,5 @@
 <?php
-require_once "conexao.php";
+require_once "../funcoes/conexao.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //variaveis e inputs

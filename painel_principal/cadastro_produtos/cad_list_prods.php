@@ -1,6 +1,7 @@
 <?php
-include 'verifica_login.php';
-include 'conexao.php';
+
+include '../../funcoes/verifica_login.php';
+include '../../funcoes/conexao.php';
 
 date_default_timezone_set('America/Sao_Paulo');
 
@@ -38,10 +39,6 @@ if(isset($_POST['cadastrar_produto'])){
 
     if(!empty($nome_produto) && !empty($marca)){
 
-        /* ==========================================
-        VERIFICA DUPLICADO
-        ========================================== */
-
         $verifica_produto = $conn->prepare("
         SELECT idProduto
         FROM produtos
@@ -67,10 +64,6 @@ if(isset($_POST['cadastrar_produto'])){
             </script>";
 
         }else{
-
-            /* ==========================================
-            CADASTRA PRODUTO
-            ========================================== */
 
             $stmt = $conn->prepare("
             INSERT INTO produtos
@@ -129,10 +122,6 @@ if(isset($_POST['cadastrar_lote'])){
 
     $criado_em = date("Y-m-d H:i:s");
 
-    /* ==========================================
-    VERIFICA PRODUTO
-    ========================================== */
-
     $verifica_produto = $conn->prepare("
     SELECT idProduto
     FROM produtos
@@ -150,10 +139,6 @@ if(isset($_POST['cadastrar_lote'])){
     $verifica_produto->get_result();
 
     if($resultado_produto->num_rows > 0){
-
-        /* ==========================================
-        VERIFICA LOTE DUPLICADO
-        ========================================== */
 
         $verifica_lote = $conn->prepare("
         SELECT idproduto
@@ -180,10 +165,6 @@ if(isset($_POST['cadastrar_lote'])){
             </script>";
 
         }else{
-
-            /* ==========================================
-            CADASTRA LOTE
-            ========================================== */
 
             $stmt_lote = $conn->prepare("
             INSERT INTO produtoslotes
@@ -247,6 +228,31 @@ href="cad_list_prods.css">
 
 <title>Cadastro de Produtos</title>
 
+<style>
+
+.vermelho-validade{
+    background-color: #ffb3b3;
+}
+
+.amarelo-validade{
+    background-color: #fff0a6;
+}
+
+.paginacao a{
+    padding: 6px 12px;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    margin: 2px;
+    border-radius: 5px;
+}
+
+.paginacao a:hover{
+    background: #444;
+}
+
+</style>
+
 </head>
 
 <body>
@@ -259,10 +265,6 @@ href="cad_list_prods.css">
         Usuário logado:
         <b><?php echo $_SESSION['nome']; ?></b>
     </p>
-
-    <!-- =====================================================
-    FORMULÁRIOS
-    ===================================================== -->
 
     <div class="forms-grid">
 
@@ -351,10 +353,6 @@ href="cad_list_prods.css">
 
     </div>
 
-    <!-- =====================================================
-    LISTAS
-    ===================================================== -->
-
     <div class="lista-card">
 
         <h3>Listas do sistema</h3>
@@ -386,10 +384,6 @@ href="cad_list_prods.css">
 
         <?php
 
-        /* =====================================================
-        FILTROS
-        ===================================================== */
-
         $pesquisa =
         isset($_GET['pesquisa'])
         ? trim($_GET['pesquisa'])
@@ -399,10 +393,6 @@ href="cad_list_prods.css">
         isset($_GET['ordenar'])
         ? $_GET['ordenar']
         : "id_desc";
-
-        /* =====================================================
-        PAGINAÇÃO
-        ===================================================== */
 
         $limite = 5;
 
@@ -416,10 +406,6 @@ href="cad_list_prods.css">
         }
 
         $inicio = ($pagina - 1) * $limite;
-
-        /* =====================================================
-        ORDER BY
-        ===================================================== */
 
         $orderBy = "idProduto DESC";
 
@@ -447,10 +433,6 @@ href="cad_list_prods.css">
 
         }
 
-        /* =====================================================
-        PESQUISA
-        ===================================================== */
-
         $where = "";
 
         if(!empty($pesquisa)){
@@ -468,11 +450,9 @@ href="cad_list_prods.css">
 
         ?>
 
-        <!-- =====================================================
-        FILTROS HTML
-        ===================================================== -->
-
         <form method="GET" class="filtros-form">
+
+            <input type="hidden" name="lista" value="produtos">
 
             <input
             type="text"
@@ -522,10 +502,6 @@ href="cad_list_prods.css">
 
         <?php
 
-        /* =====================================================
-        TOTAL
-        ===================================================== */
-
         $sql_total = "
         SELECT COUNT(*) AS total
         FROM produtos
@@ -540,10 +516,6 @@ href="cad_list_prods.css">
 
         $total_paginas =
         ceil($total_produtos / $limite);
-
-        /* =====================================================
-        LISTA PRODUTOS
-        ===================================================== */
 
         $sql_lista = "
         SELECT *
@@ -610,10 +582,6 @@ href="cad_list_prods.css">
 
             echo "</table>";
 
-            /* =====================================================
-            PAGINAÇÃO
-            ===================================================== */
-
             echo "<div class='paginacao'>";
 
             for($i = 1; $i <= $total_paginas; $i++){
@@ -621,7 +589,9 @@ href="cad_list_prods.css">
                 echo "
                 <a href='?
 
-                pagina_produtos=$i
+                lista=produtos
+
+                &pagina_produtos=$i
 
                 &pesquisa=" . urlencode($pesquisa) . "
 
@@ -650,9 +620,98 @@ href="cad_list_prods.css">
         ===================================================== -->
 
         <div id="listaLotes"
-        style="display:none;">
+        style="<?php echo isset($_GET['lista']) && $_GET['lista'] == 'lotes' ? 'display:block;' : 'display:none;'; ?>">
 
         <?php
+
+        $pesquisa_lote =
+        isset($_GET['pesquisa_lote'])
+        ? trim($_GET['pesquisa_lote'])
+        : "";
+
+        $validade_filtro =
+        isset($_GET['validade_filtro'])
+        ? trim($_GET['validade_filtro'])
+        : "";
+
+        $pagina_lotes =
+        isset($_GET['pagina_lotes'])
+        ? (int)$_GET['pagina_lotes']
+        : 1;
+
+        if($pagina_lotes < 1){
+            $pagina_lotes = 1;
+        }
+
+        $inicio_lotes =
+        ($pagina_lotes - 1) * $limite;
+
+        $where_lotes = "WHERE 1=1";
+
+        if(!empty($pesquisa_lote)){
+
+            $pesquisa_lote_escape =
+            $conn->real_escape_string($pesquisa_lote);
+
+            $where_lotes .= "
+            AND (
+                produtos.NomeProduto LIKE '%$pesquisa_lote_escape%'
+                OR
+                produtos.MarcaProduto LIKE '%$pesquisa_lote_escape%'
+            )
+            ";
+        }
+
+        if(!empty($validade_filtro)){
+
+            $where_lotes .= "
+            AND produtoslotes.validade = '$validade_filtro'
+            ";
+        }
+
+        ?>
+
+        <form method="GET" class="filtros-form">
+
+            <input type="hidden" name="lista" value="lotes">
+
+            <input
+            type="text"
+            name="pesquisa_lote"
+            placeholder="Pesquisar lote..."
+            value="<?php echo htmlspecialchars($pesquisa_lote); ?>">
+
+            <input
+            type="date"
+            name="validade_filtro"
+            value="<?php echo $validade_filtro; ?>">
+
+            <button type="submit">
+                Filtrar
+            </button>
+
+        </form>
+
+        <?php
+
+        $sql_total_lotes = "
+        SELECT COUNT(*) AS total
+        FROM produtoslotes
+
+        INNER JOIN produtos
+        ON produtos.idProduto = produtoslotes.idproduto
+
+        $where_lotes
+        ";
+
+        $resultado_total_lotes =
+        $conn->query($sql_total_lotes);
+
+        $total_lotes =
+        $resultado_total_lotes->fetch_assoc()['total'];
+
+        $total_paginas_lotes =
+        ceil($total_lotes / $limite);
 
         $sql_lotes = "
         SELECT
@@ -666,9 +725,11 @@ href="cad_list_prods.css">
         INNER JOIN produtos
         ON produtos.idProduto = produtoslotes.idproduto
 
+        $where_lotes
+
         ORDER BY produtoslotes.idlote DESC
 
-        LIMIT 5
+        LIMIT $inicio_lotes, $limite
         ";
 
         $resultado_lotes =
@@ -690,7 +751,30 @@ href="cad_list_prods.css">
             while($lote =
             $resultado_lotes->fetch_assoc()){
 
-                echo "<tr>";
+                $classe = "";
+
+                $hoje = new DateTime();
+                $data_validade =
+                new DateTime($lote['validade']);
+
+                $dias =
+                $hoje->diff($data_validade)->days;
+
+                if($data_validade >= $hoje){
+
+                    if($dias <= 30){
+
+                        $classe = "vermelho-validade";
+
+                    }elseif($dias <= 60){
+
+                        $classe = "amarelo-validade";
+
+                    }
+
+                }
+
+                echo "<tr class='$classe'>";
 
                 echo "<td>" .
                 $lote['NomeProduto'] .
@@ -716,6 +800,29 @@ href="cad_list_prods.css">
 
             echo "</table>";
 
+            echo "<div class='paginacao'>";
+
+            for($i = 1; $i <= $total_paginas_lotes; $i++){
+
+                echo "
+                <a href='?
+
+                lista=lotes
+
+                &pagina_lotes=$i
+
+                &pesquisa_lote=" . urlencode($pesquisa_lote) . "
+
+                &validade_filtro=$validade_filtro'>
+
+                $i
+
+                </a>
+                ";
+            }
+
+            echo "</div>";
+
         }else{
 
             echo "<p>Nenhum lote cadastrado.</p>";
@@ -735,6 +842,33 @@ href="cad_list_prods.css">
 </div>
 
 <script>
+
+/* =====================================================
+CORRIGE BUG DE REINICIAR LISTA
+===================================================== */
+
+window.onload = function(){
+
+    const params =
+    new URLSearchParams(window.location.search);
+
+    const lista = params.get("lista");
+
+    if(lista == "produtos"){
+
+        document.getElementById("listaProdutos")
+        .style.display = "block";
+
+    }
+
+    if(lista == "lotes"){
+
+        document.getElementById("listaLotes")
+        .style.display = "block";
+
+    }
+
+}
 
 /* =====================================================
 MOSTRAR PRODUTOS
