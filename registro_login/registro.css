@@ -151,3 +151,8 @@ p{
     font-size: 14px;
     margin-top: 10px;
 }
+
+#empresa_existente,
+#nova_empresa{
+    width: 100%;
+}
