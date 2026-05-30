@@ -23,17 +23,26 @@ function formatarDataBR($data){
 }
 
 /* =====================================================
+DADOS USUÁRIO LOGADO
+===================================================== */
+
+$idEmpresa = $_SESSION['idEmpresa'];
+
+$criado_por_nome = $_SESSION['nome'];
+
+$criado_por_id = $_SESSION['idCadastro'];
+
+/* =====================================================
 CADASTRO DE PRODUTOS
 ===================================================== */
 
 if(isset($_POST['cadastrar_produto'])){
 
     $nome_produto = trim($_POST["nome_produto"]);
-    $marca = trim($_POST["marca"]);
-    $descricao = trim($_POST["descricao"]);
 
-    $criado_por_nome = $_SESSION['nome'];
-    $criado_por_id = $_SESSION['idCadastro'];
+    $marca = trim($_POST["marca"]);
+
+    $descricao = trim($_POST["descricao"]);
 
     $data_criacao = date("Y-m-d H:i:s");
 
@@ -44,12 +53,14 @@ if(isset($_POST['cadastrar_produto'])){
         FROM produtos
         WHERE NomeProduto = ?
         AND MarcaProduto = ?
+        AND idEmpresa = ?
         ");
 
         $verifica_produto->bind_param(
-        "ss",
+        "ssi",
         $nome_produto,
-        $marca
+        $marca,
+        $idEmpresa
         );
 
         $verifica_produto->execute();
@@ -60,7 +71,7 @@ if(isset($_POST['cadastrar_produto'])){
         if($resultado_verificacao->num_rows > 0){
 
             echo "<script>
-            alert('Esse produto já existe com essa marca');
+            alert('Esse produto já existe nessa empresa');
             </script>";
 
         }else{
@@ -71,18 +82,20 @@ if(isset($_POST['cadastrar_produto'])){
                 NomeProduto,
                 MarcaProduto,
                 Descricao,
+                idEmpresa,
                 criadopor_nome,
                 criadoem,
                 criadopor_id
             )
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
 
             $stmt->bind_param(
-            "sssssi",
+            "sssissi",
             $nome_produto,
             $marca,
             $descricao,
+            $idEmpresa,
             $criado_por_nome,
             $data_criacao,
             $criado_por_id
@@ -117,7 +130,9 @@ CADASTRO DE LOTES
 if(isset($_POST['cadastrar_lote'])){
 
     $idproduto = trim($_POST['idproduto']);
+
     $quantidade = trim($_POST['quantidade']);
+
     $validade = trim($_POST['validade']);
 
     $criado_em = date("Y-m-d H:i:s");
@@ -126,11 +141,13 @@ if(isset($_POST['cadastrar_lote'])){
     SELECT idProduto
     FROM produtos
     WHERE idProduto = ?
+    AND idEmpresa = ?
     ");
 
     $verifica_produto->bind_param(
-    "i",
-    $idproduto
+    "ii",
+    $idproduto,
+    $idEmpresa
     );
 
     $verifica_produto->execute();
@@ -204,13 +221,12 @@ if(isset($_POST['cadastrar_lote'])){
     }else{
 
         echo "<script>
-        alert('ID do produto não existe');
+        alert('Produto não pertence à sua empresa');
         </script>";
 
     }
 
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -433,19 +449,25 @@ href="cad_list_prods.css">
 
         }
 
-        $where = "";
+        $where = "
+        WHERE idEmpresa = $idEmpresa
+        ";
+
 
         if(!empty($pesquisa)){
 
             $pesquisa_escape =
             $conn->real_escape_string($pesquisa);
 
-            $where = "
-            WHERE
-            NomeProduto LIKE '%$pesquisa_escape%'
-            OR
-            MarcaProduto LIKE '%$pesquisa_escape%'
-            ";
+$where = "
+WHERE idEmpresa = $idEmpresa
+AND (
+    NomeProduto LIKE '%$pesquisa_escape%'
+    OR
+    MarcaProduto LIKE '%$pesquisa_escape%'
+)
+";
+
         }
 
         ?>
@@ -646,7 +668,10 @@ href="cad_list_prods.css">
         $inicio_lotes =
         ($pagina_lotes - 1) * $limite;
 
-        $where_lotes = "WHERE 1=1";
+$where_lotes = "
+WHERE produtos.idEmpresa = $idEmpresa
+";
+
 
         if(!empty($pesquisa_lote)){
 
@@ -835,7 +860,7 @@ href="cad_list_prods.css">
 
     </div>
 
-    <a href="principal.php">
+    <a href="../painel_principal.php">
         Voltar ao painel
     </a>
 

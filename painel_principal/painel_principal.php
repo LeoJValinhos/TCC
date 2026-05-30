@@ -1,30 +1,73 @@
 <?php 
+
 include '../funcoes/verifica_login.php';
 include '../funcoes/conexao.php';
 
-// SOMA TODAS AS QUANTIDADES DOS LOTES
-$sql_total = "
-SELECT SUM(quantidade) AS total_produtos
-FROM produtoslotes
-";
+/* =====================================================
+VERIFICA SE EXISTE ID DA EMPRESA
+===================================================== */
 
-$resultado_total = $conn->query($sql_total);
+if(!isset($_SESSION['idEmpresa'])){
+
+    echo "
+    <script>
+    alert('Empresa não encontrada na sessão');
+    window.location.href='../registro_login/login.html';
+    </script>
+    ";
+
+    exit();
+
+}
+
+$idEmpresa = $_SESSION['idEmpresa'];
+
+/* =====================================================
+TOTAL DE PRODUTOS DA EMPRESA
+===================================================== */
 
 $total_produtos = 0;
 
+$sql_total = "
+
+SELECT 
+SUM(pl.quantidade) AS total_produtos
+
+FROM produtoslotes pl
+
+INNER JOIN produtos p
+ON p.idProduto = pl.idproduto
+
+WHERE p.idEmpresa = ?
+
+";
+
+$stmt_total = $conn->prepare($sql_total);
+
+$stmt_total->bind_param(
+"i",
+$idEmpresa
+);
+
+$stmt_total->execute();
+
+$resultado_total =
+$stmt_total->get_result();
+
 if($resultado_total->num_rows > 0){
 
-    $dados = $resultado_total->fetch_assoc();
+    $dados =
+    $resultado_total->fetch_assoc();
 
-    $total_produtos = $dados['total_produtos'];
+    if($dados['total_produtos'] != null){
 
-    if($total_produtos == null){
-        $total_produtos = 0;
+        $total_produtos =
+        $dados['total_produtos'];
+
     }
 
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -102,33 +145,26 @@ href="painel_principal.css">
                 <?php echo $_SESSION['nome']; ?> 👋
             </h2>
 
+            <p class="subtitulo">
+                Controle geral do estoque da empresa
+            </p>
+
         </div>
 
+        <!-- CARD ÚNICO -->
         <div class="cards">
 
-            <div class="card">
+            <div class="card principal">
 
-                <span>Produtos</span>
+                <span>Total em estoque</span>
 
                 <h2 id="prod">
                     <?php echo $total_produtos; ?>
                 </h2>
 
-            </div>
-
-            <div class="card">
-
-                <span>Entradas</span>
-
-                <h2 id="ent">0</h2>
-
-            </div>
-
-            <div class="card">
-
-                <span>Saídas</span>
-
-                <h2 id="sai">0</h2>
+                <p>
+                    Soma total de todos os lotes cadastrados
+                </p>
 
             </div>
 
