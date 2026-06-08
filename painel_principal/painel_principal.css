@@ -6,23 +6,37 @@
 }
 
 /* =====================================================
-CORES INVEX
+CORES
 ===================================================== */
 
 :root{
 
-    --bg: #0b132b;
-    --sidebar: #111c44;
-    --card: #16213e;
-    --roxo: #7c3aed;
+    --bg: #02152E;
+    --sidebar: #001A36;
+    --card: #001A36;
+    --primary: #00F5D4;
+    --secondary: #17D9B7;
+    --border: #00B7C3;
     --text: #ffffff;
-    --sub: #a0aec0;
+    --sub: #B8C7D9;
 
 }
 
+/* =====================================================
+BODY
+===================================================== */
+
 body{
-    background: var(--bg);
+
+    background: linear-gradient(
+        135deg,
+        #02152E 0%,
+        #001A36 50%,
+        #02152E 100%
+    );
+
     color: var(--text);
+
 }
 
 /* =====================================================
@@ -33,14 +47,15 @@ TOPO
 
     width: 100%;
     height: 70px;
-    background: #0f1c3f;
+
+    background: #02152E;
 
     display: flex;
     align-items: center;
 
     padding: 0 30px;
 
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(0,245,212,0.15);
 
 }
 
@@ -55,8 +70,8 @@ TOPO
 .top-left h1{
 
     font-size: 28px;
-    color: #22d3ee;
     font-weight: bold;
+    color: var(--primary);
 
 }
 
@@ -86,6 +101,8 @@ SIDEBAR
     flex-direction: column;
     justify-content: space-between;
 
+    border-right: 1px solid rgba(0,183,195,0.2);
+
 }
 
 .sidebar nav a{
@@ -100,7 +117,7 @@ SIDEBAR
 
     color: var(--sub);
 
-    border-radius: 8px;
+    border-radius: 10px;
 
     transition: 0.3s;
 
@@ -109,8 +126,9 @@ SIDEBAR
 .sidebar nav a:hover,
 .active{
 
-    background: var(--roxo);
-    color: white;
+    background: var(--secondary);
+    color: #02152E;
+    font-weight: 600;
 
 }
 
@@ -122,15 +140,23 @@ LOGOUT
 
     text-align: center;
 
-    padding: 10px;
+    padding: 12px;
 
-    background: #e63946;
+    background: #ef4444;
 
-    border-radius: 8px;
+    border-radius: 10px;
 
     text-decoration: none;
 
     color: white;
+
+    transition: 0.3s;
+
+}
+
+.logout:hover{
+
+    transform: translateY(-2px);
 
 }
 
@@ -159,6 +185,7 @@ TOPO TEXTO
 
     font-size: 32px;
     margin-bottom: 10px;
+    color: var(--primary);
 
 }
 
@@ -170,7 +197,7 @@ TOPO TEXTO
 }
 
 /* =====================================================
-CARD CENTRAL
+CARDS
 ===================================================== */
 
 .cards{
@@ -183,6 +210,8 @@ CARD CENTRAL
     justify-content: center;
     align-items: center;
 
+    gap: 30px;
+
 }
 
 .card{
@@ -194,13 +223,17 @@ CARD CENTRAL
 
     padding: 40px;
 
-    border-radius: 18px;
-
-    transition: 0.3s;
+    border-radius: 20px;
 
     text-align: center;
 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+
+    transition: 0.3s;
+
+    box-shadow:
+        0 0 10px rgba(0,183,195,0.15),
+        0 0 25px rgba(0,183,195,0.08);
 
 }
 
@@ -208,12 +241,15 @@ CARD CENTRAL
 
     transform: translateY(-5px);
 
+    box-shadow:
+        0 0 20px rgba(0,245,212,0.25),
+        0 0 40px rgba(0,245,212,0.12);
+
 }
 
 .card span{
 
     color: var(--sub);
-
     font-size: 18px;
 
 }
@@ -222,7 +258,7 @@ CARD CENTRAL
 
     font-size: 70px;
 
-    color: var(--roxo);
+    color: var(--primary);
 
     margin: 20px 0;
 
@@ -231,7 +267,130 @@ CARD CENTRAL
 .card p{
 
     color: var(--sub);
-
     font-size: 15px;
+
+}
+
+/* =====================================================
+BOTÕES
+===================================================== */
+
+button,
+.btn{
+
+    background: var(--secondary);
+
+    color: #02152E;
+
+    border: none;
+
+    padding: 14px 25px;
+
+    border-radius: 10px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+}
+
+button:hover,
+.btn:hover{
+
+    background: var(--primary);
+
+    transform: translateY(-2px);
+
+}
+
+/* =====================================================
+FORMULÁRIOS
+===================================================== */
+
+input,
+textarea,
+select{
+
+    width: 100%;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(0,183,195,0.35);
+
+    background: #011327;
+
+    color: white;
+
+    outline: none;
+
+    transition: 0.3s;
+
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+
+    border-color: var(--primary);
+
+    box-shadow: 0 0 10px rgba(0,245,212,0.2);
+
+}
+
+label{
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: white;
+
+    font-weight: 500;
+
+}
+
+/* =====================================================
+TABELAS
+===================================================== */
+
+table{
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background: var(--card);
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+}
+
+table th{
+
+    background: var(--secondary);
+
+    color: #02152E;
+
+    padding: 15px;
+
+}
+
+table td{
+
+    padding: 15px;
+
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+
+}
+
+table tr:hover{
+
+    background: rgba(0,245,212,0.05);
 
 }
