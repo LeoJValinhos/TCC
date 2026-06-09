@@ -52,6 +52,10 @@ require_once 'painel_principal_contagem.php';
                     📦 Produtos
                 </a>
 
+                 <a>
+                    🛒​ Compras
+                </a>
+
                 <a>
                     📊 Relatórios
                 </a>
