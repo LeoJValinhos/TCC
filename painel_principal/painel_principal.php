@@ -44,7 +44,7 @@ require_once 'painel_principal_contagem.php';
 
             <nav>
 
-                <a class="active">
+                <a href="painel_principal.php">
                     🏠 Home
                 </a>
 
@@ -52,11 +52,11 @@ require_once 'painel_principal_contagem.php';
                     📦 Produtos
                 </a>
 
-                 <a>
+                 <a href="compras/compras.php">
                     🛒​ Compras
                 </a>
 
-                <a>
+                <a href="relatorios/relatorios.html">
                     📊 Relatórios
                 </a>
 
