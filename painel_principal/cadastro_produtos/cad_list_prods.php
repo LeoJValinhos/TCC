@@ -1,94 +1,3 @@
-<?php
-require_once 'cad_list_prods_dados.php';
-require_once 'cad_list_prods_listas.php';
-?>
-
-<!DOCTYPE html>
-<html lang="pt-br">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="stylesheet" href="cad_list_prods.css">
-
-<title>Cadastro de Produtos</title>
-
-<style>
-
-body{
-    margin:0;
-    font-family: Arial, sans-serif;
-}
-
-.layout{
-    display:flex;
-    min-height:100vh;
-}
-
-/* SIDEBAR */
-.sidebar{
-    width:250px;
-    background:#222;
-    color:white;
-    padding:20px;
-}
-
-.sidebar h3{
-    margin-top:0;
-}
-
-.sidebar ul{
-    list-style:none;
-    padding:0;
-}
-
-.sidebar ul li{
-    margin:10px 0;
-}
-
-.sidebar ul li a{
-    color:white;
-    text-decoration:none;
-}
-
-.sidebar ul li a:hover{
-    color:#4CAF50;
-}
-
-/* CONTEÚDO */
-.main-content{
-    flex:1;
-    padding:20px;
-}
-
-.vermelho-validade{
-    background-color: #ffb3b3;
-}
-
-.amarelo-validade{
-    background-color: #fff0a6;
-}
-
-.paginacao a{
-    padding: 6px 12px;
-    background: #222;
-    color: white;
-    text-decoration: none;
-    margin: 2px;
-    border-radius: 5px;
-}
-
-.paginacao a:hover{
-    background: #444;
-}
-
-</style>
-
-</head>
-
 <body>
 
 <div class="layout">
@@ -120,11 +29,15 @@ body{
 
             <div class="forms-grid">
 
-                <!-- CADASTRO DE PRODUTOS -->
+                <!-- ==========================================
+                     CADASTRO DE PRODUTOS
+                =========================================== -->
                 <div class="form-card">
+
                     <h3>Cadastro de itens</h3>
 
                     <form method="POST" action="">
+
                         <label>Nome do produto</label>
                         <input type="text" name="nome_produto" required>
 
@@ -134,15 +47,23 @@ body{
                         <label>Descrição</label>
                         <textarea name="descricao"></textarea>
 
-                        <input type="submit" name="cadastrar_produto" value="Cadastrar produto">
+                        <input type="submit"
+                               name="cadastrar_produto"
+                               value="Cadastrar produto">
+
                     </form>
+
                 </div>
 
-                <!-- CADASTRO DE LOTES -->
+                <!-- ==========================================
+                     CADASTRO DE LOTES
+                =========================================== -->
                 <div class="form-card">
+
                     <h3>Cadastrar lote</h3>
 
                     <form method="POST" action="">
+
                         <label>ID do produto</label>
                         <input type="number" name="idproduto" required>
 
@@ -152,13 +73,22 @@ body{
                         <label>Validade</label>
                         <input type="date" name="validade" required>
 
-                        <input type="submit" name="cadastrar_lote" value="Cadastrar lote">
+                        <input type="submit"
+                               name="cadastrar_lote"
+                               value="Cadastrar lote">
+
                     </form>
+
                 </div>
 
             </div>
 
+            <!-- ==========================================
+                 LISTAGENS
+            =========================================== -->
+
             <div class="lista-card">
+
                 <h3>Listas do sistema</h3>
 
                 <button type="button" onclick="mostrarListaProdutos()">
@@ -173,11 +103,14 @@ body{
 
                 <?= $htmlListaProdutos ?>
                 <?= $htmlListaLotes ?>
+
             </div>
 
             <br>
 
-            <a href="../painel_principal.php">Voltar ao painel</a>
+            <a href="../painel_principal.php">
+                Voltar ao painel
+            </a>
 
         </div>
 
@@ -188,4 +121,3 @@ body{
 <script src="cad_list_prods.js"></script>
 
 </body>
-</html>
