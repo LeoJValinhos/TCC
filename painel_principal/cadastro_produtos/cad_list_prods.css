@@ -34,6 +34,19 @@ body{
 CONTAINER
 ========================= */
 
+.sidebar{
+
+    width: 220px;
+    background: var(--sidebar);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    border-right: 1px solid rgba(0,183,195,0.2);
+
+}
+
 .container{
 
     width: 100%;
