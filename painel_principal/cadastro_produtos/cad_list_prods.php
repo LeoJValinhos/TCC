@@ -10,15 +10,59 @@ require_once 'cad_list_prods_listas.php';
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet"
-href="cad_list_prods.css">
+<link rel="stylesheet" href="cad_list_prods.css">
 
 <title>Cadastro de Produtos</title>
 
 <style>
+
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+}
+
+.layout{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:250px;
+    background:#222;
+    color:white;
+    padding:20px;
+}
+
+.sidebar h3{
+    margin-top:0;
+}
+
+.sidebar ul{
+    list-style:none;
+    padding:0;
+}
+
+.sidebar ul li{
+    margin:10px 0;
+}
+
+.sidebar ul li a{
+    color:white;
+    text-decoration:none;
+}
+
+.sidebar ul li a:hover{
+    color:#4CAF50;
+}
+
+/* CONTEÚDO */
+.main-content{
+    flex:1;
+    padding:20px;
+}
 
 .vermelho-validade{
     background-color: #ffb3b3;
@@ -47,78 +91,97 @@ href="cad_list_prods.css">
 
 <body>
 
-<div class="container">
+<div class="layout">
 
-<h2>Sistema de Estoque</h2> 
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h3>Menu</h3>
 
-<p class="usuario"> Usuário logado: <b>
-    <?= htmlspecialchars($_SESSION['nome']) ?></b> </p> 
-    <div class="forms-grid"> 
+        <ul>
+            <li><a href="../painel_principal.php">🏠 Painel Principal</a></li>
+            <li><a href="#">📦 Produtos</a></li>
+            <li><a href="#">📋 Lotes</a></li>
+            <li><a href="#">📊 Relatórios</a></li>
+            <li><a href="../logout.php">🚪 Sair</a></li>
+        </ul>
+    </div>
 
-        <!-- ========================================== 
-                    CADASTRO DE PRODUTOS
-        =========================================== --> 
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="main-content">
 
-         <div class="form-card"> 
-            <h3>Cadastro de itens</h3> 
+        <div class="container">
 
-            <form method="POST" action=""> 
+            <h2>Sistema de Estoque</h2>
 
-                <label>Nome do produto</label> 
+            <p class="usuario">
+                Usuário logado:
+                <b><?= htmlspecialchars($_SESSION['nome']) ?></b>
+            </p>
 
-                <input type="text" name="nome_produto" required>
+            <div class="forms-grid">
 
-                 <label>Marca</label> 
-                 
-                 <input type="text" name="marca" required> 
-                 
-                 <label>Descrição</label> 
-                 
-                 <textarea name="descricao"></textarea> 
-                 
-                 <input type="submit" name="cadastrar_produto" value="Cadastrar produto"> </form> 
-                </div> 
-                
-                <!-- ========================================== 
-                    CADASTRO DE LOTES 
-                 =========================================== -->    
-                <div class="form-card"> 
-                    <h3>Cadastrar lote</h3> 
-                    
-                    <form method="POST" action=""> 
-                        
-                    <label>ID do produto</label> 
-                    
-                    <input type="number" name="idproduto" required> 
-                    
-                    <label>Quantidade</label> 
-                    
-                    <input type="number" name="quantidade" required> 
-                    
-                    <label>Validade</label> 
-                    
-                    <input type="date" name="validade" required> 
-                    
-                    <input type="submit" name="cadastrar_lote" value="Cadastrar lote"> 
-                </form> 
+                <!-- CADASTRO DE PRODUTOS -->
+                <div class="form-card">
+                    <h3>Cadastro de itens</h3>
+
+                    <form method="POST" action="">
+                        <label>Nome do produto</label>
+                        <input type="text" name="nome_produto" required>
+
+                        <label>Marca</label>
+                        <input type="text" name="marca" required>
+
+                        <label>Descrição</label>
+                        <textarea name="descricao"></textarea>
+
+                        <input type="submit" name="cadastrar_produto" value="Cadastrar produto">
+                    </form>
+                </div>
+
+                <!-- CADASTRO DE LOTES -->
+                <div class="form-card">
+                    <h3>Cadastrar lote</h3>
+
+                    <form method="POST" action="">
+                        <label>ID do produto</label>
+                        <input type="number" name="idproduto" required>
+
+                        <label>Quantidade</label>
+                        <input type="number" name="quantidade" required>
+
+                        <label>Validade</label>
+                        <input type="date" name="validade" required>
+
+                        <input type="submit" name="cadastrar_lote" value="Cadastrar lote">
+                    </form>
+                </div>
+
             </div>
-         </div> 
-         
-         <!-- ========================================== LISTAGENS =========================================== --> 
-          
-         <div class="lista-card"> 
-            <h3>Listas do sistema</h3> 
-            
-            <button type="button" onclick="mostrarListaProdutos()"> 
-                Mostrar / Ocultar Produtos </button> 
 
-                <button type="button" onclick="mostrarListaLotes()"> 
-                    Mostrar / Ocultar Lotes </button> 
-                    <br><br> 
-                    <?= $htmlListaProdutos ?> 
-                    <?= $htmlListaLotes ?> 
-                </div> <br>
-                <a href="../painel_principal.php"> Voltar ao painel </a>
+            <div class="lista-card">
+                <h3>Listas do sistema</h3>
+
+                <button type="button" onclick="mostrarListaProdutos()">
+                    Mostrar / Ocultar Produtos
+                </button>
+
+                <button type="button" onclick="mostrarListaLotes()">
+                    Mostrar / Ocultar Lotes
+                </button>
+
+                <br><br>
+
+                <?= $htmlListaProdutos ?>
+                <?= $htmlListaLotes ?>
+            </div>
+
+            <br>
+
+            <a href="../painel_principal.php">Voltar ao painel</a>
+
+        </div>
+
+    </div>
 
 </div>
 
