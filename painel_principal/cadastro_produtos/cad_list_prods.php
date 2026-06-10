@@ -1,3 +1,50 @@
+<?php
+require_once 'cad_list_prods_dados.php';
+require_once 'cad_list_prods_listas.php';
+?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet"
+href="cad_list_prods.css">
+
+<title>Cadastro de Produtos</title>
+
+<style>
+
+.vermelho-validade{
+    background-color: #ffb3b3;
+}
+
+.amarelo-validade{
+    background-color: #fff0a6;
+}
+
+.paginacao a{
+    padding: 6px 12px;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    margin: 2px;
+    border-radius: 5px;
+}
+
+.paginacao a:hover{
+    background: #444;
+}
+
+</style>
+
+</head>
+
 <body>
 
 <div class="layout">
