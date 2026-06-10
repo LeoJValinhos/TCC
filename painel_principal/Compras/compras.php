@@ -1,60 +1,84 @@
+<?php
+require_once("produtos_simulado.php");
+?>
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-
-<meta charset="UTF-8">
-
-<title>Compras</title>
-
-<link rel="stylesheet" href="compras.css">
-
+    <meta charset="UTF-8">
+    <title>Compras coletivas</title>
+    <link rel="stylesheet" href="compras.css">
 </head>
-
 <body>
 
-<div class="container">
+<h1>Compras coletivas</h1>
 
-    <header>
+<div class="produtos">
 
-        <h1>Compras coletivas</h1>
+<?php foreach($produtos as $produto){ ?>
 
-        <p>Junte-se a outras empresas e economize.</p>
+    <div class="card">
 
-    </header>
+        <img src="<?= $produto['imagem'] ?>">
 
-    <section class="resumo">
+        <h3><?= $produto['nome'] ?></h3>
 
-        <div class="box">
-            <h2>12</h2>
-            <span>Compras abertas</span>
+        <p class="preco">
+            R$ <?= number_format($produto['preco'], 2, ",", ".") ?>
+        </p>
+
+        <p>
+            Participantes:
+            <?= $produto['participantes'] ?>
+            /
+            <?= $produto['meta'] ?>
+        </p>
+
+        <div class="barra">
+            <div
+            class="progresso"
+            style="
+            width: <?= ($produto['participantes'] / $produto['meta']) * 100 ?>%;
+            ">
+            </div>
         </div>
 
-        <div class="box">
-            <h2>45</h2>
-            <span>Participantes</span>
-        </div>
+        <br>
 
-        <div class="box">
-            <h2>18%</h2>
-            <span>Economia média</span>
-        </div>
+        <?php if($produto['status'] == 'aberta'){ ?>
 
-    </section>
+            <span class="status-aberta">
+                Aberta
+            </span>
 
-    <section class="filtros">
+        <?php } else { ?>
 
-        <input
-        type="text"
-        id="busca"
-        placeholder="Buscar produto">
+            <span class="status-fechada">
+                Fechada
+            </span>
 
-    </section>
+        <?php } ?>
 
-    <section
-    id="listaProdutos"
-    class="produtos">
+        <br><br>
 
-    </section>
+        <?php if($produto['participantes'] < $produto['meta']){ ?>
+
+            <button
+            onclick="participar(<?= $produto['id'] ?>)">
+                Participar
+            </button>
+
+        <?php } else { ?>
+
+            <button disabled>
+                Compra fechada
+            </button>
+
+        <?php } ?>
+
+    </div>
+
+<?php } ?>
 
 </div>
 
