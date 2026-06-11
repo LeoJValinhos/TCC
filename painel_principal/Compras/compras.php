@@ -4,14 +4,24 @@ require_once("produtos_simulado.php");
 
 <!DOCTYPE html>
 <html>
+
 <head>
+
     <meta charset="UTF-8">
-    <title>Compras coletivas</title>
+
+    <title>
+        Compras coletivas
+    </title>
+
     <link rel="stylesheet" href="compras.css">
+
 </head>
+
 <body>
 
-<h1>Compras coletivas</h1>
+<h1>
+    Compras coletivas
+</h1>
 
 <div class="produtos">
 
@@ -19,59 +29,98 @@ require_once("produtos_simulado.php");
 
     <div class="card">
 
-        <img src="<?= $produto['imagem'] ?>">
+        <img
+        src="<?= $produto['imagemProduto'] ?>"
+        alt="<?= $produto['nomeProduto'] ?>">
 
-        <h3><?= $produto['nome'] ?></h3>
+        <h3>
+            <?= $produto['nomeProduto'] ?>
+        </h3>
 
-        <p class="preco">
-            R$ <?= number_format($produto['preco'], 2, ",", ".") ?>
+        <p>
+            Marca:
+            <?= $produto['marcaProduto'] ?>
+        </p>
+
+        <p>
+            <?= $produto['descricaoProduto'] ?>
+        </p>
+
+        <p>
+            Quantidade disponível:
+            <?= $produto['quantidade'] ?>
         </p>
 
         <p>
             Participantes:
-            <?= $produto['participantes'] ?>
+            <?= $produto['quantidadeParticipantes'] ?>
             /
             <?= $produto['meta'] ?>
         </p>
 
         <div class="barra">
+
             <div
             class="progresso"
+
             style="
-            width: <?= ($produto['participantes'] / $produto['meta']) * 100 ?>%;
+            width:
+            <?= ($produto['quantidadeParticipantes'] / $produto['meta']) * 100 ?>%;
             ">
+
             </div>
+
         </div>
 
         <br>
 
-        <?php if($produto['status'] == 'aberta'){ ?>
+        <?php if($produto['status'] == 'Aberta'){ ?>
 
             <span class="status-aberta">
                 Aberta
             </span>
 
+        <?php } elseif($produto['status'] == 'Aguardando outro participante'){ ?>
+
+            <span class="status-aberta">
+                Aguardando outro participante
+            </span>
+
+        <?php } elseif($produto['status'] == 'Concluida'){ ?>
+
+            <span class="status-fechada">
+                Concluída
+            </span>
+
         <?php } else { ?>
 
             <span class="status-fechada">
-                Fechada
+                Cancelada
             </span>
 
         <?php } ?>
 
         <br><br>
 
-        <?php if($produto['participantes'] < $produto['meta']){ ?>
+        <?php if(
+            $produto['status'] != 'Concluida'
+            &&
+            $produto['status'] != 'Cancelada'
+        ){ ?>
 
             <button
-            onclick="participar(<?= $produto['id'] ?>)">
+            onclick="participar(<?= $produto['idItem'] ?>)">
+
                 Participar
+
             </button>
 
         <?php } else { ?>
 
             <button disabled>
-                Compra fechada
+
+                Compra indisponível
+
             </button>
 
         <?php } ?>
@@ -85,4 +134,5 @@ require_once("produtos_simulado.php");
 <script src="compras.js"></script>
 
 </body>
+
 </html>

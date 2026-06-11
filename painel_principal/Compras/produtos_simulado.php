@@ -1,25 +1,28 @@
 <?php
 
-$produtos = [
+require_once("../../funcoes/conexao.php");
 
-    [
-        "id" => 1,
-        "nome" => "Caixa de Refrigerante",
-        "imagem" => "img/refrigerante.jpg",
-        "preco" => 150.00,
-        "participantes" => 1,
-        "meta" => 2,
-        "status" => "aberta"
-    ],
+$sql = "
+SELECT
+    idItem,
+    nomeProduto,
+    marcaProduto,
+    descricaoProduto,
+    quantidade,
+    imagemProduto,
+    meta,
+    quantidadeParticipantes,
+    status
+FROM loja_virtual
+";
 
-    [
-        "id" => 2,
-        "nome" => "Caixa de Salgadinhos",
-        "imagem" => "img/salgadinho.jpg",
-        "preco" => 120.00,
-        "participantes" => 2,
-        "meta" => 2,
-        "status" => "fechada"
-    ]
+$resultado = $conn->query($sql);
 
-];  
+$produtos = [];
+
+while($linha = $resultado->fetch_assoc()){
+
+    $produtos[] = $linha;
+
+}
+?>

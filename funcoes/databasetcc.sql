@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Máquina: localhost
--- Data de Criação: 30-Maio-2026 às 00:07
+-- Data de Criação: 11-Jun-2026 às 01:05
 -- Versão do servidor: 5.6.13
 -- versão do PHP: 5.4.17
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Base de Dados: `databasetcc`
 --
-CREATE DATABASE IF NOT EXISTS `databasetcc` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `databasetcc` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `databasetcc`;
 
 -- --------------------------------------------------------
@@ -46,9 +46,6 @@ CREATE TABLE IF NOT EXISTS `cadastros` (
   KEY `fk_usuario_empresa` (`idEmpresa`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
---
--- Extraindo dados da tabela `cadastros`
---
 -- --------------------------------------------------------
 
 --
@@ -69,9 +66,41 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   KEY `fk_adm` (`idAdm`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
+
 --
--- Extraindo dados da tabela `empresa`
+-- Estrutura da tabela `loja_virtual`
 --
+
+CREATE TABLE IF NOT EXISTS `loja_virtual` (
+  `idItem` int(11) NOT NULL AUTO_INCREMENT,
+  `nomeProduto` varchar(100) NOT NULL,
+  `marcaProduto` varchar(255) NOT NULL,
+  `descricaoProduto` varchar(255) DEFAULT NULL,
+  `quantidade` varchar(11) NOT NULL,
+  `imagemProduto` varchar(255) NOT NULL,
+  `meta` int(11) DEFAULT '2',
+  `quantidadeParticipantes` int(11) DEFAULT '0',
+  `status` enum('Aberta','Aguardando outro participante','Concluida','Cancelada') DEFAULT 'Aberta',
+  PRIMARY KEY (`idItem`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `participantes_loja`
+--
+
+CREATE TABLE IF NOT EXISTS `participantes_loja` (
+  `idParticipacao` int(11) NOT NULL AUTO_INCREMENT,
+  `idItem` int(11) NOT NULL,
+  `id_primeiroParticipante` int(11) DEFAULT NULL,
+  `id_segundoParticipante` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idParticipacao`),
+  KEY `idItem` (`idItem`),
+  KEY `id_primeiroParticipante` (`id_primeiroParticipante`),
+  KEY `id_segundoParticipante` (`id_segundoParticipante`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -94,10 +123,6 @@ CREATE TABLE IF NOT EXISTS `produtos` (
   KEY `fk_produto_empresa` (`idEmpresa`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
---
--- Extraindo dados da tabela `produtos`
---
-
 -- --------------------------------------------------------
 
 --
@@ -110,15 +135,11 @@ CREATE TABLE IF NOT EXISTS `produtoslotes` (
   `quantidade` int(11) NOT NULL,
   `validade` date DEFAULT NULL,
   `criado_em` datetime DEFAULT CURRENT_TIMESTAMP,
-  `idEmpresa` int(11),
+  `idEmpresa` int(11) DEFAULT NULL,
   PRIMARY KEY (`idlote`),
   KEY `idproduto` (`idproduto`),
   KEY `fk_lote_empresa` (`idEmpresa`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
-
---
--- Extraindo dados da tabela `produtoslotes`
---
 
 --
 -- Constraints for dumped tables
@@ -137,11 +158,19 @@ ALTER TABLE `empresa`
   ADD CONSTRAINT `fk_adm` FOREIGN KEY (`idAdm`) REFERENCES `cadastros` (`idCadastro`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
+-- Limitadores para a tabela `participantes_loja`
+--
+ALTER TABLE `participantes_loja`
+  ADD CONSTRAINT `participantes_loja_ibfk_1` FOREIGN KEY (`idItem`) REFERENCES `loja_virtual` (`idItem`),
+  ADD CONSTRAINT `participantes_loja_ibfk_2` FOREIGN KEY (`id_primeiroParticipante`) REFERENCES `cadastros` (`idCadastro`),
+  ADD CONSTRAINT `participantes_loja_ibfk_3` FOREIGN KEY (`id_segundoParticipante`) REFERENCES `cadastros` (`idCadastro`);
+
+--
 -- Limitadores para a tabela `produtos`
 --
 ALTER TABLE `produtos`
-  ADD CONSTRAINT `fk_produto_empresa` FOREIGN KEY (`idEmpresa`) REFERENCES `empresa` (`idEmpresa`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_funcionario` FOREIGN KEY (`criadopor_id`) REFERENCES `cadastros` (`idCadastro`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_funcionario` FOREIGN KEY (`criadopor_id`) REFERENCES `cadastros` (`idCadastro`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_produto_empresa` FOREIGN KEY (`idEmpresa`) REFERENCES `empresa` (`idEmpresa`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `produtoslotes`
