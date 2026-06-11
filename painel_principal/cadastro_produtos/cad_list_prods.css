@@ -3,10 +3,10 @@ RESET
 ========================= */
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 /* =========================
@@ -14,6 +14,7 @@ BODY
 ========================= */
 
 body{
+
     background:
     linear-gradient(
     to right,
@@ -22,249 +23,555 @@ body{
     #001437 65%,
     #02111f 100%);
 
-    color:white;
+    color: white;
 
-    min-height:100vh;
+    min-height: 100vh;
 
-    display:flex;
+    padding: 35px;
 }
 
-/* =========================
+/* =====================================================
+LAYOUT
+===================================================== */
+
+.layout{
+
+    display: flex;
+    height: calc(100vh - 70px);
+
+}
+
+/* =====================================================
 SIDEBAR
-========================= */
+===================================================== */
 
 .sidebar{
 
-    width:210px;
+    width: 220px;
+    background: var(--sidebar);
 
-    height:100vh;
+    padding: 20px;
 
-    background:#02142b;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-    border-right:1px solid rgba(0,245,196,0.15);
+    border-right: 1px solid rgba(0,183,195,0.2);
 
-    display:flex;
+}
 
-    flex-direction:column;
+.sidebar nav a{
 
-    justify-content:space-between;
+    position: relative;
 
-    position:fixed;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 
-    left:0;
-    top:0;
+    padding: 12px 15px;
 
-    padding:15px 0;
+    margin-bottom: 10px;
+
+    text-decoration: none;
+
+    color: var(--sub);
+
+    border-radius: 10px;
+
+    transition: all .3s ease;
+
+    overflow: hidden;
+
 }
 
 /* =========================
-MENU
-========================= */
-
-.menu{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:5px;
-}
-
-/* =========================
-ITENS
-========================= */
-
-.menu-item{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-    padding:16px 25px;
-
-    color:white;
-
-    text-decoration:none;
-
-    font-size:20px;
-
-    transition:0.3s;
-
-    margin:0;
-}
-
-.menu-item:hover{
-
-    background:rgba(0,245,196,0.08);
-
-    color:#00f5c4;
-
-    text-shadow:none;
-}
-
-.menu-item span{
-
-    width:22px;
-
-    text-align:center;
-}
-
-/* =========================
-BOTÃO SAIR
-========================= */
-
-.btn-sair{
-
-    margin:0 10px;
-
-    text-align:center;
-
-    padding:14px;
-
-    background:#ff4b4b;
-
-    color:white;
-
-    text-decoration:none;
-
-    border-radius:12px;
-
-    font-size:18px;
-
-    transition:0.3s;
-}
-
-.btn-sair:hover{
-
-    background:#ff2f2f;
-
-    transform:translateY(-2px);
-
-    text-shadow:none;
-}
-
-/* =========================
-CONTEÚDO
+CONTAINER
 ========================= */
 
 .container{
 
-    margin-left:210px;
+    width: 100%;
 
-    width:100%;
+    max-width: 1500px;
 
-    padding:30px 40px;
+    margin: auto;
+
+    text-align: left;
 }
 
 /* =========================
-TÍTULO
+TÍTULO PRINCIPAL
 ========================= */
 
-h1{
+h2{
 
-    color:#00f5c4;
+    font-size: 55px;
 
-    font-size:55px;
+    color: #00f5c4;
 
-    margin-bottom:10px;
+    margin-bottom: 10px;
+
+    font-weight: bold;
 }
 
 /* =========================
-PARÁGRAFO
+TEXTO
 ========================= */
 
-.container p{
+p{
 
-    color:#d8d8d8;
+    color: #ffffff;
 
-    font-size:18px;
+    font-size: 18px;
+
+    margin-bottom: 8px;
 }
 
 /* =========================
-CARD
+USUÁRIO
 ========================= */
 
-.card{
+.usuario{
 
-    width:500px;
+    margin-bottom: 30px;
+}
 
-    margin:140px auto;
+.usuario b{
 
-    text-align:center;
-
-    background:#02142b;
-
-    border:1px solid #00f5c4;
-
-    border-radius:25px;
-
-    padding:40px;
+    color: #00f5c4;
 }
 
 /* =========================
-TÍTULO CARD
+GRID DOS FORMULÁRIOS
 ========================= */
 
-.card h3{
+.forms-grid{
 
-    font-size:30px;
+    display: flex;
 
-    margin-bottom:30px;
+    gap: 28px;
 
-    font-weight:normal;
+    align-items: flex-start;
+
+    margin-bottom: 25px;
 }
 
 /* =========================
-NÚMERO
+CARDS
 ========================= */
 
-.numero{
+.form-card,
+.lista-card{
 
-    font-size:90px;
+    background: rgba(2, 17, 31, 0.96);
 
-    font-weight:bold;
+    border: 1px solid rgba(0, 245, 196, 0.35);
 
-    color:#00f5c4;
+    border-radius: 24px;
 
-    margin-bottom:25px;
+    padding: 30px;
+
+    box-shadow:
+    0 0 20px rgba(0, 245, 196, 0.05);
+}
+
+/* =========================
+CARD ESQUERDA
+========================= */
+
+.form-card:first-child{
+
+    width: 58%;
+}
+
+/* =========================
+CARD DIREITA
+========================= */
+
+.form-card:last-child{
+
+    width: 42%;
+}
+
+/* =========================
+LISTA PRODUTOS
+========================= */
+
+.lista-card{
+
+    width: 100%;
+}
+
+/* =========================
+SUBTÍTULOS
+========================= */
+
+.form-card h3,
+.lista-card h3{
+
+    color: #00f5c4;
+
+    font-size: 28px;
+
+    margin-bottom: 30px;
+}
+
+/* =========================
+LABELS
+========================= */
+
+label{
+
+    display: block;
+
+    margin-top: 18px;
+
+    margin-bottom: 10px;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+}
+
+/* =========================
+INPUTS
+========================= */
+
+input,
+textarea,
+select{
+
+    width: 100%;
+
+    background: #020b1f;
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    color: white;
+
+    font-size: 16px;
+
+    outline: none;
+
+    transition: 0.3s;
+}
+
+/* =========================
+FOCUS
+========================= */
+
+input:focus,
+textarea:focus,
+select:focus{
+
+    border-color: #00f5c4;
+
+    box-shadow:
+    0 0 15px rgba(0, 245, 196, 0.25);
+}
+
+/* =========================
+PLACEHOLDER
+========================= */
+
+input::placeholder,
+textarea::placeholder{
+
+    color: #9ca3af;
+}
+
+/* =========================
+TEXTAREA
+========================= */
+
+textarea{
+
+    min-height: 140px;
+
+    resize: none;
+}
+
+/* =========================
+BOTÕES
+========================= */
+
+input[type="submit"],
+button{
+
+    margin-top: 24px;
+
+    background:
+    linear-gradient(
+    135deg,
+    #00d9a6,
+    #00f5c4);
+
+    color: #02111f;
+
+    border: none;
+
+    border-radius: 14px;
+
+    padding: 16px 30px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+/* =========================
+HOVER BOTÃO
+========================= */
+
+input[type="submit"]:hover,
+button:hover{
+
+    transform: translateY(-2px);
+
+    box-shadow:
+    0 0 18px rgba(0, 245, 196, 0.35);
+}
+
+/* =========================
+FILTROS
+========================= */
+
+.filtros-form{
+
+    width: 100%;
+
+    display: flex;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 25px;
+}
+
+.filtros-form input{
+
+    flex: 1;
+
+    min-width: 240px;
+}
+
+.filtros-form select{
+
+    width: 260px;
+}
+
+.filtros-form button{
+
+    margin-top: 0;
+}
+
+/* =========================
+TABELA
+========================= */
+
+table{
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 25px;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+}
+
+/* =========================
+CABEÇALHO
+========================= */
+
+th{
+
+    background:
+    linear-gradient(
+    135deg,
+    #00d9a6,
+    #00f5c4);
+
+    color: #02111f;
+
+    padding: 18px;
+
+    text-align: left;
+
+    font-size: 16px;
+}
+
+/* =========================
+COLUNAS
+========================= */
+
+td{
+
+    padding: 18px;
+
+    background: rgba(0,0,0,0.12);
+
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+
+    color: #ffffff;
+
+    font-size: 15px;
+}
+
+/* =========================
+HOVER TABELA
+========================= */
+
+tr:hover td{
+
+    background: rgba(0, 245, 196, 0.03);
+}
+
+/* =========================
+PAGINAÇÃO
+========================= */
+
+.paginacao{
+
+    margin-top: 25px;
+
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+.paginacao a{
+
+    padding: 10px 16px;
+
+    background: #02111f;
+
+    border: 1px solid rgba(0, 245, 196, 0.35);
+
+    color: #00f5c4;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+
+    margin-top: 0;
+}
+
+.paginacao a:hover{
+
+    background: #00f5c4;
+
+    color: #02111f;
+
+    box-shadow:
+    0 0 15px rgba(0, 245, 196, 0.35);
+
+    text-shadow: none;
+}
+
+/* =========================
+LINK
+========================= */
+
+a{
+
+    display: inline-block;
+
+    margin-top: 30px;
+
+    color: #00f5c4;
+
+    text-decoration: none;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+}
+
+/* =========================
+HOVER LINK
+========================= */
+
+a:hover{
+
+    color: white;
+
+    text-shadow:
+    0 0 10px rgba(0, 245, 196, 0.7);
 }
 
 /* =========================
 RESPONSIVO
 ========================= */
 
-@media(max-width:768px){
+@media(max-width: 1100px){
 
-    .sidebar{
-        width:80px;
+    .forms-grid{
+
+        flex-direction: column;
     }
 
-    .menu-item{
-        justify-content:center;
-        font-size:0;
+    .form-card:first-child,
+    .form-card:last-child{
+
+        width: 100%;
     }
 
-    .menu-item span{
-        font-size:22px;
+}
+
+@media(max-width: 768px){
+
+    body{
+        padding: 20px;
     }
 
-    .btn-sair{
-        font-size:0;
+    h2{
+        font-size: 38px;
     }
 
-    .container{
-        margin-left:80px;
-        padding:20px;
+    .form-card h3,
+    .lista-card h3{
+
+        font-size: 24px;
     }
 
-    h1{
-        font-size:35px;
+    th,
+    td{
+
+        padding: 12px;
     }
 
-    .card{
-        width:100%;
-        margin-top:60px;
+    .filtros-form{
+
+        flex-direction: column;
     }
+
+    .filtros-form select{
+
+        width: 100%;
+    }
+
 }
