@@ -1,64 +1,138 @@
+<?php
+require_once("produtos_simulado.php");
+?>
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
+
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<title>Compras</title>
+    <title>
+        Compras coletivas
+    </title>
 
-<link rel="stylesheet" href="compras.css">
+    <link rel="stylesheet" href="compras.css">
 
 </head>
 
 <body>
 
-<div class="container">
+<h1>
+    Compras coletivas
+</h1>
 
-    <header>
+<div class="produtos">
 
-        <h1>Compras coletivas</h1>
+<?php foreach($produtos as $produto){ ?>
 
-        <p>Junte-se a outras empresas e economize.</p>
+    <div class="card">
 
-    </header>
+        <img
+        src="<?= $produto['imagemProduto'] ?>"
+        alt="<?= $produto['nomeProduto'] ?>">
 
-    <section class="resumo">
+        <h3>
+            <?= $produto['nomeProduto'] ?>
+        </h3>
 
-        <div class="box">
-            <h2>12</h2>
-            <span>Compras abertas</span>
+        <p>
+            Marca:
+            <?= $produto['marcaProduto'] ?>
+        </p>
+
+        <p>
+            <?= $produto['descricaoProduto'] ?>
+        </p>
+
+        <p>
+            Quantidade disponível:
+            <?= $produto['quantidade'] ?>
+        </p>
+
+        <p>
+            Participantes:
+            <?= $produto['quantidadeParticipantes'] ?>
+            /
+            <?= $produto['meta'] ?>
+        </p>
+
+        <div class="barra">
+
+            <div
+            class="progresso"
+
+            style="
+            width:
+            <?= ($produto['quantidadeParticipantes'] / $produto['meta']) * 100 ?>%;
+            ">
+
+            </div>
+
         </div>
 
-        <div class="box">
-            <h2>45</h2>
-            <span>Participantes</span>
-        </div>
+        <br>
 
-        <div class="box">
-            <h2>18%</h2>
-            <span>Economia média</span>
-        </div>
+        <?php if($produto['status'] == 'Aberta'){ ?>
 
-    </section>
+            <span class="status-aberta">
+                Aberta
+            </span>
 
-    <section class="filtros">
+        <?php } elseif($produto['status'] == 'Aguardando outro participante'){ ?>
 
-        <input
-        type="text"
-        id="busca"
-        placeholder="Buscar produto">
+            <span class="status-aberta">
+                Aguardando outro participante
+            </span>
 
-    </section>
+        <?php } elseif($produto['status'] == 'Concluida'){ ?>
 
-    <section
-    id="listaProdutos"
-    class="produtos">
+            <span class="status-fechada">
+                Concluída
+            </span>
 
-    </section>
+        <?php } else { ?>
+
+            <span class="status-fechada">
+                Cancelada
+            </span>
+
+        <?php } ?>
+
+        <br><br>
+
+        <?php if(
+            $produto['status'] != 'Concluida'
+            &&
+            $produto['status'] != 'Cancelada'
+        ){ ?>
+
+            <button
+            onclick="participar(<?= $produto['idItem'] ?>)">
+
+                Participar
+
+            </button>
+
+        <?php } else { ?>
+
+            <button disabled>
+
+                Compra indisponível
+
+            </button>
+
+        <?php } ?>
+
+    </div>
+
+<?php } ?>
 
 </div>
 
 <script src="compras.js"></script>
 
 </body>
+
 </html>
