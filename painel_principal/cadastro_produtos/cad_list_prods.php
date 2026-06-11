@@ -155,22 +155,16 @@ href="cad_list_prods.css">
             =========================================== -->
 
             <div class="lista-card">
-
                 <h3>Listas do sistema</h3>
-
                 <button type="button" onclick="mostrarListaProdutos()">
                     Mostrar / Ocultar Produtos
                 </button>
-
                 <button type="button" onclick="mostrarListaLotes()">
                     Mostrar / Ocultar Lotes
                 </button>
-
                 <br><br>
-
                 <?= $htmlListaProdutos ?>
                 <?= $htmlListaLotes ?>
-                
             </div>
 
             <br>
