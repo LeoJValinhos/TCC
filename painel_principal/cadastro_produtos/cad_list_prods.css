@@ -3,10 +3,10 @@ RESET
 ========================= */
 
 *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
 /* =========================
@@ -14,7 +14,6 @@ BODY
 ========================= */
 
 body{
-
     background:
     linear-gradient(
     to right,
@@ -23,514 +22,249 @@ body{
     #001437 65%,
     #02111f 100%);
 
-    color: white;
+    color:white;
 
-    min-height: 100vh;
+    min-height:100vh;
 
-    padding: 35px;
+    display:flex;
 }
 
 /* =========================
-CONTAINER
+SIDEBAR
 ========================= */
 
 .sidebar{
 
-    width: 220px;
-    background: var(--sidebar);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    width:210px;
 
-    border-right: 1px solid rgba(0,183,195,0.2);
+    height:100vh;
 
+    background:#02142b;
+
+    border-right:1px solid rgba(0,245,196,0.15);
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    position:fixed;
+
+    left:0;
+    top:0;
+
+    padding:15px 0;
 }
+
+/* =========================
+MENU
+========================= */
+
+.menu{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:5px;
+}
+
+/* =========================
+ITENS
+========================= */
+
+.menu-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:16px 25px;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:20px;
+
+    transition:0.3s;
+
+    margin:0;
+}
+
+.menu-item:hover{
+
+    background:rgba(0,245,196,0.08);
+
+    color:#00f5c4;
+
+    text-shadow:none;
+}
+
+.menu-item span{
+
+    width:22px;
+
+    text-align:center;
+}
+
+/* =========================
+BOTÃO SAIR
+========================= */
+
+.btn-sair{
+
+    margin:0 10px;
+
+    text-align:center;
+
+    padding:14px;
+
+    background:#ff4b4b;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:12px;
+
+    font-size:18px;
+
+    transition:0.3s;
+}
+
+.btn-sair:hover{
+
+    background:#ff2f2f;
+
+    transform:translateY(-2px);
+
+    text-shadow:none;
+}
+
+/* =========================
+CONTEÚDO
+========================= */
 
 .container{
 
-    width: 100%;
+    margin-left:210px;
 
-    max-width: 1500px;
+    width:100%;
 
-    margin: auto;
-
-    text-align: left;
+    padding:30px 40px;
 }
 
 /* =========================
-TÍTULO PRINCIPAL
+TÍTULO
 ========================= */
 
-h2{
+h1{
 
-    font-size: 55px;
+    color:#00f5c4;
 
-    color: #00f5c4;
+    font-size:55px;
 
-    margin-bottom: 10px;
-
-    font-weight: bold;
+    margin-bottom:10px;
 }
 
 /* =========================
-TEXTO
+PARÁGRAFO
 ========================= */
 
-p{
+.container p{
 
-    color: #ffffff;
+    color:#d8d8d8;
 
-    font-size: 18px;
-
-    margin-bottom: 8px;
+    font-size:18px;
 }
 
 /* =========================
-USUÁRIO
+CARD
 ========================= */
 
-.usuario{
+.card{
 
-    margin-bottom: 30px;
-}
+    width:500px;
 
-.usuario b{
+    margin:140px auto;
 
-    color: #00f5c4;
+    text-align:center;
+
+    background:#02142b;
+
+    border:1px solid #00f5c4;
+
+    border-radius:25px;
+
+    padding:40px;
 }
 
 /* =========================
-GRID DOS FORMULÁRIOS
+TÍTULO CARD
 ========================= */
 
-.forms-grid{
+.card h3{
 
-    display: flex;
+    font-size:30px;
 
-    gap: 28px;
+    margin-bottom:30px;
 
-    align-items: flex-start;
-
-    margin-bottom: 25px;
+    font-weight:normal;
 }
 
 /* =========================
-CARDS
+NÚMERO
 ========================= */
 
-.form-card,
-.lista-card{
+.numero{
 
-    background: rgba(2, 17, 31, 0.96);
+    font-size:90px;
 
-    border: 1px solid rgba(0, 245, 196, 0.35);
+    font-weight:bold;
 
-    border-radius: 24px;
+    color:#00f5c4;
 
-    padding: 30px;
-
-    box-shadow:
-    0 0 20px rgba(0, 245, 196, 0.05);
-}
-
-/* =========================
-CARD ESQUERDA
-========================= */
-
-.form-card:first-child{
-
-    width: 58%;
-}
-
-/* =========================
-CARD DIREITA
-========================= */
-
-.form-card:last-child{
-
-    width: 42%;
-}
-
-/* =========================
-LISTA PRODUTOS
-========================= */
-
-.lista-card{
-
-    width: 100%;
-}
-
-/* =========================
-SUBTÍTULOS
-========================= */
-
-.form-card h3,
-.lista-card h3{
-
-    color: #00f5c4;
-
-    font-size: 28px;
-
-    margin-bottom: 30px;
-}
-
-/* =========================
-LABELS
-========================= */
-
-label{
-
-    display: block;
-
-    margin-top: 18px;
-
-    margin-bottom: 10px;
-
-    color: white;
-
-    font-size: 16px;
-
-    font-weight: bold;
-}
-
-/* =========================
-INPUTS
-========================= */
-
-input,
-textarea,
-select{
-
-    width: 100%;
-
-    background: #020b1f;
-
-    border: 1px solid rgba(255,255,255,0.15);
-
-    border-radius: 14px;
-
-    padding: 18px;
-
-    color: white;
-
-    font-size: 16px;
-
-    outline: none;
-
-    transition: 0.3s;
-}
-
-/* =========================
-FOCUS
-========================= */
-
-input:focus,
-textarea:focus,
-select:focus{
-
-    border-color: #00f5c4;
-
-    box-shadow:
-    0 0 15px rgba(0, 245, 196, 0.25);
-}
-
-/* =========================
-PLACEHOLDER
-========================= */
-
-input::placeholder,
-textarea::placeholder{
-
-    color: #9ca3af;
-}
-
-/* =========================
-TEXTAREA
-========================= */
-
-textarea{
-
-    min-height: 140px;
-
-    resize: none;
-}
-
-/* =========================
-BOTÕES
-========================= */
-
-input[type="submit"],
-button{
-
-    margin-top: 24px;
-
-    background:
-    linear-gradient(
-    135deg,
-    #00d9a6,
-    #00f5c4);
-
-    color: #02111f;
-
-    border: none;
-
-    border-radius: 14px;
-
-    padding: 16px 30px;
-
-    font-size: 16px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    transition: 0.3s;
-}
-
-/* =========================
-HOVER BOTÃO
-========================= */
-
-input[type="submit"]:hover,
-button:hover{
-
-    transform: translateY(-2px);
-
-    box-shadow:
-    0 0 18px rgba(0, 245, 196, 0.35);
-}
-
-/* =========================
-FILTROS
-========================= */
-
-.filtros-form{
-
-    width: 100%;
-
-    display: flex;
-
-    gap: 12px;
-
-    flex-wrap: wrap;
-
-    margin-bottom: 25px;
-}
-
-.filtros-form input{
-
-    flex: 1;
-
-    min-width: 240px;
-}
-
-.filtros-form select{
-
-    width: 260px;
-}
-
-.filtros-form button{
-
-    margin-top: 0;
-}
-
-/* =========================
-TABELA
-========================= */
-
-table{
-
-    width: 100%;
-
-    border-collapse: collapse;
-
-    margin-top: 25px;
-
-    overflow: hidden;
-
-    border-radius: 18px;
-}
-
-/* =========================
-CABEÇALHO
-========================= */
-
-th{
-
-    background:
-    linear-gradient(
-    135deg,
-    #00d9a6,
-    #00f5c4);
-
-    color: #02111f;
-
-    padding: 18px;
-
-    text-align: left;
-
-    font-size: 16px;
-}
-
-/* =========================
-COLUNAS
-========================= */
-
-td{
-
-    padding: 18px;
-
-    background: rgba(0,0,0,0.12);
-
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-
-    color: #ffffff;
-
-    font-size: 15px;
-}
-
-/* =========================
-HOVER TABELA
-========================= */
-
-tr:hover td{
-
-    background: rgba(0, 245, 196, 0.03);
-}
-
-/* =========================
-PAGINAÇÃO
-========================= */
-
-.paginacao{
-
-    margin-top: 25px;
-
-    display: flex;
-
-    gap: 10px;
-
-    flex-wrap: wrap;
-}
-
-.paginacao a{
-
-    padding: 10px 16px;
-
-    background: #02111f;
-
-    border: 1px solid rgba(0, 245, 196, 0.35);
-
-    color: #00f5c4;
-
-    border-radius: 10px;
-
-    text-decoration: none;
-
-    font-size: 15px;
-
-    font-weight: bold;
-
-    transition: 0.3s;
-
-    margin-top: 0;
-}
-
-.paginacao a:hover{
-
-    background: #00f5c4;
-
-    color: #02111f;
-
-    box-shadow:
-    0 0 15px rgba(0, 245, 196, 0.35);
-
-    text-shadow: none;
-}
-
-/* =========================
-LINK
-========================= */
-
-a{
-
-    display: inline-block;
-
-    margin-top: 30px;
-
-    color: #00f5c4;
-
-    text-decoration: none;
-
-    font-size: 18px;
-
-    font-weight: bold;
-
-    transition: 0.3s;
-}
-
-/* =========================
-HOVER LINK
-========================= */
-
-a:hover{
-
-    color: white;
-
-    text-shadow:
-    0 0 10px rgba(0, 245, 196, 0.7);
+    margin-bottom:25px;
 }
 
 /* =========================
 RESPONSIVO
 ========================= */
 
-@media(max-width: 1100px){
+@media(max-width:768px){
 
-    .forms-grid{
-
-        flex-direction: column;
+    .sidebar{
+        width:80px;
     }
 
-    .form-card:first-child,
-    .form-card:last-child{
-
-        width: 100%;
+    .menu-item{
+        justify-content:center;
+        font-size:0;
     }
 
-}
-
-@media(max-width: 768px){
-
-    body{
-        padding: 20px;
+    .menu-item span{
+        font-size:22px;
     }
 
-    h2{
-        font-size: 38px;
+    .btn-sair{
+        font-size:0;
     }
 
-    .form-card h3,
-    .lista-card h3{
-
-        font-size: 24px;
+    .container{
+        margin-left:80px;
+        padding:20px;
     }
 
-    th,
-    td{
-
-        padding: 12px;
+    h1{
+        font-size:35px;
     }
 
-    .filtros-form{
-
-        flex-direction: column;
+    .card{
+        width:100%;
+        margin-top:60px;
     }
-
-    .filtros-form select{
-
-        width: 100%;
-    }
-
 }
