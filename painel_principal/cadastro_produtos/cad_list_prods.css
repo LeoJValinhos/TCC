@@ -3,10 +3,10 @@ RESET
 ========================= */
 
 *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
 /* =========================
@@ -23,65 +23,197 @@ body{
     #001437 65%,
     #02111f 100%);
 
-    color: white;
+    color:white;
 
-    min-height: 100vh;
+    min-height:100vh;
 
-    padding: 35px;
+    margin:0;
+    padding:0;
 }
 
-/* =====================================================
-LAYOUT
-===================================================== */
+/* =========================
+TOPBAR
+========================= */
 
-.layout{
+.topbar{
+    height: 72px;
+    width: 100%;
+
+    background: #02142b;
+
+    border-bottom: 1px solid rgba(0,245,196,.15);
 
     display: flex;
-    height: calc(100vh - 70px);
+    align-items: center;
 
+    padding: 0 35px;
 }
 
-/* =====================================================
+.top-left{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.top-left img{
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+}
+
+.top-left h1{
+    font-size: 24px;
+    font-weight: 700;
+    color: #00f5c4;
+    letter-spacing: 1px;
+}
+
+/* =========================
+LAYOUT
+========================= */
+
+.layout{
+    display: flex;
+    height: calc(100vh - 72px);
+}
+
+/* =========================
 SIDEBAR
-===================================================== */
+========================= */
 
 .sidebar{
-
     width: 220px;
-    background: var(--sidebar);
 
-    padding: 20px;
+    background: #02142b;
+
+    border-right: 1px solid rgba(0,245,196,.15);
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
-    border-right: 1px solid rgba(0,183,195,0.2);
+    padding: 20px 0;
+    font-family: 'Segoe UI';
+}
 
+/* remove o Menu da print */
+.sidebar h3{
+    display: none;
+}
+
+.sidebar nav{
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
 }
 
 .sidebar nav a{
-
-    position: relative;
-
     display: flex;
     align-items: center;
+
     gap: 12px;
 
-    padding: 12px 15px;
+    height: 56px;
 
-    margin-bottom: 10px;
+    padding: 0 35px;
+
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 400;
 
     text-decoration: none;
 
-    color: var(--sub);
+    transition: .25s;
+}
+
+.sidebar nav a:hover{
+    background: rgba(0,245,196,.08);
+    color: #00f5c4;
+}
+
+.sidebar nav a.active{
+    color: #00f5c4;
+}
+
+/* =========================
+BOTÃO SAIR
+========================= */
+
+.sidebar nav a:last-child{
+    margin-top: auto;
+}
+
+/* =====================================================
+LOGOUT
+===================================================== */
+
+.logout{
+
+    text-align: center;
+
+    padding: 12px;
+
+    background: #ef4444;
 
     border-radius: 10px;
 
-    transition: all .3s ease;
+    text-decoration: none;
 
-    overflow: hidden;
+    color: white;
 
+    transition: 0.3s;
+
+}
+
+.logout:hover{
+
+    transform: translateY(-2px);
+
+}
+
+/* =====================================================
+MAIN
+===================================================== */
+
+.main{
+
+    flex: 1;
+    padding: 40px;
+
+}
+
+/* =====================================================
+TOPO TEXTO
+===================================================== */
+
+.top{
+
+    margin-bottom: 40px;
+
+}
+
+.top h2{
+
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: var(--primary);
+
+}
+
+.subtitulo{
+
+    color: var(--sub);
+    font-size: 16px;
+
+}
+.main-content{
+
+    flex:1;
+
+    padding:35px;
+
+    overflow-y:auto;
 }
 
 /* =========================
@@ -90,13 +222,10 @@ CONTAINER
 
 .container{
 
-    width: 100%;
-
-    max-width: 1500px;
-
-    margin: auto;
-
-    text-align: left;
+    width:100%;
+    max-width:1500px;
+    margin:0 auto;
+    text-align:left;
 }
 
 /* =========================
@@ -105,13 +234,10 @@ TÍTULO PRINCIPAL
 
 h2{
 
-    font-size: 55px;
-
-    color: #00f5c4;
-
-    margin-bottom: 10px;
-
-    font-weight: bold;
+    font-size:55px;
+    color:#00f5c4;
+    margin-bottom:10px;
+    font-weight:bold;
 }
 
 /* =========================
@@ -120,11 +246,9 @@ TEXTO
 
 p{
 
-    color: #ffffff;
-
-    font-size: 18px;
-
-    margin-bottom: 8px;
+    color:#ffffff;
+    font-size:18px;
+    margin-bottom:8px;
 }
 
 /* =========================
@@ -133,12 +257,12 @@ USUÁRIO
 
 .usuario{
 
-    margin-bottom: 30px;
+    margin-bottom:30px;
 }
 
 .usuario b{
 
-    color: #00f5c4;
+    color:#00f5c4;
 }
 
 /* =========================
@@ -147,13 +271,10 @@ GRID DOS FORMULÁRIOS
 
 .forms-grid{
 
-    display: flex;
-
-    gap: 28px;
-
-    align-items: flex-start;
-
-    margin-bottom: 25px;
+    display:flex;
+    gap:28px;
+    align-items:flex-start;
+    margin-bottom:25px;
 }
 
 /* =========================
@@ -163,16 +284,12 @@ CARDS
 .form-card,
 .lista-card{
 
-    background: rgba(2, 17, 31, 0.96);
-
-    border: 1px solid rgba(0, 245, 196, 0.35);
-
-    border-radius: 24px;
-
-    padding: 30px;
-
+    background:rgba(2,17,31,.96);
+    border:1px solid rgba(0,245,196,.35);
+    border-radius:24px;
+    padding:30px;
     box-shadow:
-    0 0 20px rgba(0, 245, 196, 0.05);
+    0 0 20px rgba(0,245,196,.05);
 }
 
 /* =========================
@@ -180,8 +297,7 @@ CARD ESQUERDA
 ========================= */
 
 .form-card:first-child{
-
-    width: 58%;
+    width:58%;
 }
 
 /* =========================
@@ -189,8 +305,7 @@ CARD DIREITA
 ========================= */
 
 .form-card:last-child{
-
-    width: 42%;
+    width:42%;
 }
 
 /* =========================
@@ -198,8 +313,7 @@ LISTA PRODUTOS
 ========================= */
 
 .lista-card{
-
-    width: 100%;
+    width:100%;
 }
 
 /* =========================
@@ -209,11 +323,9 @@ SUBTÍTULOS
 .form-card h3,
 .lista-card h3{
 
-    color: #00f5c4;
-
-    font-size: 28px;
-
-    margin-bottom: 30px;
+    color:#00f5c4;
+    font-size:28px;
+    margin-bottom:30px;
 }
 
 /* =========================
@@ -222,17 +334,12 @@ LABELS
 
 label{
 
-    display: block;
-
-    margin-top: 18px;
-
-    margin-bottom: 10px;
-
-    color: white;
-
-    font-size: 16px;
-
-    font-weight: bold;
+    display:block;
+    margin-top:18px;
+    margin-bottom:10px;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
 }
 
 /* =========================
@@ -243,58 +350,34 @@ input,
 textarea,
 select{
 
-    width: 100%;
-
-    background: #020b1f;
-
-    border: 1px solid rgba(255,255,255,0.15);
-
-    border-radius: 14px;
-
-    padding: 18px;
-
-    color: white;
-
-    font-size: 16px;
-
-    outline: none;
-
-    transition: 0.3s;
+    width:100%;
+    background:#020b1f;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:14px;
+    padding:18px;
+    color:white;
+    font-size:16px;
+    outline:none;
+    transition:.3s;
 }
-
-/* =========================
-FOCUS
-========================= */
 
 input:focus,
 textarea:focus,
 select:focus{
 
-    border-color: #00f5c4;
-
+    border-color:#00f5c4;
     box-shadow:
-    0 0 15px rgba(0, 245, 196, 0.25);
+    0 0 15px rgba(0,245,196,.25);
 }
-
-/* =========================
-PLACEHOLDER
-========================= */
 
 input::placeholder,
 textarea::placeholder{
-
-    color: #9ca3af;
+    color:#9ca3af;
 }
 
-/* =========================
-TEXTAREA
-========================= */
-
 textarea{
-
-    min-height: 140px;
-
-    resize: none;
+    min-height:140px;
+    resize:none;
 }
 
 /* =========================
@@ -304,7 +387,7 @@ BOTÕES
 input[type="submit"],
 button{
 
-    margin-top: 24px;
+    margin-top:24px;
 
     background:
     linear-gradient(
@@ -312,266 +395,85 @@ button{
     #00d9a6,
     #00f5c4);
 
-    color: #02111f;
+    color:#02111f;
 
-    border: none;
+    border:none;
 
-    border-radius: 14px;
+    border-radius:14px;
 
-    padding: 16px 30px;
+    padding:16px 30px;
 
-    font-size: 16px;
+    font-size:16px;
 
-    font-weight: bold;
+    font-weight:bold;
 
-    cursor: pointer;
+    cursor:pointer;
 
-    transition: 0.3s;
+    transition:.3s;
 }
-
-/* =========================
-HOVER BOTÃO
-========================= */
 
 input[type="submit"]:hover,
 button:hover{
 
-    transform: translateY(-2px);
+    transform:translateY(-2px);
 
     box-shadow:
-    0 0 18px rgba(0, 245, 196, 0.35);
+    0 0 18px rgba(0,245,196,.35);
 }
 
 /* =========================
-FILTROS
-========================= */
-
-.filtros-form{
-
-    width: 100%;
-
-    display: flex;
-
-    gap: 12px;
-
-    flex-wrap: wrap;
-
-    margin-bottom: 25px;
-}
-
-.filtros-form input{
-
-    flex: 1;
-
-    min-width: 240px;
-}
-
-.filtros-form select{
-
-    width: 260px;
-}
-
-.filtros-form button{
-
-    margin-top: 0;
-}
-
-/* =========================
-TABELA
-========================= */
-
-table{
-
-    width: 100%;
-
-    border-collapse: collapse;
-
-    margin-top: 25px;
-
-    overflow: hidden;
-
-    border-radius: 18px;
-}
-
-/* =========================
-CABEÇALHO
-========================= */
-
-th{
-
-    background:
-    linear-gradient(
-    135deg,
-    #00d9a6,
-    #00f5c4);
-
-    color: #02111f;
-
-    padding: 18px;
-
-    text-align: left;
-
-    font-size: 16px;
-}
-
-/* =========================
-COLUNAS
-========================= */
-
-td{
-
-    padding: 18px;
-
-    background: rgba(0,0,0,0.12);
-
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-
-    color: #ffffff;
-
-    font-size: 15px;
-}
-
-/* =========================
-HOVER TABELA
-========================= */
-
-tr:hover td{
-
-    background: rgba(0, 245, 196, 0.03);
-}
-
-/* =========================
-PAGINAÇÃO
-========================= */
-
-.paginacao{
-
-    margin-top: 25px;
-
-    display: flex;
-
-    gap: 10px;
-
-    flex-wrap: wrap;
-}
-
-.paginacao a{
-
-    padding: 10px 16px;
-
-    background: #02111f;
-
-    border: 1px solid rgba(0, 245, 196, 0.35);
-
-    color: #00f5c4;
-
-    border-radius: 10px;
-
-    text-decoration: none;
-
-    font-size: 15px;
-
-    font-weight: bold;
-
-    transition: 0.3s;
-
-    margin-top: 0;
-}
-
-.paginacao a:hover{
-
-    background: #00f5c4;
-
-    color: #02111f;
-
-    box-shadow:
-    0 0 15px rgba(0, 245, 196, 0.35);
-
-    text-shadow: none;
-}
-
-/* =========================
-LINK
+LINKS GERAIS
 ========================= */
 
 a{
 
-    display: inline-block;
+    color:#00f5c4;
 
-    margin-top: 30px;
+    text-decoration:none;
 
-    color: #00f5c4;
-
-    text-decoration: none;
-
-    font-size: 18px;
-
-    font-weight: bold;
-
-    transition: 0.3s;
+    transition:.3s;
 }
-
-/* =========================
-HOVER LINK
-========================= */
 
 a:hover{
 
-    color: white;
+    color:white;
 
     text-shadow:
-    0 0 10px rgba(0, 245, 196, 0.7);
+    0 0 10px rgba(0,245,196,.7);
 }
 
 /* =========================
 RESPONSIVO
 ========================= */
 
-@media(max-width: 1100px){
+@media(max-width:1100px){
 
     .forms-grid{
-
-        flex-direction: column;
+        flex-direction:column;
     }
 
     .form-card:first-child,
     .form-card:last-child{
-
-        width: 100%;
+        width:100%;
     }
-
 }
 
-@media(max-width: 768px){
+@media(max-width:768px){
 
-    body{
-        padding: 20px;
+    .layout{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+        min-height:auto;
+    }
+
+    .main-content{
+        padding:20px;
     }
 
     h2{
-        font-size: 38px;
+        font-size:38px;
     }
-
-    .form-card h3,
-    .lista-card h3{
-
-        font-size: 24px;
-    }
-
-    th,
-    td{
-
-        padding: 12px;
-    }
-
-    .filtros-form{
-
-        flex-direction: column;
-    }
-
-    .filtros-form select{
-
-        width: 100%;
-    }
-
 }
