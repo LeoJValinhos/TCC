@@ -15,7 +15,7 @@ content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet"
 href="cad_list_prods.css">
-
+<link rel="icon" type="image/png" href="../../Imagens/Carrinho.png"width="70" height="70">
 <title>Cadastro de Produtos</title>
 
 <style>
@@ -47,6 +47,21 @@ href="cad_list_prods.css">
 
 <body>
 
+ <!-- TOPO -->
+ <header class="topbar">
+
+<div class="top-left">
+
+    <img src="../../imagens/carrinho2.png"
+         width="70"
+         height="70"
+         alt="Logo Carrinho">
+
+    <h1>INVEX</h1>
+
+</div>
+
+</header>
 <div class="layout">
 
     <!-- SIDEBAR -->
@@ -55,11 +70,16 @@ href="cad_list_prods.css">
 
         <nav>
             <a href="../painel_principal.php">🏠 Painel Principal</a></li>
-            <a href="#">📦 Produtos</a></li>
-            <a href="#">📋 Lotes</a></li>
-            <a href="#">📊 Relatórios</a></li>
-            <a href="../logout.php">🚪 Sair</a></li>
+            <a href="#">📦 Produtos</a>
+            <a href="#">📋 Lotes</a>
+            <a href="#">📊 Relatórios</a>
         </nav>
+        <a href="../index.html"
+               class="logout">
+
+                🚪 Sair
+
+            </a>
     </div>
 
     <!-- CONTEÚDO PRINCIPAL -->
@@ -150,7 +170,7 @@ href="cad_list_prods.css">
 
                 <?= $htmlListaProdutos ?>
                 <?= $htmlListaLotes ?>
-
+                
             </div>
 
             <br>
