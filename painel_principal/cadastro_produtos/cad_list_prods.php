@@ -53,13 +53,13 @@ href="cad_list_prods.css">
     <div class="sidebar">
         <h3>Menu</h3>
 
-        <ul>
-            <li><a href="../painel_principal.php">🏠 Painel Principal</a></li>
-            <li><a href="#">📦 Produtos</a></li>
-            <li><a href="#">📋 Lotes</a></li>
-            <li><a href="#">📊 Relatórios</a></li>
-            <li><a href="../logout.php">🚪 Sair</a></li>
-        </ul>
+        <nav>
+            <a href="../painel_principal.php">🏠 Painel Principal</a></li>
+            <a href="#">📦 Produtos</a></li>
+            <a href="#">📋 Lotes</a></li>
+            <a href="#">📊 Relatórios</a></li>
+            <a href="../logout.php">🚪 Sair</a></li>
+        </nav>
     </div>
 
     <!-- CONTEÚDO PRINCIPAL -->
