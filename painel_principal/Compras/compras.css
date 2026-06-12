@@ -1,0 +1,59 @@
+body{
+    background:#f4f6f9;
+    font-family:Arial;
+}
+
+.produtos{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.card{
+    width:300px;
+    background:white;
+    border-radius:10px;
+    padding:15px;
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+}
+
+.card img{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+}
+
+.preco{
+    color:#0a8a3a;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.barra{
+    width:100%;
+    height:10px;
+    background:#ddd;
+    border-radius:20px;
+}
+
+.progresso{
+    height:100%;
+    background:#1b57d0;
+    border-radius:20px;
+}
+
+.status-aberta{
+    background:#d4edda;
+    color:#155724;
+    padding:5px 10px;
+    border-radius:5px;
+    font-weight:bold;
+}
+
+.status-fechada{
+    background:#f8d7da;
+    color:#721c24;
+    padding:5px 10px;
+    border-radius:5px;
+    font-weight:bold;
+}
