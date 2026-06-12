@@ -13,8 +13,8 @@ require_once 'painel_principal_contagem.php';
           content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet"
-          href="painel_principal.css">
-
+    href="painel_principal.css">
+    <link rel="icon" type="image/png" href="../Imagens/Carrinho.png"width="70" height="70">
     <title>INVEX</title>
 
 </head>
