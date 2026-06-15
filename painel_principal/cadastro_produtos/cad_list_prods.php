@@ -65,23 +65,40 @@ href="cad_list_prods.css">
 <div class="layout">
 
     <!-- SIDEBAR -->
-    <div class="sidebar">
-        <h3>Menu</h3>
+        <aside class="sidebar">
 
-        <nav>
-            <a href="../painel_principal.php">🏠 Painel Principal</a></li>
-            <a href="#">📦 Produtos</a>
-            <a href="#">📋 Lotes</a>
-            <a href="#">📊 Relatórios</a>
-        </nav>
-        <a href="../index.html"
+            <nav>
+
+                <a href="../painel_principal.php">
+                    🏠 Home
+                </a>
+
+                <a href="cad_list_prods.php">
+                    📦 Produtos
+                </a>
+
+                 <a href="../compras/compras.php">
+                    🛒​ Compras
+                </a>
+
+                <a href="../relatorios/relatorios.html">
+                    📊 Relatórios
+                </a>
+
+                <a>
+                    ⚙️ Configurações
+                </a>
+
+            </nav>
+
+            <a href="../../index.html"
                class="logout">
 
                 🚪 Sair
 
             </a>
-    </div>
 
+        </aside>
     <!-- CONTEÚDO PRINCIPAL -->
     <div class="main-content">
 
@@ -154,24 +171,42 @@ href="cad_list_prods.css">
                  LISTAGENS
             =========================================== -->
 
-            <div class="lista-card">
-                <h3>Listas do sistema</h3>
-                <button type="button" onclick="mostrarListaProdutos()">
-                    Mostrar / Ocultar Produtos
-                </button>
-                <button type="button" onclick="mostrarListaLotes()">
-                    Mostrar / Ocultar Lotes
-                </button>
-                <br><br>
-                <?= $htmlListaProdutos ?>
-                <?= $htmlListaLotes ?>
+<div class="lista-card">
+
+    <div class="topo-listas">
+
+        <button
+            type="button"
+            class="btn-toggle"
+            onclick="mostrarListaProdutos()">
+
+            Mostrar / Ocultar Produtos
+
+        </button>
+
+        <button
+            type="button"
+            class="btn-toggle"
+            onclick="mostrarListaLotes()">
+
+            Mostrar / Ocultar Lotes
+
+        </button>
+
+    </div>
+
+    <div class="area-listas">
+
+        <?= $htmlListaProdutos ?>
+
+        <?= $htmlListaLotes ?>
+
+    </div>
+
+</div>
             </div>
 
             <br>
-
-            <a href="../painel_principal.php">
-                Voltar ao painel
-            </a>
 
         </div>
 
