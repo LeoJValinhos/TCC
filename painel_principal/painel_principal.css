@@ -1,11 +1,11 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI';
 }
 
-:root{
+:root {
     --bg: #02152E;
     --sidebar: #001A36;
     --card: #001A36;
@@ -16,7 +16,16 @@
     --sub: #B8C7D9;
 }
 
-body{
+/* TRAVA A TELA INTEIRA: Impede que o navegador crie uma barra de rolagem externa global */
+html, body {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    margin: 0;
+    padding: 0;
+}
+
+body {
     background: linear-gradient(
         135deg,
         #02152E 0%,
@@ -24,9 +33,14 @@ body{
         #02152E 100%
     );
     color: var(--text);
+    display: flex;
+    flex-direction: column;
 }
 
-.topbar{
+/* =====================================================
+TOPO (FIXO)
+===================================================== */
+.topbar {
     width: 100%;
     height: 70px;
     background: #02152E;
@@ -34,26 +48,35 @@ body{
     align-items: center;
     padding: 0 30px;
     border-bottom: 1px solid rgba(0,245,212,0.15);
+    flex-shrink: 0; /* Impede o topo de ser esmagado */
 }
 
-.top-left{
+.top-left {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-.top-left h1{
+.top-left h1 {
     font-size: 28px;
     font-weight: bold;
     color: var(--primary);
 }
 
-.layout{
+/* =====================================================
+LAYOUT - DEFINE O ESPAÇO ABAIXO DO TOPO
+===================================================== */
+.layout {
     display: flex;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 70px) !important;
+    width: 100%;
+    overflow: hidden !important;
 }
 
-.sidebar{
+/* =====================================================
+SIDEBAR (100% ESTÁTICA E COLADA NO CHÃO)
+===================================================== */
+.sidebar {
     width: 220px;
     background: var(--sidebar);
     padding: 20px;
@@ -61,9 +84,11 @@ body{
     flex-direction: column;
     justify-content: space-between;
     border-right: 1px solid rgba(0,183,195,0.2);
+    height: 100% !important;
+    flex-shrink: 0 !important; /* Impede a barra de perder largura */
 }
 
-.sidebar nav a{
+.sidebar nav a {
     position: relative;
     display: flex;
     align-items: center;
@@ -77,7 +102,7 @@ body{
     overflow: hidden;
 }
 
-.sidebar nav a::before{
+.sidebar nav a::before {
     content: '';
     position: absolute;
     left: 0;
@@ -90,17 +115,20 @@ body{
     transition: .3s;
 }
 
-.sidebar nav a:hover{
+.sidebar nav a:hover {
     background: rgba(0,245,212,0.10);
     color: var(--primary);
     transform: translateX(5px);
 }
 
-.sidebar nav a:hover::before{
+.sidebar nav a:hover::before {
     width: 4px;
 }
 
-.logout{
+/* =====================================================
+LOGOUT
+===================================================== */
+.logout {
     text-align: center;
     padding: 12px;
     background: #ef4444;
@@ -110,31 +138,39 @@ body{
     transition: .3s;
 }
 
-.logout:hover{
+.logout:hover {
     transform: translateY(-2px);
 }
 
-.main{
+/* =====================================================
+MAIN - APENAS ESTA PARTE VAI GERAR ROLAGEM NO SITE
+===================================================== */
+.main {
     flex: 1;
     padding: 40px;
+    height: 100% !important;
+    overflow-y: auto !important; /* Cria rolagem independente no conteúdo */
 }
 
-.top{
+/* =====================================================
+ELEMENTOS DE CONTEÚDO (CARDS, LABELS)
+===================================================== */
+.top {
     margin-bottom: 40px;
 }
 
-.top h2{
+.top h2 {
     font-size: 32px;
     margin-bottom: 10px;
     color: var(--primary);
 }
 
-.subtitulo{
+.subtitulo {
     color: var(--sub);
     font-size: 16px;
 }
 
-.cards{
+.cards {
     width: 100%;
     min-height: 60vh;
     display: flex;
@@ -142,7 +178,7 @@ body{
     align-items: center;
 }
 
-.card{
+.card {
     width: 100%;
     max-width: 500px;
     background: var(--card);
@@ -156,25 +192,25 @@ body{
         0 0 25px rgba(0,183,195,0.08);
 }
 
-.card:hover{
+.card:hover {
     transform: translateY(-5px);
     box-shadow:
         0 0 20px rgba(0,245,212,0.25),
         0 0 40px rgba(0,245,212,0.12);
 }
 
-.card span{
+.card span {
     color: var(--sub);
     font-size: 18px;
 }
 
-.card h2{
+.card h2 {
     font-size: 70px;
     color: var(--primary);
     margin: 20px 0;
 }
 
-.card p{
+.card p {
     color: var(--sub);
     font-size: 15px;
 }
