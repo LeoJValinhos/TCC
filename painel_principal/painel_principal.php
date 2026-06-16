@@ -56,7 +56,7 @@ require_once 'painel_principal_contagem.php';
                     🛒​ Compras
                 </a>
 
-                <a href="relatorios/relatorios.html">
+                <a href="relatorios/buscar_relatorio.php">
                     📊 Relatórios
                 </a>
 
