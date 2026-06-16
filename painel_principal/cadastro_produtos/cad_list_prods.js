@@ -1,66 +1,103 @@
-window.onload = function(){
+/* =====================================================
+INICIALIZAÇÃO DA PÁGINA
+===================================================== */
 
-    const params =
-    new URLSearchParams(window.location.search);
+window.onload = function () {
 
+    /* =====================================================
+    CONTROLE DE LISTAS VIA URL (?lista=produtos/lotes)
+    ===================================================== */
+
+    const params = new URLSearchParams(window.location.search);
     const lista = params.get("lista");
 
-    if(lista == "produtos"){
+    // Abre automaticamente a lista de produtos
+    if (lista == "produtos") {
 
-        document.getElementById("listaProdutos")
-        .style.display = "block";
+        const elProdutos = document.getElementById("listaProdutos");
 
-    }
-
-    if(lista == "lotes"){
-
-        document.getElementById("listaLotes")
-        .style.display = "block";
-
-    }
-
-}
-
-function mostrarListaProdutos(){
-
-    let lista =
-    document.getElementById("listaProdutos");
-
-    lista.style.display =
-    lista.style.display == "none"
-    ? "block"
-    : "none";
-
-}
-
-function mostrarListaLotes(){
-
-    let lista =
-    document.getElementById("listaLotes");
-
-    lista.style.display =
-    lista.style.display == "none"
-    ? "block"
-    : "none";
-
-}
-
-function animar(id, valor) {
-    let el = document.getElementById(id);
-    let i = 0;
-
-    let intervalo = setInterval(() => {
-        i += Math.ceil(valor / 30);
-        if (i >= valor) {
-            i = valor;
-            clearInterval(intervalo);
+        if (elProdutos) {
+            elProdutos.style.display = "block";
         }
-        el.innerText = i;
-    }, 30);
-}
+    }
 
-window.onload = () => {
+    // Abre automaticamente a lista de lotes
+    if (lista == "lotes") {
+
+        const elLotes = document.getElementById("listaLotes");
+
+        if (elLotes) {
+            elLotes.style.display = "block";
+        }
+    }
+
+    /* =====================================================
+    ANIMAÇÕES DE CONTADORES (DASHBOARD)
+    ===================================================== */
+
     animar("prod", 120);
     animar("ent", 80);
     animar("sai", 45);
 };
+
+
+/* =====================================================
+TOGGLE - LISTA DE PRODUTOS
+===================================================== */
+
+function mostrarListaProdutos() {
+
+    let lista = document.getElementById("listaProdutos");
+
+    if (!lista) return;
+
+    lista.style.display =
+        lista.style.display == "none"
+            ? "block"
+            : "none";
+}
+
+
+/* =====================================================
+TOGGLE - LISTA DE LOTES
+===================================================== */
+
+function mostrarListaLotes() {
+
+    let lista = document.getElementById("listaLotes");
+
+    if (!lista) return;
+
+    lista.style.display =
+        lista.style.display == "none"
+            ? "block"
+            : "none";
+}
+
+
+/* =====================================================
+FUNÇÃO DE ANIMAÇÃO DE NÚMEROS
+===================================================== */
+
+function animar(id, valor) {
+
+    let el = document.getElementById(id);
+
+    // proteção caso o elemento não exista
+    if (!el) return;
+
+    let i = 0;
+
+    let intervalo = setInterval(() => {
+
+        i += Math.ceil(valor / 30);
+
+        if (i >= valor) {
+            i = valor;
+            clearInterval(intervalo);
+        }
+
+        el.innerText = i;
+
+    }, 30);
+}
