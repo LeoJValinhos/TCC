@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Máquina: localhost
--- Data de Criação: 11-Jun-2026 às 01:05
+-- Data de Criação: 16-Jun-2026 às 07:53
 -- Versão do servidor: 5.6.13
 -- versão do PHP: 5.4.17
 
@@ -44,7 +44,15 @@ CREATE TABLE IF NOT EXISTS `cadastros` (
   UNIQUE KEY `cpf` (`cpf`),
   UNIQUE KEY `celular` (`celular`),
   KEY `fk_usuario_empresa` (`idEmpresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=3 ;
+
+--
+-- Extraindo dados da tabela `cadastros`
+--
+
+INSERT INTO `cadastros` (`idCadastro`, `nome`, `sobrenome`, `senha`, `email`, `datanasc`, `cpf`, `celular`, `idEmpresa`, `tipocadastro`) VALUES
+(1, 'Leonardo', 'Valinhos', 'vini4675', 'root@root', '2007-03-20', '11111111111', '22222222222', 1, 'EMPRESA/ADM'),
+(2, 'vinicius', 'sales', '012345678', 'vini@vini', '2008-07-20', '01234567812', '88888888888', 2, 'EMPRESA/ADM');
 
 -- --------------------------------------------------------
 
@@ -64,7 +72,15 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   UNIQUE KEY `CNPJ` (`CNPJ`),
   UNIQUE KEY `codigoEmpresa` (`codigoEmpresa`),
   KEY `fk_adm` (`idAdm`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=3 ;
+
+--
+-- Extraindo dados da tabela `empresa`
+--
+
+INSERT INTO `empresa` (`idEmpresa`, `nomeEmpresa`, `CNPJ`, `codigoEmpresa`, `idAdm`, `nomeAdm`, `criado_em`) VALUES
+(1, 'Leleco Interpraise', '33333333333333', '8554687', 1, 'Leonardo', '2026-06-08 20:25:10'),
+(2, 'vini corp', '01829742386474', '1622009', 2, 'vinicius', '2026-06-11 21:44:31');
 
 -- --------------------------------------------------------
 
@@ -83,7 +99,15 @@ CREATE TABLE IF NOT EXISTS `loja_virtual` (
   `quantidadeParticipantes` int(11) DEFAULT '0',
   `status` enum('Aberta','Aguardando outro participante','Concluida','Cancelada') DEFAULT 'Aberta',
   PRIMARY KEY (`idItem`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Extraindo dados da tabela `loja_virtual`
+--
+
+INSERT INTO `loja_virtual` (`idItem`, `nomeProduto`, `marcaProduto`, `descricaoProduto`, `quantidade`, `imagemProduto`, `meta`, `quantidadeParticipantes`, `status`) VALUES
+(5, 'Sabao em po', 'Brilhante', 'Sabao em po para limpeza', '200', '../../imagens/sabao_brilho.png', 2, 2, 'Concluida'),
+(6, 'Televisão 49 polegadas', 'Sansung', 'TV ULTRA 8K WIDE MUITO TOP 49 E TANTAS POLEGADAS', '850', '../../imagens/tvlg.png', 2, 1, 'Aguardando outro participante');
 
 -- --------------------------------------------------------
 
@@ -100,7 +124,15 @@ CREATE TABLE IF NOT EXISTS `participantes_loja` (
   KEY `idItem` (`idItem`),
   KEY `id_primeiroParticipante` (`id_primeiroParticipante`),
   KEY `id_segundoParticipante` (`id_segundoParticipante`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Extraindo dados da tabela `participantes_loja`
+--
+
+INSERT INTO `participantes_loja` (`idParticipacao`, `idItem`, `id_primeiroParticipante`, `id_segundoParticipante`) VALUES
+(1, 5, 1, 2),
+(2, 6, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -117,11 +149,26 @@ CREATE TABLE IF NOT EXISTS `produtos` (
   `criadopor_nome` varchar(100) DEFAULT NULL,
   `criadoem` datetime DEFAULT CURRENT_TIMESTAMP,
   `criadopor_id` int(11) DEFAULT NULL,
+  `preco_padrao_compra` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `preco_padrao_venda` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `estoque_minimo` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idProduto`),
   UNIQUE KEY `unique_produto_empresa` (`NomeProduto`,`MarcaProduto`,`idEmpresa`),
   KEY `fk_funcionario` (`criadopor_id`),
   KEY `fk_produto_empresa` (`idEmpresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=7 ;
+
+--
+-- Extraindo dados da tabela `produtos`
+--
+
+INSERT INTO `produtos` (`idProduto`, `NomeProduto`, `MarcaProduto`, `Descricao`, `idEmpresa`, `criadopor_nome`, `criadoem`, `criadopor_id`, `preco_padrao_compra`, `preco_padrao_venda`, `estoque_minimo`) VALUES
+(1, 'sabÃ£o em pÃ³', 'Brilho', '', 1, 'Leonardo', '2026-06-08 20:28:52', 1, '0.00', '0.00', 0),
+(2, 'detergente', 'ype', '', 1, 'Leonardo', '2026-06-08 20:29:00', 1, '0.00', '0.00', 0),
+(3, 'bolacha', 'trakinas', '', 1, 'Leonardo', '2026-06-08 20:29:06', 1, '0.00', '0.00', 0),
+(4, 'Amaciante', 'Confort', 'limpa coisas', 1, 'Leonardo', '2026-06-16 00:58:20', 1, '25.00', '30.00', 50),
+(5, 'Suco de Uva Integral 300ml', 'Aurora', 'Garrafa de vidro com suco de uva 100% integral, sem adiÃ§Ã£o de aÃ§Ãºcares ou conservantes.', 1, 'Leonardo', '2026-06-16 04:39:04', 1, '4.50', '7.50', 15),
+(6, 'Salgadinho Assado de Queijo 60g', 'Fandangos', 'Salgadinho de milho assado sabor queijo, pacote de 60 gramas.', 1, 'Leonardo', '2026-06-16 04:39:41', 1, '2.20', '4.50', 20);
 
 -- --------------------------------------------------------
 
@@ -136,10 +183,24 @@ CREATE TABLE IF NOT EXISTS `produtoslotes` (
   `validade` date DEFAULT NULL,
   `criado_em` datetime DEFAULT CURRENT_TIMESTAMP,
   `idEmpresa` int(11) DEFAULT NULL,
+  `numero_lote` varchar(50) NOT NULL,
+  `preco_compra` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `preco_venda` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `desconto` decimal(5,2) NOT NULL DEFAULT '0.00',
+  `status_lote` enum('normal','promocao','vencido') NOT NULL DEFAULT 'normal',
   PRIMARY KEY (`idlote`),
   KEY `idproduto` (`idproduto`),
   KEY `fk_lote_empresa` (`idEmpresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=4 ;
+
+--
+-- Extraindo dados da tabela `produtoslotes`
+--
+
+INSERT INTO `produtoslotes` (`idlote`, `idproduto`, `quantidade`, `validade`, `criado_em`, `idEmpresa`, `numero_lote`, `preco_compra`, `preco_venda`, `desconto`, `status_lote`) VALUES
+(1, 3, 200, '2028-07-09', '2026-06-08 20:29:20', 1, '', '0.00', '0.00', '0.00', 'normal'),
+(2, 4, 120, '2026-07-21', '2026-06-16 01:10:00', 1, '3', '3000.00', '3600.00', '0.00', ''),
+(3, 1, 149, '2026-06-15', '2026-06-16 01:19:49', 1, '4', '3000.00', '3500.00', '0.00', 'vencido');
 
 --
 -- Constraints for dumped tables
