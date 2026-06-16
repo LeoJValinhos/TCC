@@ -1,57 +1,79 @@
+/* =====================================================
+ESTILOS DOS PRODUTOS (EM COLUNA CENTRALIZADA)
+===================================================== */
 .produtos{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
+    display: flex;
+    flex-direction: column; 
+    gap: 20px;
+    align-items: center;    /* Mantém os cards perfeitamente no meio */
+    width: 100%;
 }
 
 .card{
-    width:300px;
-    background:white;
-    border-radius:10px;
-    padding:15px;
-    box-shadow:0 0 10px rgba(0,0,0,.1);
+    width: 500px;           
+    max-width: 100%;
+    background: #001A36;    
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid #00B7C3;
+    text-align: center;
+    box-shadow:
+        0 0 10px rgba(0,183,195,0.15),
+        0 0 25px rgba(0,183,195,0.08);
+    transition: 0.3s;
+}
+
+.card:hover{
+    transform: translateY(-5px);
+    box-shadow:
+        0 0 20px rgba(0,245,212,0.25),
+        0 0 40px rgba(0,245,212,0.12);
 }
 
 .card img{
-    width:100%;
-    height:200px;
-    object-fit:cover;
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
 }
 
 .preco{
-    color:#0a8a3a;
-    font-size:22px;
-    font-weight:bold;
+    color: #00F5D4;
+    font-size: 22px;
+    font-weight: bold;
 }
 
 .barra{
-    width:100%;
-    height:10px;
-    background:#ddd;
-    border-radius:20px;
+    width: 100%;
+    height: 10px;
+    background: #ddd;
+    border-radius: 20px;
 }
 
 .progresso{
-    height:100%;
-    background:#1b57d0;
-    border-radius:20px;
+    height: 100%;
+    background: #1b57d0;
+    border-radius: 20px;
 }
 
 .status-aberta{
-    background:#d4edda;
-    color:#155724;
-    padding:5px 10px;
-    border-radius:5px;
-    font-weight:bold;
+    background: #d4edda;
+    color: #155724;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
 .status-fechada{
-    background:#f8d7da;
-    color:#721c24;
-    padding:5px 10px;
-    border-radius:5px;
-    font-weight:bold;
+    background: #f8d7da;
+    color: #721c24;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
 }
+
+/* =====================================================
+RESET E CONFIGURAÇÃO DA PÁGINA
+===================================================== */
 *{
     margin: 0;
     padding: 0;
@@ -59,12 +81,7 @@
     font-family: 'Segoe UI';
 }
 
-/* =====================================================
-CORES
-===================================================== */
-
 :root{
-
     --bg: #02152E;
     --sidebar: #001A36;
     --card: #001A36;
@@ -73,340 +90,163 @@ CORES
     --border: #00B7C3;
     --text: #ffffff;
     --sub: #B8C7D9;
-
 }
 
-/* =====================================================
-BODY
-===================================================== */
-
 body{
-
     background: linear-gradient(
         135deg,
         #02152E 0%,
         #001A36 50%,
         #02152E 100%
     );
-
     color: var(--text);
-
+    min-height: 100vh;
 }
 
 /* =====================================================
-TOPO
+TOPO (FIXADO)
 ===================================================== */
-
 .topbar{
-
     width: 100%;
     height: 70px;
-
     background: #02152E;
-
     display: flex;
     align-items: center;
-
     padding: 0 30px;
-
     border-bottom: 1px solid rgba(0,245,212,0.15);
-
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .top-left{
-
     display: flex;
     align-items: center;
     gap: 15px;
-
 }
 
 .top-left h1{
-
     font-size: 28px;
     font-weight: bold;
     color: var(--primary);
-
 }
 
 /* =====================================================
-LAYOUT
+LAYOUT CONTAINER
 ===================================================== */
-
 .layout{
-
     display: flex;
-    height: calc(100vh - 70px);
-
+    width: 100%;
+    padding-top: 70px; 
 }
 
 /* =====================================================
-SIDEBAR
+SIDEBAR (FIXADA)
 ===================================================== */
-
 .sidebar{
-
     width: 220px;
     background: var(--sidebar);
-
     padding: 20px;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
     border-right: 1px solid rgba(0,183,195,0.2);
 
+    position: fixed;
+    top: 70px;
+    left: 0;
+    height: calc(100vh - 70px);
+    z-index: 999;
 }
 
 .sidebar nav a{
-
     position: relative;
-
     display: flex;
     align-items: center;
     gap: 12px;
-
     padding: 12px 15px;
-
     margin-bottom: 10px;
-
     text-decoration: none;
-
     color: var(--sub);
-
     border-radius: 10px;
-
     transition: all .3s ease;
-
     overflow: hidden;
-
 }
 
-/* Remove destaque permanente */
-
 .active{
-
     background: transparent !important;
     color: var(--sub) !important;
     font-weight: normal !important;
-
 }
-
-/* Barra lateral */
 
 .sidebar nav a::before{
-
     content: '';
-
     position: absolute;
-
     left: 0;
     top: 50%;
-
     transform: translateY(-50%);
-
     width: 0;
-
     height: 70%;
-
     background: var(--primary);
-
     border-radius: 0 5px 5px 0;
-
     transition: .3s;
-
 }
-
-/* Hover */
 
 .sidebar nav a:hover{
-
     background: rgba(0,245,212,0.10);
-
     color: var(--primary);
-
     transform: translateX(5px);
-
 }
-
-/* Barra aparece */
 
 .sidebar nav a:hover::before{
-
     width: 4px;
-
 }
 
-/* =====================================================
-LOGOUT
-===================================================== */
-
 .logout{
-
     text-align: center;
-
     padding: 12px;
-
     background: #ef4444;
-
     border-radius: 10px;
-
     text-decoration: none;
-
     color: white;
-
     transition: 0.3s;
-
 }
 
 .logout:hover{
-
     transform: translateY(-2px);
-
 }
 
 /* =====================================================
-MAIN
+MAIN (ÁREA DE CONTEÚDO COM POSIÇÃO RELATIVA)
 ===================================================== */
-
 .main{
-
     flex: 1;
     padding: 40px;
-
+    padding-top: 90px;  /* Deixa espaço para o título absoluto não cobrir o primeiro card */
+    margin-left: 220px; 
+    position: relative; /* Base para o título se posicionar */
 }
 
-/* =====================================================
-TOPO TEXTO
-===================================================== */
-
-.top{
-
-    margin-bottom: 40px;
-
-}
-
-.top h2{
-
+/* Força o título "Compras coletivas" a fixar no canto esquerdo, não importa o que aconteça nos cards */
+.main h1,
+.main h2,
+.top h2 {
+    position: absolute;
+    top: 30px;
+    left: 40px;
     font-size: 32px;
-    margin-bottom: 10px;
-    color: var(--primary);
-
+    color: var(--text) !important;
+    font-weight: bold;
+    margin: 0;
 }
 
-.subtitulo{
-
-    color: var(--sub);
-    font-size: 16px;
-
+/* Esconde subtítulos ou blocos vazios antigos que possam quebrar espaçamento */
+.subtitulo {
+    display: none;
 }
-
-/* =====================================================
-CARDS
-===================================================== */
 
 .cards{
-
     width: 100%;
-    min-height: 60vh;
-
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
-
-    gap: 30px;
-
-}
-
-.card{
-
-    width: 100%;
-    max-width: 500px;
-
-    background: var(--card);
-
-    padding: 40px;
-
-    border-radius: 20px;
-
-    text-align: center;
-
-    border: 1px solid var(--border);
-
-    transition: 0.3s;
-
-    box-shadow:
-        0 0 10px rgba(0,183,195,0.15),
-        0 0 25px rgba(0,183,195,0.08);
-
-}
-
-.card:hover{
-
-    transform: translateY(-5px);
-
-    box-shadow:
-        0 0 20px rgba(0,245,212,0.25),
-        0 0 40px rgba(0,245,212,0.12);
-
-}
-
-.card span{
-
-    color: var(--sub);
-    font-size: 18px;
-
-}
-
-.card h2{
-
-    font-size: 70px;
-
-    color: var(--primary);
-
-    margin: 20px 0;
-
-}
-
-.card p{
-
-    color: var(--sub);
-    font-size: 15px;
-
-}
-
-/* =====================================================
-BOTÕES
-===================================================== */
-
-button,
-.btn{
-
-    background: var(--secondary);
-
-    color: #02152E;
-
-    border: none;
-
-    padding: 14px 25px;
-
-    border-radius: 10px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    transition: 0.3s;
-
-}
-
-button:hover,
-.btn:hover{
-
-    background: var(--primary);
-
-    transform: translateY(-2px);
-
 }
