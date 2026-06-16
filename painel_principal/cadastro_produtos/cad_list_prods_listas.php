@@ -347,25 +347,47 @@ if($resultado_lotes->num_rows > 0){
 
     while($lote = $resultado_lotes->fetch_assoc()){
 
-        $classe = "";
+        /* =====================================================
+CORES DE VALIDADE DOS LOTES
+===================================================== */
 
-        $hoje = new DateTime();
-        $data_validade =
-        new DateTime($lote['validade']);
+$classe = "";
 
-        $dias =
-        $hoje->diff($data_validade)->days;
+$hoje = new DateTime();
 
-        if($data_validade >= $hoje){
+$data_validade =
+new DateTime($lote['validade']);
 
-            if($dias <= 30){
+/* =====================================================
+LOTE VENCIDO
+===================================================== */
 
-                $classe = "vermelho-validade";
+if($data_validade < $hoje){
 
-            }elseif($dias <= 60){
+    $classe = "vermelho-validade";
 
-                $classe = "amarelo-validade";
+}else{
 
+    $dias =
+    $hoje->diff($data_validade)->days;
+
+    /* =====================================================
+    VENCE EM ATÉ 30 DIAS
+    ===================================================== */
+
+    if($dias <= 30){
+
+        $classe = "vermelho-validade";
+
+    }
+
+    /* =====================================================
+    VENCE ENTRE 31 E 60 DIAS
+    ===================================================== */
+
+    elseif($dias <= 60){
+
+        $classe = "amarelo-validade";
             }
         }
 
