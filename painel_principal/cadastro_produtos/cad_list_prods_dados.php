@@ -39,6 +39,19 @@ if (isset($_POST['cadastrar_produto'])) {
     $marca = trim($_POST["marca"]);
     $descricao = trim($_POST["descricao"]);
 
+   /* =====================================================
+    NOVOS CAMPOS
+    ===================================================== */
+
+    $preco_padrao_compra =
+    (float) $_POST["preco_padrao_compra"];
+
+    $preco_padrao_venda =
+    (float) $_POST["preco_padrao_venda"];
+
+    $estoque_minimo =
+    (int) $_POST["estoque_minimo"];
+
     $data_criacao = date("Y-m-d H:i:s");
 
     if (!empty($nome_produto) && !empty($marca)) {
@@ -74,26 +87,32 @@ if (isset($_POST['cadastrar_produto'])) {
             $stmt = $conn->prepare("
                 INSERT INTO produtos
                 (
-                    NomeProduto,
-                    MarcaProduto,
-                    Descricao,
-                    idEmpresa,
-                    criadopor_nome,
-                    criadoem,
-                    criadopor_id
+                   NomeProduto,
+                   MarcaProduto,
+                   Descricao,
+                   preco_padrao_compra,
+                   preco_padrao_venda,
+                   estoque_minimo,
+                   idEmpresa,
+                   criadopor_nome,
+                   criadoem,
+                   criadopor_id
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
             $stmt->bind_param(
-                "sssissi",
-                $nome_produto,
-                $marca,
-                $descricao,
-                $idEmpresa,
-                $criado_por_nome,
-                $data_criacao,
-                $criado_por_id
+               "sssddiissi",
+               $nome_produto,
+               $marca,
+               $descricao,
+               $preco_padrao_compra,
+               $preco_padrao_venda,
+               $estoque_minimo,
+               $idEmpresa,
+               $criado_por_nome,
+               $data_criacao,
+               $criado_por_id
             );
 
             if ($stmt->execute()) {
@@ -126,6 +145,39 @@ if(isset($_POST['cadastrar_lote'])){
     $quantidade = trim($_POST['quantidade']);
 
     $validade = trim($_POST['validade']);
+    /* =====================================================
+     NOVOS CAMPOS DO LOTE
+    ===================================================== */
+
+    $numero_lote =
+    trim($_POST['numero_lote']);
+
+    $preco_compra =
+    (float) $_POST['preco_compra'];
+
+    $preco_venda =
+    (float) $_POST['preco_venda'];
+
+    $desconto =
+    (float) $_POST['desconto'];
+
+    /* =====================================================
+    STATUS DO LOTE
+    ===================================================== */
+
+    $status_lote = "normal";
+
+if($desconto > 0){
+
+    $status_lote = "promocao";
+
+}
+
+if($validade < date("Y-m-d")){
+
+    $status_lote = "vencido";
+
+}
 
     $criado_em = date("Y-m-d H:i:s");
 
@@ -153,13 +205,13 @@ if(isset($_POST['cadastrar_lote'])){
         SELECT idproduto
         FROM produtoslotes
         WHERE idproduto = ?
-        AND validade = ?
+        AND numero_lote = ?
         ");
 
         $verifica_lote->bind_param(
         "is",
         $idproduto,
-        $validade
+        $numero_lote
         );
 
         $verifica_lote->execute();
@@ -170,30 +222,40 @@ if(isset($_POST['cadastrar_lote'])){
         if($resultado_lote->num_rows > 0){
 
             echo "<script>
-            alert('Já existe um lote desse produto com essa validade');
+            alert('Já existe um lote desse produto com esse número de lote');
             </script>";
 
         }else{
 
             $stmt_lote = $conn->prepare("
             INSERT INTO produtoslotes
-            (
-                idproduto,
-                quantidade,
-                validade,
-                criado_em,
-                idEmpresa
-            )
-            VALUES (?, ?, ?, ?, ?)
+          (
+             idproduto,
+             numero_lote,
+             quantidade,
+             validade,
+             preco_compra,
+             preco_venda,
+             desconto,
+             status_lote,
+             criado_em,
+             idEmpresa             
+          )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
             $stmt_lote->bind_param(
-            "iissi",
-            $idproduto,
-            $quantidade,
-            $validade,
-            $criado_em,
-            $idEmpresa
+              "isisdddssi",
+              $idproduto,
+              $numero_lote,
+              $quantidade,
+              $validade,
+              $preco_compra,
+              $preco_venda,
+              $desconto,
+              $status_lote,
+              $criado_em,
+              $idEmpresa
             );
 
             if($stmt_lote->execute()){
