@@ -1,0 +1,19 @@
+function animar(id, valor) {
+    let el = document.getElementById(id);
+    let i = 0;
+
+    let intervalo = setInterval(() => {
+        i += Math.ceil(valor / 30);
+        if (i >= valor) {
+            i = valor;
+            clearInterval(intervalo);
+        }
+        el.innerText = i;
+    }, 30);
+}
+
+window.onload = () => {
+    animar("prod", 120);
+    animar("ent", 80);
+    animar("sai", 45);
+};

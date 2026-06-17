@@ -49,7 +49,15 @@ require_once 'painel_principal_contagem.php';
                 </a>
 
                 <a href="cadastro_produtos/cad_list_prods.php">
-                    📦 Produtos
+                    ➡️​ Entrada
+                </a>
+
+                <a href="saida/saida.php">
+                    ⬅️​ Saida
+                </a>
+
+                <a href="consulta/consulta.php">
+                    📦 Consulta
                 </a>
 
                  <a href="compras/compras.php">
