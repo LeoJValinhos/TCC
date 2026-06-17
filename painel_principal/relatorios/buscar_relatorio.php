@@ -58,7 +58,9 @@ $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : "dashboard";
         <aside class="sidebar">
             <nav>
                 <a href="../painel_principal.php">🏠 Home</a>
-                <a href="../cadastro_produtos/cad_list_prods.php">📦 Produtos</a>
+                <a href="../cadastro_produtos/cad_list_prods.php">➡️​ Entrada</a>
+                <a href="../saida/saida.php"> ⬅️​ Saida</a>
+                <a href="../consulta/consulta.php"> 📦 Consulta</a>
                 <a href="../compras/compras.php">🛒​ Compras</a>
                 <a href="buscar_relatorio.php?tipo=dashboard">📊 Relatórios</a>
                 <a>⚙️ Configurações</a>

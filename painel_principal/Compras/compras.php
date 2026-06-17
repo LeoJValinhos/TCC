@@ -25,8 +25,10 @@ require_once("produtos_simulado.php");
         <aside class="sidebar">
             <nav>
                 <a href="../painel_principal.php">🏠 Home</a>
-                <a href="../cadastro_produtos/cad_list_prods.php">📦 Produtos</a>
-                <a href="../compras/compras.php">🛒 Compras</a>
+                <a href="../cadastro_produtos/cad_list_prods.php">➡️​ Entrada</a>
+                <a href="../saida/saida.php"> ⬅️​ Saida</a>
+                <a href="../consulta/consulta.php"> 📦 Consulta</a>
+                <a href="compras.php">🛒 Compras</a>
                 <a href="../relatorios/buscar_relatorio.php">📊 Relatórios</a>
                 <a>⚙️ Configurações</a>
             </nav>
