@@ -214,3 +214,223 @@ ELEMENTOS DE CONTEÚDO (CARDS, LABELS)
     color: var(--sub);
     font-size: 15px;
 }
+
+/* =====================================================
+FORMULÁRIOS
+===================================================== */
+label{
+    display:block;
+    margin-bottom:8px;
+    margin-top:18px;
+    color:white;
+    font-weight:600;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    background:#02152E;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:12px;
+    padding:15px;
+    color:white;
+    font-size:15px;
+    outline:none;
+    transition:.3s;
+}
+
+textarea{
+    min-height:120px;
+    resize:none;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:var(--primary);
+    box-shadow: 0 0 10px rgba(0,245,212,.25);
+}
+
+input::placeholder,
+textarea::placeholder{
+    color:#93a3b5;
+}
+
+/* =====================================================
+BOTÕES
+===================================================== */
+button,
+input[type="submit"]{
+    background:var(--secondary);
+    color:#02152E;
+    border:none;
+    padding:14px 25px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+    margin-top:20px;
+}
+
+button:hover,
+input[type="submit"]:hover{
+    background:var(--primary);
+    transform:translateY(-2px);
+}
+
+/* =====================================================
+ÁREA LISTAS
+==================================================== */
+.topo-listas{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.area-listas{
+    background:#02152E;
+    border:1px solid rgba(0,245,212,.10);
+    border-radius:15px;
+    padding:25px;
+}
+
+/* =====================================================
+FILTROS
+===================================================== */
+.filtros-form{
+    display:grid;
+    gap:15px;
+    margin-bottom:25px;
+}
+
+/* =====================================================
+TABELAS
+===================================================== */
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    overflow:hidden;
+    border-radius:12px;
+}
+
+table th{
+    background:#02152E;
+    color:white;
+    text-align:left;
+    padding:16px;
+}
+
+table td{
+    padding:16px;
+    border-top:1px solid rgba(255,255,255,.08);
+    color:var(--sub);
+}
+
+table tr:hover{
+    background:rgba(0,245,212,.05);
+}
+
+/* =====================================================
+PAGINAÇÃO
+===================================================== */
+.paginacao{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:30px;
+}
+
+.paginacao a{
+
+    min-width:42px;
+    height:42px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    background:#02152E;
+    color:white;
+
+    border:1px solid var(--border);
+    border-radius:10px;
+
+    transition:.3s;
+}
+
+.paginacao a:hover{
+
+    background:var(--primary);
+    color:#02152E;
+}
+
+/* =====================================================
+RESPONSIVO TABLET
+===================================================== */
+@media(max-width:1100px){
+    .forms-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+/* =====================================================
+RESPONSIVO CELULAR
+===================================================== */
+@media(max-width:768px){
+    .layout{
+        flex-direction:column;
+        padding-top: 70px;
+    }
+
+    .sidebar{
+        position: static;
+        width:100%;
+        height: auto;
+    }
+    
+    .main{
+        margin-left: 0;
+        padding:20px;
+    }
+
+    h2{
+        font-size:32px;
+    }
+
+    .topo-listas{
+        flex-direction:column;
+    }
+}
+
+.lista-card{
+
+    max-width:1300px;
+    margin:0 auto;
+}
+
+.area-listas{
+
+    margin:auto;
+}
+
+.titulo-lista{
+
+    width:100%;
+
+    text-align:center;
+
+    color:var(--primary);
+
+    font-size:32px;
+
+    margin:20px 0 30px;
+
+    font-weight:700;
+}

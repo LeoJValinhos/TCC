@@ -1,3 +1,6 @@
+<?php
+require_once 'consulta_logica.php';
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -78,6 +81,41 @@
             </a>
 
         </aside>
+
+            <main class="main">
+
+
+    <div class="top">
+
+        <h2>Consulta de Produtos e Lotes</h2>
+
+        <p class="subtitulo">
+            Consulte os produtos cadastrados e seus respectivos lotes.
+        </p>
+
+    </div>
+
+                <!-- LISTAGENS -->
+                <div class="lista-card">
+
+                    <div class="area-listas">
+
+                        <h1 class="titulo-lista">
+                            Lista de Produtos</h1>
+                        <?= $htmlListaProdutos ?>
+
+                        <h1 class="titulo-lista">
+                            Lista de lotes</h1>
+                        <?= $htmlListaLotes ?>
+
+
+                    </div>
+
+                </div>
+
+</main>
+
+</div>
 
             <script src="consulta.js"></script>
 

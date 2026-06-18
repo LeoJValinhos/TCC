@@ -1,6 +1,5 @@
 <?php
 require_once 'cad_list_prods_dados.php';
-require_once 'cad_list_prods_listas.php';
 
 /* =====================================================
 BUSCAR PRODUTOS PARA O SELECT DE LOTES
@@ -153,23 +152,6 @@ $produtos_select = $conn->query("
                         </form>
                     </div>
 
-                </div>
-
-                <!-- LISTAGENS -->
-                <div class="lista-card">
-                    <div class="topo-listas">
-                        <button type="button" class="btn-toggle" onclick="mostrarListaProdutos()">
-                            Mostrar / Ocultar Produtos
-                        </button>
-                        <button type="button" class="btn-toggle" onclick="mostrarListaLotes()">
-                            Mostrar / Ocultar Lotes
-                        </button>
-                    </div>
-
-                    <div class="area-listas">
-                        <?= $htmlListaProdutos ?>
-                        <?= $htmlListaLotes ?>
-                    </div>
                 </div>
 
             </div>
