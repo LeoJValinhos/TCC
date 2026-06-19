@@ -1,8 +1,11 @@
+/* ==========================================================================
+   RAIZ E CORES GERAIS (ALINHADOS COM SEU SISTEMA DE CONSULTA)
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI';
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 :root {
@@ -16,7 +19,6 @@
     --sub: #B8C7D9;
 }
 
-/* TRAVA A TELA INTEIRA: Impede que o navegador crie uma barra de rolagem externa global */
 html, body {
     height: 100vh !important;
     max-height: 100vh !important;
@@ -26,20 +28,15 @@ html, body {
 }
 
 body {
-    background: linear-gradient(
-        135deg,
-        #02152E 0%,
-        #001A36 50%,
-        #02152E 100%
-    );
+    background: linear-gradient(135deg, #02152E 0%, #001A36 50%, #02152E 100%);
     color: var(--text);
     display: flex;
     flex-direction: column;
 }
 
-/* =====================================================
-TOPO (FIXO)
-===================================================== */
+/* ==========================================================================
+   ESTILOS DO TOPO E SIDEBAR INTERNA (PRESERVAÇÃO DO SEU LAYOUT)
+   ========================================================================== */
 .topbar {
     width: 100%;
     height: 70px;
@@ -48,7 +45,7 @@ TOPO (FIXO)
     align-items: center;
     padding: 0 30px;
     border-bottom: 1px solid rgba(0,245,212,0.15);
-    flex-shrink: 0; /* Impede o topo de ser esmagado */
+    flex-shrink: 0;
 }
 
 .top-left {
@@ -63,9 +60,6 @@ TOPO (FIXO)
     color: var(--primary);
 }
 
-/* =====================================================
-LAYOUT - DEFINE O ESPAÇO ABAIXO DO TOPO
-===================================================== */
 .layout {
     display: flex;
     height: calc(100vh - 70px) !important;
@@ -73,9 +67,6 @@ LAYOUT - DEFINE O ESPAÇO ABAIXO DO TOPO
     overflow: hidden !important;
 }
 
-/* =====================================================
-SIDEBAR (100% ESTÁTICA E COLADA NO CHÃO)
-===================================================== */
 .sidebar {
     width: 220px;
     background: var(--sidebar);
@@ -85,7 +76,7 @@ SIDEBAR (100% ESTÁTICA E COLADA NO CHÃO)
     justify-content: space-between;
     border-right: 1px solid rgba(0,183,195,0.2);
     height: 100% !important;
-    flex-shrink: 0 !important; /* Impede a barra de perder largura */
+    flex-shrink: 0 !important;
 }
 
 .sidebar nav a {
@@ -125,9 +116,6 @@ SIDEBAR (100% ESTÁTICA E COLADA NO CHÃO)
     width: 4px;
 }
 
-/* =====================================================
-LOGOUT
-===================================================== */
 .logout {
     text-align: center;
     padding: 12px;
@@ -142,21 +130,15 @@ LOGOUT
     transform: translateY(-2px);
 }
 
-/* =====================================================
-MAIN - APENAS ESTA PARTE VAI GERAR ROLAGEM NO SITE
-===================================================== */
 .main {
     flex: 1;
     padding: 40px;
     height: 100% !important;
-    overflow-y: auto !important; /* Cria rolagem independente no conteúdo */
+    overflow-y: auto !important;
 }
 
-/* =====================================================
-ELEMENTOS DE CONTEÚDO (CARDS, LABELS)
-===================================================== */
 .top {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .top h2 {
@@ -170,47 +152,341 @@ ELEMENTOS DE CONTEÚDO (CARDS, LABELS)
     font-size: 16px;
 }
 
-.cards {
+/* ==========================================================================
+   ESTRUTURA CARD PRINCIPAL
+   ========================================================================== */
+.container-saida-central {
     width: 100%;
-    min-height: 60vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
 }
 
-.card {
+.card-neon-invex {
     width: 100%;
-    max-width: 500px;
+    max-width: 850px;
     background: var(--card);
     padding: 40px;
-    border-radius: 20px;
-    text-align: center;
+    border-radius: 16px;
     border: 1px solid var(--border);
-    transition: .3s;
-    box-shadow:
-        0 0 10px rgba(0,183,195,0.15),
-        0 0 25px rgba(0,183,195,0.08);
+    box-shadow: 0 0 20px rgba(0, 183, 195, 0.15);
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow:
-        0 0 20px rgba(0,245,212,0.25),
-        0 0 40px rgba(0,245,212,0.12);
-}
-
-.card span {
-    color: var(--sub);
-    font-size: 18px;
-}
-
-.card h2 {
-    font-size: 70px;
+.titulo-card {
     color: var(--primary);
-    margin: 20px 0;
+    font-size: 22px;
+    margin-bottom: 30px;
+    font-weight: bold;
 }
 
-.card p {
-    color: var(--sub);
+/* ==========================================================================
+   NOVO COMPONENTE DE PESQUISA (RE-DESIGN)
+   ========================================================================== */
+.form-group-invex {
+    position: relative;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.label-invex {
+    display: block;
+    color: #ffffff;
     font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.search-wrapper-invex {
+    position: relative;
+    width: 100%;
+}
+
+.input-search-invex {
+    width: 100%;
+    background-color: #02152E;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px 45px 15px 18px;
+    color: #ffffff;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.input-search-invex:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(0, 245, 212, 0.25);
+}
+
+.icon-search-invex {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    font-size: 15px;
+    pointer-events: none;
+}
+
+/* Dropdown da Tabela de Resultados */
+.dropdown-results-invex {
+    display: none; /* Controlado via JS */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 280px;
+    overflow-y: auto;
+    background-color: #001f3d;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-top: 8px;
+    z-index: 999;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Estilo para a Tabela do Menu */
+.table-results-invex {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.table-results-invex th {
+    background-color: #02152E;
+    padding: 12px 18px;
+    font-size: 11px;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(0, 183, 195, 0.2);
+}
+
+.table-results-invex td {
+    padding: 12px 18px;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Comportamento das linhas da tabela */
+.item-row-invex {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.item-row-invex:hover {
+    background-color: rgba(0, 245, 212, 0.08);
+}
+
+/* Linha ativamente selecionada */
+.item-row-invex.selected {
+    background-color: #002e4d;
+}
+
+.item-row-invex.selected td:first-child {
+    border-left: 4px solid var(--primary);
+    padding-left: 14px;
+}
+
+/* Textos e Tags Internas do Dropdown */
+.prod-name {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.prod-brand {
+    font-size: 12px;
+    color: var(--sub);
+    margin-top: 1px;
+}
+
+.lot-number {
+    font-size: 13px;
+    color: #e2e8f0;
+}
+
+.lot-date {
+    font-size: 11px;
+    margin-top: 1px;
+}
+
+.qty-highlight {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Utilitários de Cores de Datas */
+.text-muted { color: #64748b; }
+.text-warning { color: #f59e0b; font-weight: 500; }
+.text-critical { color: #ef4444; font-weight: 500; }
+.text-right { text-align: right; }
+
+/* Badges de Status Organizados */
+.badge-invex {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-stable {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.badge-warning {
+    background-color: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.badge-critical {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* ==========================================================================
+   OUTROS INPUTS E BOTÃO DO FORMULÁRIO (ESTILO EMPILHADO DO PRINT)
+   ========================================================================== */
+.grupo-campo-saida {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.grupo-campo-saida label {
+    display: block;
+    margin-bottom: 8px;
+    color: white;
+    font-weight: 600;
+}
+
+.grupo-campo-saida input[type="number"],
+.select-nativo-saida {
+    width: 100%;
+    background: #02152E;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    padding: 15px;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition: .3s;
+}
+
+/* Borda ativa na Quantidade conforme solicitado */
+.grupo-campo-saida input[type="number"] {
+    border-color: var(--border);
+    box-shadow: 0 0 10px rgba(0, 183, 195, 0.25);
+}
+
+.grupo-campo-saida input[type="number"]:focus,
+.select-nativo-saida:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(0,245,212,.25);
+}
+
+.container-botao-saida {
+    margin-top: 15px;
+    width: 100%;
+}
+
+.btn-confirmar-neon {
+    width: 100%;
+    background: #02152E;
+    color: var(--primary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.btn-confirmar-neon:hover {
+    background: var(--sidebar);
+    box-shadow: 0 0 15px rgba(0, 245, 212, 0.2);
+    transform: translateY(-2px);
+}
+/* ==========================================================================
+   PAINEL DE VALORES E DESCONTOS DINÂMICOS (NOVO)
+   ========================================================================== */
+.panel-valores-invex {
+    display: flex;
+    gap: 20px;
+    background-color: #021226;
+    border: 1px dashed rgba(0, 183, 195, 0.4);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    width: 100%;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.valor-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.total-box {
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding-left: 20px;
+}
+
+.valor-label {
+    font-size: 12px;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.valor-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.valor-destaque {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.total-color {
+    color: var(--primary);
+    text-shadow: 0 0 10px rgba(0, 245, 212, 0.3);
+}
+
+/* Tag de Desconto Moderna e Pulsante */
+.badge-desconto-invex {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.4) 100%);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
+}
+
+/* Restante dos estilos do formulário (mantenha os anteriores) */
+.grupo-campo-saida {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+    width: 100%;
 }
