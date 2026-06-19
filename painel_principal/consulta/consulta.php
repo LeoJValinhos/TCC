@@ -20,6 +20,37 @@ require_once 'consulta_logica.php';
 
 <body>
 
+<style>
+        .vermelho-validade {
+        background-color: #d03c3c;
+        color: white;
+        font-weight: bold;
+        border-radius: 25px;
+        text-align: center;
+        }
+
+        .amarelo-validade {
+        background-color: #d2bb48;
+        color: black;
+        font-weight: bold;
+        border-radius: 25px;
+        text-align: center;
+        }
+
+        .paginacao a {
+            padding: 6px 12px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            margin: 2px;
+            border-radius: 5px;
+        }
+
+        .paginacao a:hover {
+            background: #444;
+        }
+    </style>
+
     <!-- TOPO -->
     <header class="topbar">
 
@@ -67,7 +98,7 @@ require_once 'consulta_logica.php';
                     📊 Relatórios
                 </a>
 
-                <a>
+                <a href="../configuracoes/painel_principal_config.php">
                     ⚙️ Configurações
                 </a>
 
@@ -103,7 +134,14 @@ require_once 'consulta_logica.php';
                         <h1 class="titulo-lista">
                             Lista de Produtos</h1>
                         <?= $htmlListaProdutos ?>
-
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
                         <h1 class="titulo-lista">
                             Lista de lotes</h1>
                         <?= $htmlListaLotes ?>
