@@ -30,7 +30,7 @@ require_once("produtos_simulado.php");
                 <a href="../consulta/consulta.php"> 📦 Consulta</a>
                 <a href="compras.php">🛒 Compras</a>
                 <a href="../relatorios/buscar_relatorio.php">📊 Relatórios</a>
-                <a>⚙️ Configurações</a>
+                <a href="../configuracoes/painel_principal_config.php">⚙️ Configurações</a>
             </nav>
 
             <a href="../../index.html" class="logout">🚪 Sair</a>
