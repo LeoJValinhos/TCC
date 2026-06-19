@@ -68,7 +68,7 @@ require_once 'painel_principal_contagem.php';
                     📊 Relatórios
                 </a>
 
-                <a>
+                <a href="configuracoes/painel_principal_config.php">
                     ⚙️ Configurações
                 </a>
 
