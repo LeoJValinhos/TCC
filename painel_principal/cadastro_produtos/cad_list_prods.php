@@ -70,7 +70,7 @@ $produtos_select = $conn->query("
                 <a href="../consulta/consulta.php"> 📦 Consulta</a>
                 <a href="../compras/compras.php">🛒 Compras</a>
                 <a href="../relatorios/buscar_relatorio.php">📊 Relatórios</a>
-                <a>⚙️ Configurações</a>
+                <a href="../configuracoes/painel_principal_config.php">⚙️ Configurações</a>
             </nav>
 
             <a href="../../index.html" class="logout">🚪 Sair</a>
@@ -129,9 +129,6 @@ $produtos_select = $conn->query("
                                     </option>
                                 <?php } ?>
                             </select>
-
-                            <label>Número do lote</label>
-                            <input type="text" name="numero_lote" maxlength="50" required>
 
                             <label>Quantidade</label>
                             <input type="number" name="quantidade" min="1" required>
