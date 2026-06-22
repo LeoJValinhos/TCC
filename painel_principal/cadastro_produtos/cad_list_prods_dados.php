@@ -150,7 +150,7 @@ if(isset($_POST['cadastrar_lote'])){
     ===================================================== */
 
     $numero_lote =
-    trim($_POST['numero_lote']);
+    $idproduto . "_" . $validade;
 
     $preco_compra =
     (float) $_POST['preco_compra'];

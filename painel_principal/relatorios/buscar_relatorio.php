@@ -63,7 +63,7 @@ $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : "dashboard";
                 <a href="../consulta/consulta.php"> 📦 Consulta</a>
                 <a href="../compras/compras.php">🛒​ Compras</a>
                 <a href="buscar_relatorio.php?tipo=dashboard">📊 Relatórios</a>
-                <a>⚙️ Configurações</a>
+                <a href="../configuracoes/painel_principal_config.php">⚙️ Configurações</a>
             </nav>
             <a href="../../index.html" class="logout">🚪 Sair</a>
         </aside>
