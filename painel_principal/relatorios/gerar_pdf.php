@@ -1,4 +1,31 @@
 <?php
+// Captura o período da URL
+$periodo = isset($_GET['periodo']) ? $_GET['periodo'] : 'todos';
+
+// Filtro para tabelas que usam a data de saída (s.data_saida)
+$sql_filtro = "";
+if ($periodo == "hoje") $sql_filtro = " AND DATE(s.data_saida) = CURDATE()";
+elseif ($periodo == "semana") $sql_filtro = " AND DATE(s.data_saida) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+elseif ($periodo == "mes") $sql_filtro = " AND DATE(s.data_saida) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+
+// Filtro para tabelas de estoque/lotes que usam data de cadastro (l.criado_em)
+$filtro_lote = "";
+if ($periodo == "hoje") $filtro_lote = " AND DATE(l.criado_em) = CURDATE()";
+elseif ($periodo == "semana") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+elseif ($periodo == "mes") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+
+$periodo = isset($_GET['periodo']) ? $_GET['periodo'] : 'todos';
+$filtro_vencimento = "";
+
+if ($periodo == "hoje") {
+    $filtro_vencimento = " AND DATE(l.validade) = CURDATE()";
+} elseif ($periodo == "semana") {
+    // Itens que venceram nos últimos 7 dias até hoje
+    $filtro_vencimento = " AND l.validade BETWEEN DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND CURDATE()";
+} elseif ($periodo == "mes") {
+    // Itens que venceram nos últimos 30 dias até hoje
+    $filtro_vencimento = " AND l.validade BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND CURDATE()";
+}
 
 date_default_timezone_set('America/Sao_Paulo');
 
@@ -180,10 +207,14 @@ if ($tipo == 'baixas') $nome_relatorio = "PERDAS / BAIXAS";
 
             <?php
 
-            /* =====================================================
-    RELATÓRIO: PRODUTOS (ALINHADO COM OS LOTES E DESCONTOS)
-   ===================================================== */
+            // 3. RELATÓRIO: PRODUTOS (ALINHADO COM OS LOTES E DESCONTOS)
 if ($tipo == "produtos") {
+    // 1. Definição do filtro para a tabela de lotes (l.criado_em)
+    $filtro_lote = "";
+    if ($periodo == "hoje") $filtro_lote = " AND DATE(l.criado_em) = CURDATE()";
+    elseif ($periodo == "semana") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+    elseif ($periodo == "mes") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+
     echo "<thead>
             <tr>
                 <th>Produto</th>
@@ -197,10 +228,12 @@ if ($tipo == "produtos") {
           </thead>
           <tbody>";
 
+    // 2. Query com a inclusão de $filtro_lote
     $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.preco_compra, l.preco_venda, l.desconto
             FROM produtoslotes l
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
             WHERE l.idEmpresa = $idEmpresa 
+            $filtro_lote
             ORDER BY p.NomeProduto ASC, l.numero_lote ASC";
             
     $result = $conn->query($sql);
@@ -226,6 +259,7 @@ if ($tipo == "produtos") {
                 <td class='text-right' style='font-weight:bold;'>R$ ".number_format($p_venda_final, 2, ',', '.')."</td>
               </tr>";
     }
+    echo "</tbody>";
 }
 
 
@@ -246,10 +280,12 @@ elseif ($tipo == "lotes") {
           </thead>
           <tbody>";
 
+    // A variável $filtro_lote já deve estar definida no topo do arquivo (usando l.criado_em)
     $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote 
             FROM produtoslotes l 
             INNER JOIN produtos p ON p.IdProduto = l.idproduto 
             WHERE l.idEmpresa = $idEmpresa 
+            $filtro_lote
             ORDER BY l.idlote DESC";
             
     $result = $conn->query($sql);
@@ -268,68 +304,53 @@ elseif ($tipo == "lotes") {
                 <td class='text-center'>".strtoupper($row['status_lote'])."</td>
               </tr>";
     }
+    echo "</tbody>";
 }
 
 
+            /* =====================================================
+   RELATÓRIO: VENCIMENTO
+   ===================================================== */
+elseif ($tipo == "vencimento") {
+    // 1. Cabeçalho alinhado com a sua imagem (Produto, Lote, Quantidade, Data Vencimento)
+    echo "<thead>
+            <tr>
+                <th>Produto</th>
+                <th>Lote</th>
+                <th class='text-center'>Quantidade</th>
+                <th class='text-center'>Data Vencimento</th>
+            </tr>
+          </thead>
+          <tbody>";
+
+    // 2. Query garantindo o filtro de status 'vencido' + o filtro de período definido no topo
+    // Nota: Certifique-se que $filtro_vencimento foi definido no topo do arquivo (conforme conversamos)
+    $sql = "SELECT l.numero_lote, l.quantidade, l.validade, p.NomeProduto 
+            FROM produtoslotes l 
+            INNER JOIN produtos p ON p.idProduto = l.idproduto 
+            WHERE l.idEmpresa = $idEmpresa 
+            AND LOWER(l.status_lote) = 'vencido' 
+            $filtro_vencimento 
+            ORDER BY l.validade ASC";
+            
+    $result = $conn->query($sql);
+
+    // 3. Loop de exibição
+    while ($row = $result->fetch_assoc()) {
+        $val = $row['validade'] ? date('d/m/Y', strtotime($row['validade'])) : 'N/A';
+        
+        echo "<tr>
+                <td>".htmlspecialchars($row['NomeProduto'])."</td>
+                <td>".htmlspecialchars($row['numero_lote'])."</td>
+                <td class='text-center'>{$row['quantidade']} un</td>
+                <td class='text-center' style='font-weight: bold;'>{$val}</td>
+              </tr>";
+    }
+    echo "</tbody>";
+}
 
             /* =====================================================
-
-            RELATÓRIO: VENCIMENTO
-
-            ===================================================== */
-
-            elseif ($tipo == "vencimento") {
-
-                echo "<thead>
-
-                        <tr>
-
-                            <th>Produto</th>
-
-                            <th>Lote</th>
-
-                            <th class='text-center'>Quantidade</th>
-
-                            <th class='text-center'>Data Vencimento</th>
-
-                        </tr>
-
-                      </thead>
-
-                      <tbody>";
-
-
-
-                $sql = "SELECT l.numero_lote, l.quantidade, l.validade, p.NomeProduto FROM produtoslotes l INNER JOIN produtos p ON p.idProduto = l.idproduto WHERE l.idEmpresa = $idEmpresa ORDER BY l.validade ASC";
-
-                $result = $conn->query($sql);
-
-
-
-                while ($row = $result->fetch_assoc()) {
-
-                    $val = $row['validade'] ? date('d/m/Y', strtotime($row['validade'])) : 'N/A';
-
-                    echo "<tr>
-
-                            <td>".htmlspecialchars($row['NomeProduto'])."</td>
-
-                            <td>".htmlspecialchars($row['numero_lote'])."</td>
-
-                            <td class='text-center'>{$row['quantidade']} un</td>
-
-                            <td class='text-center' style='font-weight: bold;'>{$val}</td>
-
-                          </tr>";
-
-                }
-
-            }
-
-
-
-            /* =====================================================
-    RELATÓRIO: DESCONTOS (ALINHADO COM A INTERFACE E ESTOQUE)
+   RELATÓRIO: DESCONTOS (ALINHADO COM A INTERFACE E ESTOQUE)
    ===================================================== */
 elseif ($tipo == "descontos") {
     echo "<thead>
@@ -345,10 +366,13 @@ elseif ($tipo == "descontos") {
           </thead>
           <tbody>";
 
+    // A variável $filtro_lote deve estar definida no topo do seu gerar_pdf.php
     $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.preco_venda, l.desconto, l.status_lote
             FROM produtoslotes l
             INNER JOIN produtos p ON p.idProduto = l.idproduto
-            WHERE l.idEmpresa = '" . $idEmpresa . "' AND l.desconto > 0
+            WHERE l.idEmpresa = '" . $idEmpresa . "' 
+            AND l.desconto > 0 
+            $filtro_lote
             ORDER BY l.desconto DESC, p.NomeProduto ASC";
             
     $result = $conn->query($sql);
@@ -378,7 +402,7 @@ elseif ($tipo == "descontos") {
                     <td class='text-right'>R$ " . number_format($preco_com_desconto, 2, ',', '.') . "</td>
                     <td class='text-center' style='color: #eab308; font-weight: bold;'>" . number_format($porcentagem_desc, 0) . "% OFF</td>
                     <td class='text-right' style='color: #22c55e; font-weight: bold;'>R$ " . number_format($valor_total_estoque, 2, ',', '.') . "</td>
-                </tr>";
+                  </tr>";
         }
     } else {
         echo "<tr><td colspan='7' style='text-align:center; padding:20px;'>Nenhum lote com promoção ativa encontrado para o período selecionado.</td></tr>";
@@ -386,10 +410,8 @@ elseif ($tipo == "descontos") {
     echo "</tbody>";
 }
 
-
-
             /* =====================================================
-    RELATÓRIO: LUCRO (ALINHADO COM A INTERFACE)
+   RELATÓRIO: LUCRO (ALINHADO COM A INTERFACE)
    ===================================================== */
 elseif ($tipo == "lucro") {
     echo "<thead>
@@ -405,11 +427,14 @@ elseif ($tipo == "lucro") {
           </thead>
           <tbody>";
 
+    // A variável $sql_filtro deve estar definida no topo do seu gerar_pdf.php
     $sql = "SELECT p.NomeProduto, s.quantidade_saida, s.data_saida, l.preco_compra, l.preco_venda, l.desconto
             FROM saida s
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
-            WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) = 'venda' " . (isset($filtro_saida) ? $filtro_saida : '') . "
+            WHERE l.idEmpresa = '$idEmpresa' 
+            AND LOWER(s.motivo_saida) = 'venda' 
+            $sql_filtro 
             ORDER BY s.id_saida DESC";
             
     $result = $conn->query($sql);
@@ -429,7 +454,6 @@ elseif ($tipo == "lucro") {
             $faturamento_real = $venda_bruta - $total_desconto;
             $lucro = $faturamento_real - $custo_total;
 
-            // Define dinamicamente se o lucro vai impresso em vermelho (prejuízo) ou verde no PDF
             $cor_lucro = ($lucro >= 0) ? '#22c55e' : '#ef4444';
 
             echo "<tr>
@@ -454,7 +478,6 @@ elseif ($tipo == "lucro") {
     echo "</tbody>";
 }
 
-
        /* =====================================================
    RELATÓRIO: VENDAS (AJUSTADO COM PREÇO UNITÁRIO ORIGINAL)
    ===================================================== */
@@ -472,11 +495,14 @@ elseif ($tipo == "vendas") {
           </thead>
           <tbody>";
 
+    // Inserimos $sql_filtro na query para respeitar o período selecionado
     $sql = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida
             FROM saida s
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
-            WHERE l.idEmpresa = $idEmpresa AND LOWER(s.motivo_saida) = 'venda'
+            WHERE l.idEmpresa = $idEmpresa 
+            AND LOWER(s.motivo_saida) = 'venda' 
+            $sql_filtro 
             ORDER BY s.id_saida DESC";
     
     $result = $conn->query($sql);
@@ -487,157 +513,125 @@ elseif ($tipo == "vendas") {
             $p_unitario_original = floatval($row['preco_venda']);
             $desc = floatval($row['desconto']);
             
-            // O Total Faturado continua calculando o desconto normalmente
             $valor_final = ($p_unitario_original * (1 - ($desc / 100))) * $qtd;
-            
             $data_v = $row['data_saida'] ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
 
             echo "<tr>
                     <td>".htmlspecialchars($row['NomeProduto'])."</td>
                     <td>#".htmlspecialchars($row['numero_lote'])."</td>
-                    <td class='text-center'>{$qtd} un</td>";
-            
-            // Agora exibe o Preço Unitário NORMAL (sem desconto)
-            echo "<td class='text-center' style='color: #94a3b8;'>R$ ".number_format($p_unitario_original, 2, ',', '.')."</td>";
-            
-            echo "<td class='text-center'>{$desc}%</td>
+                    <td class='text-center'>{$qtd} un</td>
+                    <td class='text-center' style='color: #94a3b8;'>R$ ".number_format($p_unitario_original, 2, ',', '.')."</td>
+                    <td class='text-center'>{$desc}%</td>
                     <td class='text-right' style='color:#22c55e; font-weight:bold;'>R$ ".number_format($valor_final, 2, ',', '.')."</td>
                     <td class='text-center'>{$data_v}</td>
                   </tr>";
         }
     } else {
-        echo "<tr><td colspan='7' class='text-center'>Nenhuma venda registrada.</td></tr>";
+        echo "<tr><td colspan='7' class='text-center' style='padding:20px;'>Nenhuma venda registrada para o período selecionado.</td></tr>";
+    }
+    echo "</tbody>";
+}   
+
+
+            /* =====================================================
+   RELATÓRIO: PERDAS / BAIXAS (Com Custo Unitário)
+   ===================================================== */
+elseif ($tipo == "baixas" || $tipo == "perdas") {
+    echo "<thead>
+            <tr>
+                <th>Produto</th>
+                <th>Lote</th>
+                <th class='text-center'>Qtd Perdida</th>
+                <th class='text-right'>Custo Unitário</th>
+                <th class='text-right'>Prejuízo Total</th>
+                <th class='text-center'>Data da Baixa</th>
+                <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>";
+
+    // Injeção de $sql_filtro para filtrar as perdas/baixas pelo período
+    $sql = "SELECT p.NomeProduto, l.numero_lote, l.preco_compra, s.quantidade_saida, s.data_saida, s.motivo_saida
+            FROM saida s
+            INNER JOIN produtoslotes l ON s.idlote = l.idlote
+            INNER JOIN produtos p ON l.idproduto = p.IdProduto
+            WHERE l.idEmpresa = $idEmpresa 
+            AND LOWER(s.motivo_saida) <> 'venda' 
+            $sql_filtro 
+            ORDER BY s.id_saida DESC";
+            
+    $result = $conn->query($sql);
+
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $qtd = intval($row['quantidade_saida']);
+            $custo = floatval($row['preco_compra']);
+            $prejuizo = $custo * $qtd;
+            $data_b = $row['data_saida'] ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
+
+            echo "<tr>
+                    <td>".htmlspecialchars($row['NomeProduto'])."</td>
+                    <td>#".htmlspecialchars($row['numero_lote'])."</td>
+                    <td class='text-center'>{$qtd} un</td>
+                    <td class='text-right'>R$ ".number_format($custo, 2, ',', '.')."</td>
+                    <td class='text-right' style='color:#ef4444; font-weight:bold;'>R$ ".number_format($prejuizo, 2, ',', '.')."</td>
+                    <td class='text-center'>{$data_b}</td>
+                    <td><span style='color:#b91c1c;'>".htmlspecialchars($row['motivo_saida'])."</span></td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='7' class='text-center' style='padding:20px;'>Nenhuma perda ou baixa registrada para este período.</td></tr>";
     }
     echo "</tbody>";
 }
-
-
             /* =====================================================
-            NOVO RELATÓRIO: PERDAS / BAIXAS (Com Custo Unitário)
-            ===================================================== */
-            elseif ($tipo == "baixas" || $tipo == "perdas") {
-                echo "<thead>
-                        <tr>
-                            <th>Produto</th>
-                            <th>Lote</th>
-                            <th class='text-center'>Qtd Perdida</th>
-                            <th class='text-right'>Custo Unitário</th>
-                            <th class='text-right'>Prejuízo Total</th>
-                            <th class='text-center'>Data da Baixa</th>
-                            <th>Motivo</th>
-                        </tr>
-                      </thead>
-                      <tbody>";
+    NOVO RELATÓRIO: DASHBOARD
+   ===================================================== */
+elseif ($tipo == "dashboard") {
+    echo "<thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Produto</th>
+                <th>Lote</th>
+                <th class='text-center'>Quantidade</th>
+                <th class='text-center'>Data Registro</th>
+                <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>";
 
-                $sql = "SELECT p.NomeProduto, l.numero_lote, l.preco_compra, s.quantidade_saida, s.data_saida, s.motivo_saida
-                        FROM saida s
-                        INNER JOIN produtoslotes l ON s.idlote = l.idlote
-                        INNER JOIN produtos p ON l.idproduto = p.IdProduto
-                        WHERE l.idEmpresa = $idEmpresa AND LOWER(s.motivo_saida) <> 'venda'
-                        ORDER BY s.id_saida DESC";
-                $result = $conn->query($sql);
+    // Injeção de $sql_filtro para obedecer ao período (hoje, semana, mês)
+    $sql = "SELECT p.NomeProduto, l.numero_lote, s.quantidade_saida, s.data_saida, s.motivo_saida
+            FROM saida s
+            INNER JOIN produtoslotes l ON s.idlote = l.idlote
+            INNER JOIN produtos p ON l.idproduto = p.IdProduto
+            WHERE l.idEmpresa = $idEmpresa 
+            $sql_filtro
+            ORDER BY s.id_saida DESC";
+            
+    $result = $conn->query($sql);
 
-                if ($result && $result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $qtd = intval($row['quantidade_saida']);
-                        $custo = floatval($row['preco_compra']);
-                        $prejuizo = $custo * $qtd;
-                        $data_b = $row['data_saida'] ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $is_venda = (strtolower($row['motivo_saida']) == 'venda');
+            $tipo_mov = $is_venda ? 'VENDA' : 'BAIXA';
+            $cor_tipo = $is_venda ? '#22c55e' : '#ef4444';
+            $data_m = $row['data_saida'] ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
 
-                        echo "<tr>
-                                <td>".htmlspecialchars($row['NomeProduto'])."</td>
-                                <td>#".htmlspecialchars($row['numero_lote'])."</td>
-                                <td class='text-center'>{$qtd} un</td>
-                                <td class='text-right'>R$ ".number_format($custo, 2, ',', '.')."</td>
-                                <td class='text-right' style='color:#ef4444; font-weight:bold;'>R$ ".number_format($prejuizo, 2, ',', '.')."</td>
-                                <td class='text-center'>{$data_b}</td>
-                                <td><span style='color:#b91c1c;'>".htmlspecialchars($row['motivo_saida'])."</span></td>
-                              </tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='7' class='text-center'>Nenhuma perda ou baixa registrada.</td></tr>";
-                }
-            }
-
-            /* =====================================================
-
-            NOVO RELATÓRIO: DASHBOARD
-
-            ===================================================== */
-
-            elseif ($tipo == "dashboard") {
-
-                echo "<thead>
-
-                        <tr>
-
-                            <th>Tipo</th>
-
-                            <th>Produto</th>
-
-                            <th>Lote</th>
-
-                            <th class='text-center'>Quantidade</th>
-
-                            <th class='text-center'>Data Registro</th>
-
-                            <th>Motivo</th>
-
-                        </tr>
-
-                      </thead>
-
-                      <tbody>";
-
-
-
-                $sql = "SELECT p.NomeProduto, l.numero_lote, s.quantidade_saida, s.data_saida, s.motivo_saida
-
-                        FROM saida s
-
-                        INNER JOIN produtoslotes l ON s.idlote = l.idlote
-
-                        INNER JOIN produtos p ON l.idproduto = p.IdProduto
-
-                        WHERE l.idEmpresa = $idEmpresa
-
-                        ORDER BY s.id_saida DESC";
-
-                $result = $conn->query($sql);
-
-
-
-                while ($row = $result->fetch_assoc()) {
-
-                    $is_venda = (strtolower($row['motivo_saida']) == 'venda');
-
-                    $tipo_mov = $is_venda ? 'VENDA' : 'BAIXA';
-
-                    $cor_tipo = $is_venda ? '#22c55e' : '#ef4444';
-
-                    $data_m = $row['data_saida'] ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
-
-
-
-                    echo "<tr>
-
-                            <td style='font-weight:bold; color:{$cor_tipo};'>{$tipo_mov}</td>
-
-                            <td>".htmlspecialchars($row['NomeProduto'])."</td>
-
-                            <td>#".htmlspecialchars($row['numero_lote'])."</td>
-
-                            <td class='text-center'>{$row['quantidade_saida']} un</td>
-
-                            <td class='text-center'>{$data_m}</td>
-
-                            <td>".htmlspecialchars($row['motivo_saida'])."</td>
-
-                          </tr>";
-
-                }
-
-            }
+            echo "<tr>
+                    <td style='font-weight:bold; color:{$cor_tipo};'>{$tipo_mov}</td>
+                    <td>".htmlspecialchars($row['NomeProduto'])."</td>
+                    <td>#".htmlspecialchars($row['numero_lote'])."</td>
+                    <td class='text-center'>{$row['quantidade_saida']} un</td>
+                    <td class='text-center'>{$data_m}</td>
+                    <td>".htmlspecialchars($row['motivo_saida'])."</td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='6' class='text-center' style='padding:20px;'>Nenhuma movimentação encontrada para o período selecionado.</td></tr>";
+    }
+    echo "</tbody>";
+}
 
             ?>
 
