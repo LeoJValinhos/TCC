@@ -3,57 +3,54 @@ session_start();
 
 include '../funcoes/conexao.php';
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $email = $_POST['email'];
     $senha = $_POST['senha'];
 
     $stmt = $conn->prepare("
-        SELECT *
-        FROM cadastros
-        WHERE email = ?
-        AND senha = ?
+        SELECT
+            c.*,
+            e.codigoEmpresa
+        FROM cadastros c
+        INNER JOIN empresa e
+            ON c.idEmpresa = e.idEmpresa
+        WHERE c.email = ?
+        AND c.senha = ?
     ");
 
     $stmt->bind_param(
-    "ss",
-    $email,
-    $senha
+        "ss",
+        $email,
+        $senha
     );
 
     $stmt->execute();
 
-    $resultado =
-    $stmt->get_result();
+    $resultado = $stmt->get_result();
 
-    if($resultado->num_rows > 0){
+    if ($resultado->num_rows > 0) {
 
-        $usuario =
-        $resultado->fetch_assoc();
+        $usuario = $resultado->fetch_assoc();
 
         /* LIMPA SESSÃO ANTIGA */
         $_SESSION = array();
 
         /* SESSÕES */
-        $_SESSION['idCadastro'] =
-        $usuario['idCadastro'];
+        $_SESSION['idCadastro'] = $usuario['idCadastro'];
 
-        $_SESSION['nome'] =
-        $usuario['nome'];
+        $_SESSION['nome'] = $usuario['nome'];
 
-        $_SESSION['idEmpresa'] =
-        $usuario['idEmpresa'];
+        $_SESSION['idEmpresa'] = $usuario['idEmpresa'];
 
-        $_SESSION['tipoCadastro'] =
-        $usuario['tipocadastro'];
+        $_SESSION['tipoCadastro'] = $usuario['tipocadastro'];
 
-        header(
-        "Location: ../painel_principal/painel_principal.php"
-        );
+        $_SESSION['codigoEmpresa'] = $usuario['codigoEmpresa'];
 
+        header("Location: ../painel_principal/painel_principal.php");
         exit();
 
-    }else{
+    } else {
 
         echo "
         <script>
