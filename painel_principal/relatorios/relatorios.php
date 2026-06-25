@@ -61,95 +61,64 @@ if ($periodo_atual == "hoje") {
 
 
 <style>
-
+    /* --- CONFIGURAÇÃO DO CONTAINER DA TABELA --- */
     .container-tabela {
-
         width: 100%;
-
         margin-top: 20px;
-
         background: #001a36;
-
         border: 1px solid rgba(0, 245, 212, 0.2);
-
         border-radius: 8px;
-
-        overflow: hidden;
-
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-
+        
+        /* Limita a tabela a um tamanho fixo seguro para não empurrar a página */
+        max-height: 450px !important; 
+        overflow-y: auto !important; /* Ativa o scroll apenas aqui dentro */
     }
-
+    
     .tabela-dados {
-
         width: 100%;
-
         border-collapse: collapse;
-
         text-align: left;
-
         font-family: sans-serif;
-
     }
-
+    
+    /* --- CABEÇALHO FIXO COM COR SÓLIDA --- */
     .tabela-dados th {
-
-        background-color: rgba(0, 245, 212, 0.08);
-
+        background-color: #001a36 !important; /* Mesma cor de fundo do container */
         color: #00F5D4;
-
         padding: 14px 18px;
-
         font-size: 14px;
-
         text-transform: uppercase;
-
         border-bottom: 2px solid rgba(0, 245, 212, 0.3);
-
+        
+        /* Gruda no topo da tabela ao rolar */
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 10 !important;
     }
-
+    
     .tabela-dados td {
-
         padding: 12px 18px;
-
         color: #e2e8f0;
-
         font-size: 14px;
-
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-
     }
-
+    
+    /* --- BADGES --- */
     .badge {
-
         display: inline-block;
-
         padding: 4px 10px;
-
         border-radius: 4px;
-
         font-size: 12px;
-
         font-weight: bold;
-
         text-transform: uppercase;
-
     }
-
     .badge-venda { background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); }
-
     .badge-perda { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
-
     .badge-normal { background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); }
-
     .badge-vencido { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
-
     .badge-promocao { background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.3); }
-
 </style>
-
-
-
 <div class="container-tabela">
 
     <table class="tabela-dados">
