@@ -486,309 +486,125 @@ $GLOBALS['periodo_atual'] = $periodo;
 
 
 
-relatorios.js
-
-function animar(id, valor) {
-
-    let el = document.getElementById(id);
-
-    if (!el) return;
-
-   
-
-    let i = 0;
-
-    if (valor == 0) {
-
-        el.innerText = 0;
-
-        return;
-
-    }
-
-
-
-    let intervalo = setInterval(() => {
-
-        i += Math.ceil(valor / 15);
-
-        if (i >= valor) {
-
-            i = valor;
-
-            clearInterval(intervalo);
-
-        }
-
-        el.innerText = i;
-
-    }, 40);
-
-}
-
-
-
-window.onload = () => {
-
-    let vProd = parseInt(document.getElementById("prod")?.innerText) || 0;
-
-    let vLotes = parseInt(document.getElementById("lotes_cantina")?.innerText) || 0;
-
-    let vVenc = parseInt(document.getElementById("vencidos")?.innerText) || 0;
-
-    let vPromo = parseInt(document.getElementById("promo")?.innerText) || 0;
-
-    let vEstoque = parseInt(document.getElementById("estoque")?.innerText) || 0;
-
-
-
-    animar("prod", vProd);
-
-    animar("lotes_cantina", vLotes);
-
-    animar("vencidos", vVenc);
-
-    animar("promo", vPromo);
-
-    animar("estoque", vEstoque);
-
-};
-
-
-
-relatorio_vendas.php
-
-<?php
-
-date_default_timezone_set('America/Sao_Paulo');
-
-error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-
-
-
-// Conexão padrão com o banco
-
-$conn = new mysqli("localhost", "root", "usbw", "databasetcc");
-
-if ($conn->connect_error) { die("Erro de conexão: " . $conn->connect_error); }
-
-
-
-// Captura o período selecionado vindo do buscar_relatorio.php
-
-$periodo_atual = isset($GLOBALS['periodo_atual']) ? $GLOBALS['periodo_atual'] : "todos";
-
-
-
-// Monta o filtro de data correto para as vendas
-
-$filtro_venda = "";
-
-if ($periodo_atual == "hoje") {
-
-    $filtro_venda = " AND DATE(s.data_saida) = CURDATE()";
-
-} elseif ($periodo_atual == "semana") {
-
-    $filtro_venda = " AND DATE(s.data_saida) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
-
-} elseif ($periodo_atual == "mes") {
-
-    $filtro_venda = " AND DATE(s.data_saida) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
-
-}
-
-
-
-// Busca as saídas de venda trazendo também os preços e descontos do lote envolvido
-
-$sql_vendas = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida, s.motivo_saida
-
-               FROM saida s
-
-               INNER JOIN produtoslotes l ON s.idlote = l.idlote
-
-               INNER JOIN produtos p ON l.idproduto = p.IdProduto
-
-               WHERE LOWER(s.motivo_saida) = 'venda' " . $filtro_venda . "
-
-               ORDER BY s.id_saida DESC";
-
-
-
-$resultado = $conn->query($sql_vendas);
-
-
-
-if (!$resultado) {
-
-    die("<div style='color:red; padding:20px; background:#fff;'><strong>Erro na Consulta de Vendas:</strong> " . $conn->error . "</div>");
-
-}
-
-?>
-
-
-
 <style>
-
+    /* --- SEUS ESTILOS ORIGINAIS (MANTIDOS 100% IGUAIS) --- */
     .container-tabela {
-
         width: 100%;
-
         margin-top: 20px;
-
         background: #001a36;
-
         border: 1px solid rgba(0, 245, 212, 0.2);
-
         border-radius: 8px;
-
         overflow: hidden;
-
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-
     }
-
     .tabela-dados {
-
         width: 100%;
-
         border-collapse: collapse;
-
         text-align: left;
-
         font-family: sans-serif;
-
     }
-
     .tabela-dados th {
-
         background-color: rgba(0, 245, 212, 0.08);
-
         color: #00F5D4;
-
         padding: 14px 18px;
-
         font-size: 14px;
-
         text-transform: uppercase;
-
         border-bottom: 2px solid rgba(0, 245, 212, 0.3);
-
         letter-spacing: 0.5px;
-
     }
-
     .tabela-dados td {
-
         padding: 14px 18px;
-
         color: #e2e8f0;
-
         font-size: 14px;
-
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-
     }
-
     .tabela-dados tr:hover {
-
         background-color: rgba(255, 255, 255, 0.02);
-
     }
-
     .badge-venda {
-
         display: inline-block;
-
         padding: 4px 10px;
-
         border-radius: 4px;
-
         font-size: 12px;
-
         font-weight: bold;
-
         text-transform: uppercase;
-
         background: rgba(34, 197, 94, 0.1);
-
         color: #22c55e;
-
         border: 1px solid rgba(34, 197, 94, 0.3);
-
     }
-
     .preco-original {
-
         text-decoration: line-through;
-
         color: #94a3b8;
-
         font-size: 12px;
-
         display: block;
-
     }
-
     .preco-final {
-
         color: #00F5D4;
-
         font-weight: bold;
-
     }
-
     .tag-desconto {
-
         background: rgba(234, 179, 8, 0.1);
-
         color: #eab308;
-
         border: 1px solid rgba(234, 179, 8, 0.3);
-
         padding: 2px 6px;
-
         border-radius: 3px;
-
         font-size: 10px;
-
         margin-left: 5px;
-
         font-weight: bold;
-
     }
 
+    /* --- AJUSTES DE ROLAGEM E CORREÇÃO DOS MENUS FIXOS --- */
+
+    /* Trava a tela inteira para evitar que a topbar suba */
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        overflow: hidden; /* Impede a página de rolar como um todo */
+    }
+
+    /* Fixa a Topbar no topo absoluto */
+    .topbar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        z-index: 1000;
+    }
+
+    /* Organiza a estrutura abaixo da topbar */
+    .layout {
+        display: flex;
+        margin-top: 70px; /* Compensa a altura da topbar */
+        height: calc(100vh - 70px);
+    }
+
+    /* Fixa a Sidebar na lateral esquerda */
+    .sidebar {
+        position: fixed !important;
+        left: 0;
+        top: 70px;
+        width: 250px;
+        height: calc(100vh - 70px);
+        overflow-y: auto;
+        z-index: 999;
+    }
+
+    /* A MÁGICA ACONTECE AQUI: Apenas esta área vai receber a rolagem */
+    .main {
+        margin-left: 250px !important; /* Deixa o espaço da sidebar livre */
+        width: calc(100% - 250px) !important;
+        height: 100%; /* Ocupa o restante da tela vertical */
+        overflow-y: auto; /* Ativa o scroll APENAS aqui dentro */
+        padding: 20px;
+        box-sizing: border-box;
+    }
 </style>
 
 
 
-<div class="container-tabela">
 
-    <table class="tabela-dados">
-
-        <thead>
-
-            <tr>
-
-                <th>Produto</th>
-
-                <th>Nº Lote</th>
-
-                <th>Qtd Vendida</th>
-
-                <th>Valor Total</th>
-
-                <th>Data da Venda</th>
-
-                <th>Motivo</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
 
             <?php
 
