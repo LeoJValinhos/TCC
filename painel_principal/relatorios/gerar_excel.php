@@ -44,31 +44,53 @@ fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 
 
 
-// 1. RELATÓRIO DE DESCONTOS
+/* =====================================================
 
-if ($tipo == "descontos") {
+            RELATÓRIO: DESCONTOS
 
-    fputcsv($output, ['Produto', 'Lote', 'Quantidade', 'Desconto (%)', 'Valor Desconto (R$)'], ';');
+            ===================================================== */
 
-    $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.desconto, l.preco_venda
+            if ($tipo == "descontos") {
+    // Define os cabeçalhos das colunas
+    fputcsv($output, ['Produto', 'Nº Lote', 'Qtd em Estoque', 'Valor Original', 'Val. Unit. c/ Desconto', 'Desconto Aplicado', 'Valor Total Estoque'], ';');
 
+    $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.preco_venda, l.desconto, l.status_lote
             FROM produtoslotes l
-
             INNER JOIN produtos p ON p.idProduto = l.idproduto
-
-            WHERE l.idEmpresa = '$idEmpresa' AND l.desconto > 0";
-
+            WHERE l.idEmpresa = '$idEmpresa' AND l.desconto > 0
+            ORDER BY l.desconto DESC, p.NomeProduto ASC";
+            
     $result = $conn->query($sql);
 
     while ($row = $result->fetch_assoc()) {
+        $qtd = intval($row['quantidade']);
+        $preco_original = floatval($row['preco_venda']);
+        $porcentagem_desc = floatval($row['desconto']);
+        
+        $preco_com_desconto = $preco_original * (1 - ($porcentagem_desc / 100));
+        $valor_total_estoque = $preco_com_desconto * $qtd;
+        
+        $status_limpo = strtolower(trim($row['status_lote']));
+        $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
+        
+        $nome_produto = $row['NomeProduto'];
+        if ($status_limpo == 'vencido') {
+            $nome_produto .= ' (VENCIDO)';
+        }
 
-        $valor_desc = ($row['quantidade'] * $row['preco_venda']) * ($row['desconto'] / 100);
-
-        fputcsv($output, [$row['NomeProduto'], $row['numero_lote'], $row['quantidade'].' un', $row['desconto'].'%', number_format($valor_desc, 2, ',', '.')], ';');
-
+        // Escreve os dados puramente nas colunas do Excel
+        fputcsv($output, [
+            $nome_produto,
+            $lote,
+            $qtd . ' un',
+            'R$ ' . number_format($preco_original, 2, ',', '.'),
+            'R$ ' . number_format($preco_com_desconto, 2, ',', '.'),
+            number_format($porcentagem_desc, 0) . '% OFF',
+            'R$ ' . number_format($valor_total_estoque, 2, ',', '.')
+        ], ';');
     }
-
 }
+
 
 // 2. RELATÓRIO DE VENDAS
 
@@ -98,48 +120,70 @@ elseif ($tipo == "vendas") {
 
 }
 
-// 3. RELATÓRIO DE PRODUTOS
-
+// 3. RELATÓRIO DE PRODUTOS (ALINHADO COM OS LOTES E DESCONTOS)
 elseif ($tipo == "produtos") {
+    // Cabeçalho do Excel com as novas colunas
+    fputcsv($output, ['Produto', 'N. Lote', 'Marca', 'Preço Compra', 'Preço Venda Base', 'Desconto %', 'Preço Venda Final'], ';');
 
-    fputcsv($output, ['Produto', 'Marca', 'Preço Compra', 'Preço Venda'], ';');
-
-    $sql = "SELECT NomeProduto, MarcaProduto, preco_padrao_compra, preco_padrao_venda FROM produtos WHERE idEmpresa = '$idEmpresa'";
-
+    $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.preco_compra, l.preco_venda, l.desconto
+            FROM produtoslotes l
+            INNER JOIN produtos p ON l.idproduto = p.IdProduto
+            WHERE l.idEmpresa = '$idEmpresa'
+            ORDER BY p.NomeProduto ASC, l.numero_lote ASC";
+            
     $result = $conn->query($sql);
 
     while ($row = $result->fetch_assoc()) {
+        $p_compra = floatval($row['preco_compra']);
+        $p_venda_base = floatval($row['preco_venda']);
+        $desc = floatval($row['desconto']);
+        
+        // Calcula a venda final para o Excel
+        $p_venda_final = $p_venda_base * (1 - ($desc / 100));
+        $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
+        $marca = !empty($row['MarcaProduto']) ? $row['MarcaProduto'] : '-';
 
-        fputcsv($output, [$row['NomeProduto'], $row['MarcaProduto'], $row['preco_padrao_compra'], $row['preco_padrao_venda']], ';');
-
+        // Formata os valores numéricos com vírgula para o Excel abrir certinho
+        fputcsv($output, [
+            $row['NomeProduto'],
+            $lote,
+            $marca,
+            number_format($p_compra, 2, ',', '.'),
+            number_format($p_venda_base, 2, ',', '.'),
+            $desc . '%',
+            number_format($p_venda_final, 2, ',', '.')
+        ], ';');
     }
-
 }
 
-// 4. RELATÓRIO DE BAIXAS/PERDAS
-
+// 4. RELATÓRIO DE BAIXAS/PERDAS (Com cálculo de Prejuízo adicionado)
 elseif ($tipo == "baixas" || $tipo == "perdas") {
-
-    fputcsv($output, ['Produto', 'Lote', 'Qtd', 'Motivo', 'Data'], ';');
-
-    $sql = "SELECT p.NomeProduto, l.numero_lote, s.quantidade_saida, s.motivo_saida, s.data_saida
-
+    // Adicionado cabeçalho do preço de custo e do prejuízo total
+    fputcsv($output, ['Produto', 'Lote', 'Qtd', 'Motivo', 'Custo Unitário', 'Prejuízo Total', 'Data'], ';');
+    
+    // Adicionado l.preco_compra na busca do banco de dados
+    $sql = "SELECT p.NomeProduto, l.numero_lote, s.quantidade_saida, s.motivo_saida, s.data_saida, l.preco_compra
             FROM saida s
-
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
-
-            INNER JOIN produtos p ON l.idproduto = p.IdProduto
-
-            WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) <> 'venda'";
-
+            INNER JOIN produtos p ON l.idproduto = p.idProduto
+            WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) <> 'venda' $sql_filtro ORDER BY s.id_saida DESC";
+            
     $result = $conn->query($sql);
-
     while ($row = $result->fetch_assoc()) {
+        $qtd = intval($row['quantidade_saida']);
+        $custo_unitario = floatval($row['preco_compra']);
+        $prejuizo_total = $qtd * $custo_unitario;
 
-        fputcsv($output, [$row['NomeProduto'], $row['numero_lote'], $row['quantidade_saida'], $row['motivo_saida'], $row['data_saida']], ';');
-
+        fputcsv($output, [
+            $row['NomeProduto'], 
+            $row['numero_lote'], 
+            $qtd, 
+            $row['motivo_saida'], 
+            'R$ '.number_format($custo_unitario, 2, ',', '.'),
+            'R$ '.number_format($prejuizo_total, 2, ',', '.'),
+            $row['data_saida']
+        ], ';');
     }
-
 }
 
 // 6. RELATÓRIO DE LUCRO (Adicionado para o Excel)
@@ -196,6 +240,64 @@ elseif ($tipo == "lucro") {
 
 }
 
+// 4. RELATÓRIO DE LOTES (COM CAMPO MARCA)
+elseif ($tipo == "lotes") {
+    // Cabeçalho do Excel incluindo a coluna Marca
+    fputcsv($output, ['Produto', 'Nº Lote', 'Marca', 'Quantidade', 'Validade', 'Status'], ';');
+
+    $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote
+            FROM produtoslotes l
+            INNER JOIN produtos p ON l.idproduto = p.IdProduto
+            WHERE l.idEmpresa = '$idEmpresa'
+            ORDER BY l.idlote DESC";
+            
+    $result = $conn->query($sql);
+
+    while ($row = $result->fetch_assoc()) {
+        $data_validade = ($row['validade']) ? date('d/m/Y', strtotime($row['validade'])) : '-';
+        $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
+        $marca = !empty($row['MarcaProduto']) ? $row['MarcaProduto'] : '-';
+
+        fputcsv($output, [
+            $row['NomeProduto'],
+            $lote,
+            $marca,
+            intval($row['quantidade']) . ' un',
+            $data_validade,
+            strtoupper($row['status_lote'])
+        ], ';');
+    }
+}
+
+// 5. RELATÓRIO DE VENCIMENTO (APENAS ITENS VENCIDOS)
+elseif ($tipo == "vencimento") {
+    // Cabeçalho do Excel com as colunas idênticas à interface
+    fputcsv($output, ['Produto', 'Nº Lote', 'Quantidade', 'Validade', 'Status'], ';');
+
+    // Query filtrando apenas os produtos com status 'vencido'
+    $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote
+            FROM produtoslotes l
+            INNER JOIN produtos p ON l.idproduto = p.IdProduto
+            WHERE l.idEmpresa = '$idEmpresa' AND LOWER(l.status_lote) = 'vencido' " . $filtro_lote . "
+            ORDER BY l.idlote DESC";
+            
+    $result = $conn->query($sql);
+
+    while ($row = $result->fetch_assoc()) {
+        $data_validade = ($row['validade']) ? date('d/m/Y', strtotime($row['validade'])) : '-';
+        $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
+
+        // Escreve os dados no arquivo CSV/Excel
+        fputcsv($output, [
+            $row['NomeProduto'],
+            $lote,
+            intval($row['quantidade']) . ' un',
+            $data_validade,
+            strtoupper($row['status_lote'])
+        ], ';');
+    }
+}
+
 // 5. DASHBOARD PADRÃO (Caso não seja nenhum dos acima)
 
 else {
@@ -221,6 +323,8 @@ else {
     }
 
 }
+
+
 
 
 
