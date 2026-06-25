@@ -325,57 +325,8 @@ if ($periodo_atual == "hoje") {
 
         <?php
 
-        /* =================================================================
-           1. CENÁRIO: RELATÓRIO DE VENDAS (HISTÓRICO GERAL DE SAÍDAS)
-           ================================================================= */
-        elseif ($tipo == "vendas"):
-            $sql = "SELECT p.NomeProduto, s.quantidade_saida, s.data_saida, l.numero_lote, l.preco_venda, l.desconto
-                    FROM saida s
-                    INNER JOIN produtoslotes l ON s.idlote = l.idlote
-                    INNER JOIN produtos p ON l.idproduto = p.IdProduto
-                    WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) = 'venda' " . $filtro_saida . "
-                    ORDER BY s.id_saida DESC";
-            $resultado = $conn->query($sql);
-        ?>
-            <thead>
-                <tr>
-                    <th>Produto</th>
-                    <th>Nº Lote</th>
-                    <th>Qtd Vendida</th>
-                    <th>Data Venda</th>
-                    <th style="text-align: right;">Preço Unitário</th>
-                    <th style="text-align: right;">Total Faturado</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($resultado && $resultado->num_rows > 0) {
-                    while ($row = $resultado->fetch_assoc()) {
-                        $data_venda = ($row['data_saida']) ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
-                        $qtd = intval($row['quantidade_saida']);
-                        $preco_venda = floatval($row['preco_venda']);
-                        $porcentagem_desc = floatval($row['desconto']);
-
-                        $preco_com_desconto = $preco_venda * (1 - ($porcentagem_desc / 100));
-                        $total_linha = $qtd * $preco_com_desconto;
-                        $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
-
-                        echo "<tr>
-                                <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto']) . "</td>
-                                <td style='color: #94a3b8;'>" . $lote . "</td>
-                                <td>" . $qtd . " un</td>
-                                <td>" . $data_venda . "</td>
-                                <td style='text-align: right; color: #94a3b8;'>R$ " . number_format($preco_com_desconto, 2, ',', '.') . "</td>
-                                <td style='text-align: right; color: #22c55e; font-weight: bold;'>R$ " . number_format($total_linha, 2, ',', '.') . "</td>
-                              </tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='6' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhuma venda registrada no período selecionado.</td></tr>";
-                }
-                ?>
-            </tbody>
-
-        <?php
+        
+        
         /* =================================================================
            3. CENÁRIO: RELATÓRIO DE LUCRO BRUTO (COM COLUNA DE DESCONTO)
            ================================================================= */
