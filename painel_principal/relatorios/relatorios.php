@@ -257,103 +257,68 @@ if ($periodo_atual == "hoje") {
         <?php
 
         /* =================================================================
-
-           2. CENÁRIO: RELATÓRIO DE DESCONTOS APLICADOS
-
+           2. CENÁRIO: RELATÓRIO DE DESCONTOS APLICADOS (LOTES EM PROMOÇÃO)
            ================================================================= */
-
         elseif ($tipo == "descontos"):
-
-            $sql = "SELECT p.NomeProduto, l.numero_lote, s.quantidade_saida, s.data_saida, l.preco_venda, l.desconto
-
-                    FROM saida s
-
-                    INNER JOIN produtoslotes l ON s.idlote = l.idlote
-
+            // Seleciona diretamente os lotes com desconto ativo (> 0), trazendo a validade e status para a verificação
+            $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.preco_venda, l.desconto, l.validade, l.status_lote
+                    FROM produtoslotes l
                     INNER JOIN produtos p ON l.idproduto = p.IdProduto
-
-                    WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) = 'venda' " . $filtro_saida . "
-
-                    ORDER BY s.id_saida DESC";
-
+                    WHERE l.idEmpresa = '$idEmpresa' AND l.desconto > 0 " . $filtro_lote . "
+                    ORDER BY l.desconto DESC, p.NomeProduto ASC";
             $resultado = $conn->query($sql);
-
         ?>
-
             <thead>
-
                 <tr>
-
                     <th>Produto</th>
-
                     <th>Nº Lote</th>
-
-                    <th>Qtd Vendida</th>
-
-                    <th>Data da Venda</th>
-
-                    <th>Desconto Aplicado</th>
-
-                    <th>Valor Total</th>
-
+                    <th>Qtd em Estoque</th>
+                    <th style="text-align: right;">Valor Original</th>
+                    <th style="text-align: right;">Val. Unit. c/ Desconto</th>
+                    <th style="text-align: center;">Desconto Aplicado</th>
+                    <th style="text-align: right;">Valor Total Estoque</th>
                 </tr>
-
             </thead>
-
             <tbody>
-
                 <?php
-
                 if ($resultado && $resultado->num_rows > 0) {
-
                     while ($row = $resultado->fetch_assoc()) {
-
-                        $data_venda = ($row['data_saida']) ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
-
-                       
-
-                        $qtd = intval($row['quantidade_saida']);
-
-                        $preco_venda = floatval($row['preco_venda']);
-
+                        $qtd = intval($row['quantidade']);
+                        $preco_original = floatval($row['preco_venda']);
                         $porcentagem_desc = floatval($row['desconto']);
-
-                       
-
-                        $bruto = $qtd * $preco_venda;
-
-                        $valor_desconto = $bruto * ($porcentagem_desc / 100);
-
-                        $valor_total = $bruto - $valor_desconto;
-
-                       
+                        
+                        // Cálculos baseados nos valores unitários e no estoque atual
+                        $preco_com_desconto = $preco_original * (1 - ($porcentagem_desc / 100));
+                        $total_desconto_lote = ($preco_original * ($porcentagem_desc / 100)) * $qtd;
+                        $valor_total_estoque = $preco_com_desconto * $qtd;
+                        
+                        $status_limpo = strtolower(trim($row['status_lote']));
+                        $lote = !empty($row['numero_lote']) ? '#'.htmlspecialchars($row['numero_lote']) : '-';
 
                         echo "<tr>
-
-                                <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto']) . "</td>
-
-                                <td style='color: #94a3b8;'>#" . htmlspecialchars($row['numero_lote']) . "</td>
-
+                                <td style='font-weight: 600;'>
+                                    " . htmlspecialchars($row['NomeProduto']) . " ";
+                                    
+                                    // Pequena tag de alerta caso o produto esteja em promoção MAS também esteja VENCIDO
+                                    if ($status_limpo == 'vencido') {
+                                        echo "<span style='background: #ef4444; color: #ffffff; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 5px; font-weight: bold; vertical-align: middle;'>VENCIDO</span>";
+                                    }
+                                    
+                        echo "  </td>
+                                <td style='color: #94a3b8;'> " . $lote . " </td>
                                 <td>" . $qtd . " un</td>
-
-                                <td>" . $data_venda . "</td>
-
-                                <td style='color: #eab308; font-weight: bold;'>" . number_format($porcentagem_desc, 0) . "% (R$ " . number_format($valor_desconto, 2, ',', '.') . ")</td>
-
-                                <td style='color: #22c55e;'>R$ " . number_format($valor_total, 2, ',', '.') . "</td>
-
+                                <td style='text-align: right; color: #94a3b8;'>R$ " . number_format($preco_original, 2, ',', '.') . "</td>
+                                <td style='text-align: right; color: #ffffff; font-weight: 500;'>R$ " . number_format($preco_com_desconto, 2, ',', '.') . "</td>
+                                <td style='text-align: center; color: #eab308; font-weight: bold;'>
+                                    " . number_format($porcentagem_desc, 0) . "% OFF
+                                </td>
+                                <td style='text-align: right; color: #22c55e; font-weight: bold;'>R$ " . number_format($valor_total_estoque, 2, ',', '.') . "</td>
                               </tr>";
-
                     }
-
                 } else {
-
-                    echo "<tr><td colspan='6' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhum desconto encontrado para o período selecionado.</td></tr>";
-
+                    echo "<tr><td colspan='7' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhum lote com promoção ativa encontrado para o período selecionado.</td></tr>";
                 }
-
                 ?>
-
             </tbody>
 
 
@@ -473,111 +438,159 @@ if ($periodo_atual == "hoje") {
         <?php
 
         /* =================================================================
-
-           4. CENÁRIO: DEMAIS ABAS DE LOTES (Produtos, Lotes, Vencimento)
-
+           4. CENÁRIO: RELATÓRIO DE PRODUTOS CADASTRADOS (PREÇOS E DESCONTOS)
            ================================================================= */
-
-        else:
-
-            $complemento_query = "";
-
-            if ($tipo == "vencimento") {
-
-                $complemento_query = " AND LOWER(l.status_lote) = 'vencido'";
-
-            }
-
-
-
-            $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote
-
+        elseif ($tipo == "produtos"):
+            $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.preco_compra, l.preco_venda, l.desconto
                     FROM produtoslotes l
-
                     INNER JOIN produtos p ON l.idproduto = p.IdProduto
-
-                    WHERE l.idEmpresa = '$idEmpresa' " . $filtro_lote . $complemento_query . "
-
-                    ORDER BY l.idlote DESC";
-
+                    WHERE l.idEmpresa = '$idEmpresa' " . $filtro_lote . "
+                    ORDER BY p.NomeProduto ASC, l.numero_lote ASC";
             $resultado = $conn->query($sql);
-
         ?>
-
             <thead>
-
                 <tr>
-
                     <th>Produto</th>
-
-                    <th>Nº Lote</th>
-
-                    <th>Quantidade</th>
-
-                    <th>Validade</th>
-
-                    <th>Status</th>
-
+                    <th style="text-align: center;">Nº Lote</th>
+                    <th>Marca</th>
+                    <th style="text-align: right;">Preço Compra</th>
+                    <th style="text-align: right;">Preço Venda</th>
+                    <th style="text-align: center;">Desconto</th>
+                    <th style="text-align: right;">Venda Final</th>
                 </tr>
-
             </thead>
-
             <tbody>
-
                 <?php
-
                 if ($resultado && $resultado->num_rows > 0) {
-
                     while ($row = $resultado->fetch_assoc()) {
-
-                        $data_validade = ($row['validade']) ? date('d/m/Y', strtotime($row['validade'])) : '-';
-
-                        $status_limpo = strtolower(trim($row['status_lote']));
-
-                        $classe_badge = 'badge-normal';
-
-                       
-
-                        if ($status_limpo == 'vencido') {
-
-                            $classe_badge = 'badge-vencido';
-
-                        } elseif ($status_limpo == 'promocao' || $status_limpo == 'promoção') {
-
-                            $classe_badge = 'badge-promocao';
-
-                        }
-
-                       
+                        $p_compra = floatval($row['preco_compra']);
+                        $p_venda_base = floatval($row['preco_venda']);
+                        $desc = floatval($row['desconto']);
+                        
+                        // Preço final calculado com desconto aplicado
+                        $p_venda_final = $p_venda_base * (1 - ($desc / 100));
+                        $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
+                        $marca = !empty($row['MarcaProduto']) ? htmlspecialchars($row['MarcaProduto']) : '-';
 
                         echo "<tr>
-
                                 <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto']) . "</td>
-
-                                <td style='color: #94a3b8;'>#" . htmlspecialchars($row['numero_lote']) . "</td>
-
-                                <td>" . intval($row['quantidade']) . " un</td>
-
-                                <td>" . $data_validade . "</td>
-
-                                <td><span class='badge " . $classe_badge . "'>" . htmlspecialchars($row['status_lote']) . "</span></td>
-
+                                <td style='color: #94a3b8; text-align: center;'>" . $lote . "</td>
+                                <td style='color: #ffffff;'>" . $marca . "</td>
+                                <td style='color: #ffffff; text-align: right;'>R$ " . number_format($p_compra, 2, ',', '.') . "</td>
+                                <td style='color: #94a3b8; text-align: right;'>R$ " . number_format($p_venda_base, 2, ',', '.') . "</td>
+                                <td style='text-align: center;'>";
+                                    if ($desc > 0) {
+                                        echo "<span style='color: #ef4444; font-weight: bold;'>" . $desc . "%</span>";
+                                    } else {
+                                        echo "<span style='color: #94a3b8;'>-</span>";
+                                    }
+                        echo "  </td>
+                                <td style='text-align: right; font-weight: bold; color: " . ($desc > 0 ? '#22c55e' : '#e2e8f0') . ";'>
+                                    R$ " . number_format($p_venda_final, 2, ',', '.') . "
+                                </td>
                               </tr>";
-
                     }
-
                 } else {
-
-                    echo "<tr><td colspan='5' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhum dado encontrado para este período.</td></tr>";
-
+                    echo "<tr><td colspan='7' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhum produto ou lote encontrado para o período selecionado.</td></tr>";
                 }
-
                 ?>
-
             </tbody>
 
+        <?php
+        /* =================================================================
+           5. CENÁRIO: ABA EXCLUSIVA DE LOTES GERAIS (COM MARCA)
+           ================================================================= */
+        elseif ($tipo == "lotes"):
+            $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote
+                    FROM produtoslotes l
+                    INNER JOIN produtos p ON l.idproduto = p.IdProduto
+                    WHERE l.idEmpresa = '$idEmpresa' " . $filtro_lote . "
+                    ORDER BY l.idlote DESC";
+            $resultado = $conn->query($sql);
+        ?>
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Nº Lote</th>
+                    <th>Marca</th>
+                    <th>Quantidade</th>
+                    <th>Validade</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if ($resultado && $resultado->num_rows > 0) {
+                    while ($row = $resultado->fetch_assoc()) {
+                        $data_validade = ($row['validade']) ? date('d/m/Y', strtotime($row['validade'])) : '-';
+                        $status_limpo = strtolower(trim($row['status_lote']));
+                        $classe_badge = 'badge-normal';
+                        
+                        if ($status_limpo == 'vencido') {
+                            $classe_badge = 'badge-vencido';
+                        } elseif ($status_limpo == 'promocao' || $status_limpo == 'promoção') {
+                            $classe_badge = 'badge-promocao';
+                        }
+
+                        $marca = !empty($row['MarcaProduto']) ? htmlspecialchars($row['MarcaProduto']) : '-';
+                        $lote = !empty($row['numero_lote']) ? '#'.htmlspecialchars($row['numero_lote']) : '-';
+                        
+                        echo "<tr>
+                                <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto']) . "</td>
+                                <td style='color: #94a3b8;'>" . $lote . "</td>
+                                <td style='color: #ffffff;'>" . $marca . "</td>
+                                <td>" . intval($row['quantidade']) . " un</td>
+                                <td>" . $data_validade . "</td>
+                                <td><span class='badge " . $classe_badge . "'>" . htmlspecialchars($row['status_lote']) . "</span></td>
+                              </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='6' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhum lote encontrado para este período.</td></tr>";
+                }
+                ?>
+            </tbody>
+
+        <?php
+        /* =================================================================
+           6. CENÁRIO: ABA EXCLUSIVA DE VENCIMENTO (Apenas Vencidos)
+           ================================================================= */
+        else: // Se não for nenhum dos anteriores, assume "vencimento" por padrão de segurança
+            $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote
+                    FROM produtoslotes l
+                    INNER JOIN produtos p ON l.idproduto = p.IdProduto
+                    WHERE l.idEmpresa = '$idEmpresa' AND LOWER(l.status_lote) = 'vencido' " . $filtro_lote . "
+                    ORDER BY l.idlote DESC";
+            $resultado = $conn->query($sql);
+        ?>
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Nº Lote</th>
+                    <th>Quantidade</th>
+                    <th>Validade</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if ($resultado && $resultado->num_rows > 0) {
+                    while ($row = $resultado->fetch_assoc()) {
+                        $data_validade = ($row['validade']) ? date('d/m/Y', strtotime($row['validade'])) : '-';
+                        $lote = !empty($row['numero_lote']) ? '#'.htmlspecialchars($row['numero_lote']) : '-';
+                        
+                        echo "<tr>
+                                <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto']) . "</td>
+                                <td style='color: #94a3b8;'>" . $lote . "</td>
+                                <td>" . intval($row['quantidade']) . " un</td>
+                                <td>" . $data_validade . "</td>
+                                <td><span class='badge badge-vencido'>" . htmlspecialchars($row['status_lote']) . "</span></td>
+                              </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='5' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhum produto vencido encontrado para este período.</td></tr>";
+                }
+                ?>
+            </tbody>
         <?php endif; ?>
-
     </table>
-
 </div>
