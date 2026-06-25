@@ -326,111 +326,120 @@ if ($periodo_atual == "hoje") {
         <?php
 
         /* =================================================================
-
-           3. CENÁRIO: RELATÓRIO DE LUCRO BRUTO / VENDAS
-
+           1. CENÁRIO: RELATÓRIO DE VENDAS (HISTÓRICO GERAL DE SAÍDAS)
            ================================================================= */
-
-        elseif ($tipo == "lucro"):
-
-            $sql = "SELECT p.NomeProduto, s.quantidade_saida, s.data_saida, l.preco_compra, l.preco_venda, l.desconto
-
+        elseif ($tipo == "vendas"):
+            $sql = "SELECT p.NomeProduto, s.quantidade_saida, s.data_saida, l.numero_lote, l.preco_venda, l.desconto
                     FROM saida s
-
                     INNER JOIN produtoslotes l ON s.idlote = l.idlote
-
                     INNER JOIN produtos p ON l.idproduto = p.IdProduto
-
                     WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) = 'venda' " . $filtro_saida . "
-
                     ORDER BY s.id_saida DESC";
-
             $resultado = $conn->query($sql);
-
         ?>
-
             <thead>
-
                 <tr>
-
                     <th>Produto</th>
-
+                    <th>Nº Lote</th>
                     <th>Qtd Vendida</th>
-
                     <th>Data Venda</th>
-
-                    <th>Preço Custo (Unidade)</th>
-
-                    <th>Valor Faturado</th>
-
-                    <th>Lucro Estimado</th>
-
+                    <th style="text-align: right;">Preço Unitário</th>
+                    <th style="text-align: right;">Total Faturado</th>
                 </tr>
-
             </thead>
-
             <tbody>
-
                 <?php
-
                 if ($resultado && $resultado->num_rows > 0) {
-
                     while ($row = $resultado->fetch_assoc()) {
-
                         $data_venda = ($row['data_saida']) ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
-
-                       
-
                         $qtd = intval($row['quantidade_saida']);
-
-                        $custo_unitario = floatval($row['preco_compra']);
-
                         $preco_venda = floatval($row['preco_venda']);
-
                         $porcentagem_desc = floatval($row['desconto']);
 
-
-
-                        $custo_total = $qtd * $custo_unitario;
-
-                        $venda_bruta = $qtd * $preco_venda;
-
-                        $total_desconto = $venda_bruta * ($porcentagem_desc / 100);
-
-                       
-
-                        $faturamento_real = $venda_bruta - $total_desconto;
-
-                        $lucro = $faturamento_real - $custo_total;
-
-
+                        $preco_com_desconto = $preco_venda * (1 - ($porcentagem_desc / 100));
+                        $total_linha = $qtd * $preco_com_desconto;
+                        $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
 
                         echo "<tr>
-
                                 <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto']) . "</td>
-
+                                <td style='color: #94a3b8;'>" . $lote . "</td>
                                 <td>" . $qtd . " un</td>
-
                                 <td>" . $data_venda . "</td>
-
-                                <td style='color: #94a3b8;'>R$ " . number_format($custo_unitario, 2, ',', '.') . "</td>
-
-                                <td style='color: #38bdf8;'>R$ " . number_format($faturamento_real, 2, ',', '.') . "</td>
-
-                                <td style='color: #22c55e; font-weight: bold;'>R$ " . number_format($lucro, 2, ',', '.') . "</td>
-
+                                <td style='text-align: right; color: #94a3b8;'>R$ " . number_format($preco_com_desconto, 2, ',', '.') . "</td>
+                                <td style='text-align: right; color: #22c55e; font-weight: bold;'>R$ " . number_format($total_linha, 2, ',', '.') . "</td>
                               </tr>";
-
                     }
-
                 } else {
-
-                    echo "<tr><td colspan='6' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhuma venda encontrada para calcular lucros neste período.</td></tr>";
-
+                    echo "<tr><td colspan='6' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhuma venda registrada no período selecionado.</td></tr>";
                 }
-
                 ?>
+            </tbody>
 
+        <?php
+        /* =================================================================
+           3. CENÁRIO: RELATÓRIO DE LUCRO BRUTO (COM COLUNA DE DESCONTO)
+           ================================================================= */
+        elseif ($tipo == "lucro"):
+            $sql = "SELECT p.NomeProduto, s.quantidade_saida, s.data_saida, l.preco_compra, l.preco_venda, l.desconto
+                    FROM saida s
+                    INNER JOIN produtoslotes l ON s.idlote = l.idlote
+                    INNER JOIN produtos p ON l.idproduto = p.IdProduto
+                    WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) = 'venda' " . $filtro_saida . "
+                    ORDER BY s.id_saida DESC";
+            $resultado = $conn->query($sql);
+        ?>
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Qtd Vendida</th>
+                    <th>Data Venda</th>
+                    <th style="text-align: right;">Preço Custo (Un)</th>
+                    <th style="text-align: center;">Desconto</th>
+                    <th style="text-align: right;">Valor Faturado</th>
+                    <th style="text-align: right;">Lucro Estimado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if ($resultado && $resultado->num_rows > 0) {
+                    while ($row = $resultado->fetch_assoc()) {
+                        $data_venda = ($row['data_saida']) ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
+                        
+                        $qtd = intval($row['quantidade_saida']);
+                        $custo_unitario = floatval($row['preco_compra']);
+                        $preco_venda = floatval($row['preco_venda']);
+                        $porcentagem_desc = floatval($row['desconto']);
+
+                        $custo_total = $qtd * $custo_unitario;
+                        $venda_bruta = $qtd * $preco_venda;
+                        $total_desconto = $venda_bruta * ($porcentagem_desc / 100);
+                        
+                        $faturamento_real = $venda_bruta - $total_desconto;
+                        $lucro = $faturamento_real - $custo_total;
+
+                        // Define a cor do lucro: vermelho se for negativo (prejuízo) e verde se positivo
+                        $cor_lucro = ($lucro >= 0) ? '#22c55e' : '#ef4444';
+
+                        echo "<tr>
+                                <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto']) . "</td>
+                                <td>" . $qtd . " un</td>
+                                <td>" . $data_venda . "</td>
+                                <td style='text-align: right; color: #94a3b8;'>R$ " . number_format($custo_unitario, 2, ',', '.') . "</td>
+                                <td style='text-align: center;'>";
+                                    if ($porcentagem_desc > 0) {
+                                        echo "<span style='color: #eab308; font-weight: bold;'>" . number_format($porcentagem_desc, 0) . "% OFF</span>";
+                                    } else {
+                                        echo "<span style='color: #64748b;'>-</span>";
+                                    }
+                        echo "  </td>
+                                <td style='text-align: right; color: #38bdf8;'>R$ " . number_format($faturamento_real, 2, ',', '.') . "</td>
+                                <td style='text-align: right; color: " . $cor_lucro . "; font-weight: bold;'>R$ " . number_format($lucro, 2, ',', '.') . "</td>
+                              </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='7' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhuma venda encontrada para calcular lucros neste período.</td></tr>";
+                }
+                ?>
             </tbody>
 
 
