@@ -15,6 +15,112 @@ $idEmpresa = $_SESSION['idEmpresa'];
     <link rel="stylesheet" href="saida.css">
     <link rel="icon" type="image/png" href="../Imagens/Carrinho.png" width="70" height="70">
     <title>INVEX - Saída de Produtos</title>
+    <style>
+        /* Ajustes inline para garantir que o layout quebre as amarras de largura máxima */
+        .layout {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .main {
+            flex: 1;
+            padding: 30px;
+            box-sizing: border-box;
+            background-color: #030e1e; /* Mantendo o fundo escuro padrão */
+        }
+
+        /* Faz o container central se espalhar por toda a tela */
+        .container-saida-central {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* O card agora ocupa 100% da área útil */
+        .card-neon-invex {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box;
+            background: #05162e;
+            border: 1px solid #00f2ff33;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        }
+
+        /* Input de busca ocupando toda a largura útil */
+        .search-wrapper-invex {
+            width: 100%;
+            position: relative;
+        }
+
+        .input-search-invex {
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+
+        /* Alarga o painel de resultados do dropdown */
+        .dropdown-results-invex {
+            width: 100% !important;
+            max-height: 450px; /* Aumentado para ver mais linhas de uma vez */
+            overflow-y: auto;
+            background: #030e1e;
+            border: 1px solid #00f2ff55;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        /* Tabela esticada para preencher a tela */
+        .table-results-invex {
+            width: 100% !important;
+            border-collapse: collapse;
+        }
+
+        .table-results-invex th, 
+        .table-results-invex td {
+            padding: 14px 18px !important; /* Mais espaçoso para leitura */
+            text-align: left;
+        }
+
+        /* Grid para os campos de quantidade e motivo ficarem lado a lado em telas cheias */
+        .grid-campos-saida {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .grupo-campo-saida {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .grupo-campo-saida input,
+        .grupo-campo-saida select {
+            width: 100% !important;
+            box-sizing: border-box;
+            padding: 12px;
+            background: #030e1e;
+            border: 1px solid #475569;
+            color: #fff;
+            border-radius: 6px;
+        }
+
+        /* Painel de valores em largura cheia */
+        .panel-valores-invex {
+            width: 100%;
+            display: flex;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .valor-card {
+            flex: 1;
+        }
+    </style>
 </head>
 
 <body>
@@ -76,7 +182,6 @@ $idEmpresa = $_SESSION['idEmpresa'];
                                     </thead>
                                     <tbody>
                                         <?php
-                                        // Query ajustada perfeitamente com os nomes exatos das suas colunas do banco
                                         $query = "SELECT l.idlote, l.numero_lote, l.quantidade, l.validade, l.preco_venda, l.desconto, p.NomeProduto, p.MarcaProduto 
                                                   FROM produtoslotes l 
                                                   INNER JOIN produtos p ON l.idproduto = p.idProduto 
@@ -117,11 +222,8 @@ $idEmpresa = $_SESSION['idEmpresa'];
                                                     $data_formatada = "Sem data cadastrada";
                                                 }
 
-                                                // Correção do erro de sintaxe para PHP antigo (usando isset em vez de ??)
                                                 $preco = isset($row['preco_venda']) ? $row['preco_venda'] : 0.00;
                                                 $desconto = isset($row['desconto']) ? $row['desconto'] : 0.00;
-
-                                                // Converte o desconto decimal do banco (ex: 15.00) em número inteiro para a tag (ex: 15)
                                                 $desconto_int = intval($desconto);
 
                                                 echo "<tr class='item-row-invex' data-id='{$row['idlote']}' data-preco='{$preco}' data-desconto='{$desconto_int}' data-busca='".strtolower($row['NomeProduto']." ".$row['MarcaProduto'])."'>";
@@ -160,23 +262,25 @@ $idEmpresa = $_SESSION['idEmpresa'];
                             </div>
                         </div>
 
-                        <div class="grupo-campo-saida">
-                            <label for="quantidade">Quantidade de Saída</label>
-                            <input type="number" id="quantidade" name="quantidade" min="1" value="1" required>
+                        <div class="grid-campos-saida">
+                            <div class="grupo-campo-saida">
+                                <label for="quantidade">Quantidade de Saída</label>
+                                <input type="number" id="quantidade" name="quantidade" min="1" value="1" required>
+                            </div>
+
+                            <div class="grupo-campo-saida">
+                                <label for="motivo">Motivo</label>
+                                <select id="motivo" name="motivo" required>
+                                    <option value="Venda">Venda</option>
+                                    <option value="Vencimento">Produto Vencido</option>
+                                    <option value="Avaria">Avaria / Danificado</option>
+                                    <option value="Ajuste">Ajuste de Inventário</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="grupo-campo-saida">
-                            <label for="motivo">Motivo</label>
-                            <select id="motivo" name="motivo" class="select-nativo-saida" required>
-                                <option value="Venda">Venda</option>
-                                <option value="Vencimento">Produto Vencido</option>
-                                <option value="Avaria">Avaria / Danificado</option>
-                                <option value="Ajuste">Ajuste de Inventário</option>
-                            </select>
-                        </div>
-
-                        <div class="container-botao-saida">
-                            <button type="submit" class="btn-confirmar-neon">Confirmar Saída</button>
+                        <div class="container-botao-saida" style="margin-top: 30px;">
+                            <button type="submit" class="btn-confirmar-neon" style="width: 100%;">Confirmar Saída</button>
                         </div>
                     </form>
                 </div>
