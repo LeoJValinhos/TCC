@@ -487,122 +487,130 @@ $GLOBALS['periodo_atual'] = $periodo;
 
 
 <style>
-    /* --- SEUS ESTILOS ORIGINAIS (MANTIDOS 100% IGUAIS) --- */
-    .container-tabela {
-        width: 100%;
-        margin-top: 20px;
-        background: #001a36;
-        border: 1px solid rgba(0, 245, 212, 0.2);
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-    .tabela-dados {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: left;
-        font-family: sans-serif;
-    }
-    .tabela-dados th {
-        background-color: rgba(0, 245, 212, 0.08);
-        color: #00F5D4;
-        padding: 14px 18px;
-        font-size: 14px;
-        text-transform: uppercase;
-        border-bottom: 2px solid rgba(0, 245, 212, 0.3);
-        letter-spacing: 0.5px;
-    }
-    .tabela-dados td {
-        padding: 14px 18px;
-        color: #e2e8f0;
-        font-size: 14px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .tabela-dados tr:hover {
-        background-color: rgba(255, 255, 255, 0.02);
-    }
-    .badge-venda {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: bold;
-        text-transform: uppercase;
-        background: rgba(34, 197, 94, 0.1);
-        color: #22c55e;
-        border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-    .preco-original {
-        text-decoration: line-through;
-        color: #94a3b8;
-        font-size: 12px;
-        display: block;
-    }
-    .preco-final {
-        color: #00F5D4;
-        font-weight: bold;
-    }
-    .tag-desconto {
-        background: rgba(234, 179, 8, 0.1);
-        color: #eab308;
-        border: 1px solid rgba(234, 179, 8, 0.3);
-        padding: 2px 6px;
-        border-radius: 3px;
-        font-size: 10px;
-        margin-left: 5px;
-        font-weight: bold;
-    }
+        /* 1. BLOQUEIA TOTALMENTE A ROLAGEM EXTERNA DA TELA */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+            box-sizing: border-box;
+            background-color: #02152E; /* Ajuste para a cor padrão do seu fundo */
+        }
 
-    /* --- AJUSTES DE ROLAGEM E CORREÇÃO DOS MENUS FIXOS --- */
+        /* 2. ESTRUTURA DO LAYOUT EM GRIDE/ALTURA FIXA */
+        .layout {
+            display: flex;
+            height: calc(100vh - 70px); /* Desconta a altura da topbar */
+            width: 100%;
+            overflow: hidden;
+        }
 
-    /* Trava a tela inteira para evitar que a topbar suba */
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        overflow: hidden; /* Impede a página de rolar como um todo */
-    }
+        .sidebar {
+            height: 100%;
+            overflow-y: auto;
+        }
 
-    /* Fixa a Topbar no topo absoluto */
-    .topbar {
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 70px;
-        z-index: 1000;
-    }
+        /* 3. ALINHA O CONTEÚDO DA DIREITA SEM DEIXAR ESTICAR */
+        .main {
+            flex: 1;
+            height: 100%;
+            max-height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column; /* Organiza os títulos, menus e tabela em pilha */
+            overflow: hidden !important; /* Proíbe o painel cinza/azul de rolar */
+        }
 
-    /* Organiza a estrutura abaixo da topbar */
-    .layout {
-        display: flex;
-        margin-top: 70px; /* Compensa a altura da topbar */
-        height: calc(100vh - 70px);
-    }
+        /* 4. O CONTEÚDO DINÂMICO OCUPA TODO O ESPAÇO RESTANTE */
+        .conteudo-dinamico-relatorio {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-    /* Fixa a Sidebar na lateral esquerda */
-    .sidebar {
-        position: fixed !important;
-        left: 0;
-        top: 70px;
-        width: 250px;
-        height: calc(100vh - 70px);
-        overflow-y: auto;
-        z-index: 999;
-    }
+        /* 5. A TABELA GANHA O SCROLL INTERNO PERFEITO */
+        .container-tabela {
+            width: 100%;
+            margin-top: 10px;
+            background: #001a36;
+            border: 1px solid rgba(0, 245, 212, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            
+            /* O segredo: preenche dinamicamente o espaço livre e ativa a barra interna */
+            flex: 1 !important;
+            overflow-y: auto !important; 
+        }
 
-    /* A MÁGICA ACONTECE AQUI: Apenas esta área vai receber a rolagem */
-    .main {
-        margin-left: 250px !important; /* Deixa o espaço da sidebar livre */
-        width: calc(100% - 250px) !important;
-        height: 100%; /* Ocupa o restante da tela vertical */
-        overflow-y: auto; /* Ativa o scroll APENAS aqui dentro */
-        padding: 20px;
-        box-sizing: border-box;
-    }
-</style>
+        .tabela-dados {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-family: sans-serif;
+        }
 
+        /* CORREÇÃO DO CABEÇALHO OPRA NÃO EMBOLAR */
+        .tabela-dados th {
+            background-color: #001a36 !important; /* Cor sólida idêntica ao fundo do container */
+            color: #00F5D4;
+            padding: 14px 18px;
+            font-size: 14px;
+            text-transform: uppercase;
+            border-bottom: 2px solid rgba(0, 245, 212, 0.3);
+            letter-spacing: 0.5px;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+        }
 
+        .tabela-dados td {
+            padding: 14px 18px;
+            color: #e2e8f0;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tabela-dados tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* BADGES E ADICIONAIS MANTIDOS */
+        .badge-venda {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .preco-original {
+            text-decoration: line-through;
+            color: #94a3b8;
+            font-size: 12px;
+            display: block;
+        }
+        .preco-final {
+            color: #00F5D4;
+            font-weight: bold;
+        }
+        .tag-desconto {
+            background: rgba(234, 179, 8, 0.1);
+            color: #eab308;
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+    </style>
 
 
 
