@@ -45,19 +45,22 @@ fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 
 
 /* =====================================================
-
             RELATÓRIO: DESCONTOS
-
             ===================================================== */
-
-            if ($tipo == "descontos") {
+if ($tipo == "descontos") {
     // Define os cabeçalhos das colunas
     fputcsv($output, ['Produto', 'Nº Lote', 'Qtd em Estoque', 'Valor Original', 'Val. Unit. c/ Desconto', 'Desconto Aplicado', 'Valor Total Estoque'], ';');
+
+    // Mapeamento do filtro para a tabela de lotes (l.criado_em)
+    $filtro_lote = "";
+    if ($periodo == "hoje") $filtro_lote = " AND DATE(l.criado_em) = CURDATE()";
+    elseif ($periodo == "semana") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+    elseif ($periodo == "mes") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
 
     $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.preco_venda, l.desconto, l.status_lote
             FROM produtoslotes l
             INNER JOIN produtos p ON p.idProduto = l.idproduto
-            WHERE l.idEmpresa = '$idEmpresa' AND l.desconto > 0
+            WHERE l.idEmpresa = '$idEmpresa' AND l.desconto > 0 $filtro_lote
             ORDER BY l.desconto DESC, p.NomeProduto ASC";
             
     $result = $conn->query($sql);
@@ -78,7 +81,6 @@ fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
             $nome_produto .= ' (VENCIDO)';
         }
 
-        // Escreve os dados puramente nas colunas do Excel
         fputcsv($output, [
             $nome_produto,
             $lote,
@@ -91,33 +93,37 @@ fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
     }
 }
 
-
 // 2. RELATÓRIO DE VENDAS
-
 elseif ($tipo == "vendas") {
 
     fputcsv($output, ['Produto', 'Lote', 'Qtd', 'Preço Unit.', 'Desconto (%)', 'Valor Final', 'Data'], ';');
 
+    // O $sql_filtro já está sendo injetado aqui. 
+    // Certifique-se apenas de que a variável $sql_filtro esteja definida no topo do arquivo.
     $sql = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida
-
             FROM saida s
-
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
-
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
-
-            WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) = 'venda' $sql_filtro ORDER BY s.id_saida DESC";
+            WHERE l.idEmpresa = '$idEmpresa' 
+            AND LOWER(s.motivo_saida) = 'venda' 
+            $sql_filtro 
+            ORDER BY s.data_saida DESC";
 
     $result = $conn->query($sql);
 
     while ($row = $result->fetch_assoc()) {
-
         $total = ($row['preco_venda'] * (1 - ($row['desconto'] / 100))) * $row['quantidade_saida'];
 
-        fputcsv($output, [$row['NomeProduto'], $row['numero_lote'], $row['quantidade_saida'], 'R$ '.number_format($row['preco_venda'], 2, ',', '.'), $row['desconto'].'%', 'R$ '.number_format($total, 2, ',', '.'), $row['data_saida']], ';');
-
+        fputcsv($output, [
+            $row['NomeProduto'], 
+            $row['numero_lote'], 
+            $row['quantidade_saida'], 
+            'R$ '.number_format($row['preco_venda'], 2, ',', '.'), 
+            $row['desconto'].'%', 
+            'R$ '.number_format($total, 2, ',', '.'), 
+            $row['data_saida']
+        ], ';');
     }
-
 }
 
 // 3. RELATÓRIO DE PRODUTOS (ALINHADO COM OS LOTES E DESCONTOS)
@@ -125,10 +131,16 @@ elseif ($tipo == "produtos") {
     // Cabeçalho do Excel com as novas colunas
     fputcsv($output, ['Produto', 'N. Lote', 'Marca', 'Preço Compra', 'Preço Venda Base', 'Desconto %', 'Preço Venda Final'], ';');
 
+    // Definição do filtro para a tabela de lotes (l.criado_em)
+    $filtro_lote = "";
+    if ($periodo == "hoje") $filtro_lote = " AND DATE(l.criado_em) = CURDATE()";
+    elseif ($periodo == "semana") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+    elseif ($periodo == "mes") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+
     $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.preco_compra, l.preco_venda, l.desconto
             FROM produtoslotes l
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
-            WHERE l.idEmpresa = '$idEmpresa'
+            WHERE l.idEmpresa = '$idEmpresa' $filtro_lote
             ORDER BY p.NomeProduto ASC, l.numero_lote ASC";
             
     $result = $conn->query($sql);
@@ -158,15 +170,18 @@ elseif ($tipo == "produtos") {
 
 // 4. RELATÓRIO DE BAIXAS/PERDAS (Com cálculo de Prejuízo adicionado)
 elseif ($tipo == "baixas" || $tipo == "perdas") {
-    // Adicionado cabeçalho do preço de custo e do prejuízo total
+    // Cabeçalho do Excel
     fputcsv($output, ['Produto', 'Lote', 'Qtd', 'Motivo', 'Custo Unitário', 'Prejuízo Total', 'Data'], ';');
     
-    // Adicionado l.preco_compra na busca do banco de dados
+    // O $sql_filtro já está presente na query abaixo
     $sql = "SELECT p.NomeProduto, l.numero_lote, s.quantidade_saida, s.motivo_saida, s.data_saida, l.preco_compra
             FROM saida s
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
             INNER JOIN produtos p ON l.idproduto = p.idProduto
-            WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) <> 'venda' $sql_filtro ORDER BY s.id_saida DESC";
+            WHERE l.idEmpresa = '$idEmpresa' 
+            AND LOWER(s.motivo_saida) <> 'venda' 
+            $sql_filtro 
+            ORDER BY s.id_saida DESC";
             
     $result = $conn->query($sql);
     while ($row = $result->fetch_assoc()) {
@@ -191,12 +206,14 @@ elseif ($tipo == "lucro") {
     // Cabeçalhos idênticos à tabela da interface
     fputcsv($output, ['Produto', 'Qtd Vendida', 'Data Venda', 'Preço Custo (Unidade)', 'Desconto', 'Valor Faturado', 'Lucro Estimado'], ';');
 
-    // Query correta que busca do histórico de saídas/vendas reais
+    // Query corrigida utilizando $sql_filtro
     $sql = "SELECT p.NomeProduto, s.quantidade_saida, s.data_saida, l.preco_compra, l.preco_venda, l.desconto
             FROM saida s
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
-            WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) = 'venda' " . (isset($filtro_saida) ? $filtro_saida : '') . "
+            WHERE l.idEmpresa = '$idEmpresa' 
+            AND LOWER(s.motivo_saida) = 'venda' 
+            $sql_filtro 
             ORDER BY s.id_saida DESC";
             
     $result = $conn->query($sql);
@@ -234,10 +251,16 @@ elseif ($tipo == "lotes") {
     // Cabeçalho do Excel incluindo a coluna Marca
     fputcsv($output, ['Produto', 'Nº Lote', 'Marca', 'Quantidade', 'Validade', 'Status'], ';');
 
+    // Definição do filtro para a tabela de lotes (l.criado_em)
+    $filtro_lote = "";
+    if ($periodo == "hoje") $filtro_lote = " AND DATE(l.criado_em) = CURDATE()";
+    elseif ($periodo == "semana") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+    elseif ($periodo == "mes") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+
     $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote
             FROM produtoslotes l
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
-            WHERE l.idEmpresa = '$idEmpresa'
+            WHERE l.idEmpresa = '$idEmpresa' $filtro_lote
             ORDER BY l.idlote DESC";
             
     $result = $conn->query($sql);
@@ -263,11 +286,19 @@ elseif ($tipo == "vencimento") {
     // Cabeçalho do Excel com as colunas idênticas à interface
     fputcsv($output, ['Produto', 'Nº Lote', 'Quantidade', 'Validade', 'Status'], ';');
 
-    // Query filtrando apenas os produtos com status 'vencido'
+    // Definição do filtro para a tabela de lotes (l.criado_em)
+    $filtro_lote = "";
+    if ($periodo == "hoje") $filtro_lote = " AND DATE(l.criado_em) = CURDATE()";
+    elseif ($periodo == "semana") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+    elseif ($periodo == "mes") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+
+    // Query filtrando apenas os produtos com status 'vencido' e aplicando o filtro de data
     $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote
             FROM produtoslotes l
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
-            WHERE l.idEmpresa = '$idEmpresa' AND LOWER(l.status_lote) = 'vencido' " . $filtro_lote . "
+            WHERE l.idEmpresa = '$idEmpresa' 
+            AND LOWER(l.status_lote) = 'vencido' 
+            $filtro_lote 
             ORDER BY l.idlote DESC";
             
     $result = $conn->query($sql);
@@ -288,29 +319,30 @@ elseif ($tipo == "vencimento") {
 }
 
 // 5. DASHBOARD PADRÃO (Caso não seja nenhum dos acima)
-
 else {
 
     fputcsv($output, ['Tipo', 'Produto', 'Lote', 'Qtd', 'Data', 'Motivo'], ';');
 
+    // Adicionamos $sql_filtro ao final da cláusula WHERE
     $sql = "SELECT p.NomeProduto, l.numero_lote, s.quantidade_saida, s.data_saida, s.motivo_saida
-
             FROM saida s
-
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
-
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
-
-            WHERE l.idEmpresa = '$idEmpresa'";
+            WHERE l.idEmpresa = '$idEmpresa' $sql_filtro
+            ORDER BY s.id_saida DESC";
 
     $result = $conn->query($sql);
 
     while ($row = $result->fetch_assoc()) {
-
-        fputcsv($output, [$row['motivo_saida'], $row['NomeProduto'], $row['numero_lote'], $row['quantidade_saida'], $row['data_saida'], $row['motivo_saida']], ';');
-
+        fputcsv($output, [
+            $row['motivo_saida'], 
+            $row['NomeProduto'], 
+            $row['numero_lote'], 
+            $row['quantidade_saida'], 
+            $row['data_saida'], 
+            $row['motivo_saida']
+        ], ';');
     }
-
 }
 
 
