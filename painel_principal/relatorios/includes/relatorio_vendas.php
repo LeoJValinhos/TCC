@@ -19,13 +19,14 @@ if ($periodo_atual == "hoje") {
     $filtro_venda = " AND DATE(s.data_saida) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
 }
 
-// Busca as saídas de venda trazendo também os preços e descontos do lote envolvido (Adicionado idEmpresa)
+// Busca as saídas de venda trazendo também os preços e descontos do lote envolvido
 $idEmpresa = isset($_SESSION['idEmpresa']) ? $_SESSION['idEmpresa'] : null;
 
+// Corrigido 'p.idProduto' para 'p.IdProduto' para manter o padrão do seu banco
 $sql_vendas = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida, s.motivo_saida
                FROM saida s
                INNER JOIN produtoslotes l ON s.idlote = l.idlote
-               INNER JOIN produtos p ON l.idproduto = p.idProduto
+               INNER JOIN produtos p ON l.idproduto = p.IdProduto
                WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) = 'venda' " . $filtro_venda . "
                ORDER BY s.id_saida DESC";
 
@@ -126,7 +127,6 @@ if (!$resultado) {
                     $preco_unitario = floatval($row['preco_venda']);
                     $desconto_porcentagem = floatval($row['desconto']);
                     
-                    // Cálculo dos valores baseados no desconto
                     if ($desconto_porcentagem > 0) {
                         $preco_unitario_final = $preco_unitario * (1 - ($desconto_porcentagem / 100));
                         $valor_total_original = $preco_unitario * $qtd;
@@ -141,7 +141,6 @@ if (!$resultado) {
                     echo "<td style='color: #94a3b8;'>#" . htmlspecialchars($row['numero_lote']) . "</td>";
                     echo "<td style='color: #e2e8f0;'>" . $qtd . " un</td>";
                     
-                    // Nova Coluna: Custo Unitário (Com ou sem desconto)
                     echo "<td>";
                     if ($desconto_porcentagem > 0) {
                         echo "<span class='preco-original'>R$ " . number_format($preco_unitario, 2, ',', '.') . "</span>";
@@ -151,7 +150,6 @@ if (!$resultado) {
                     }
                     echo "</td>";
                     
-                    // Coluna de Valor Total
                     echo "<td>";
                     if ($desconto_porcentagem > 0) {
                         echo "<span class='preco-original'>R$ " . number_format($valor_total_original, 2, ',', '.') . "</span>";
