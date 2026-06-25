@@ -45,6 +45,42 @@ $query_manual = "
     ORDER BY p.NomeProduto ASC, pl.validade ASC
 ";
 $resultado_manual = $conn->query($query_manual);
+
+/* =========================================================================
+   BUSCA 3: USUÁRIOS DA EMPRESA (SOMENTE ADM)
+   ========================================================================= */
+
+$listaAdministradores = [];
+$listaFuncionarios = [];
+
+if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
+
+    $stmt = $conn->prepare("
+        SELECT
+            nome,
+            email,
+            tipocadastro
+        FROM cadastros
+        WHERE idEmpresa = ?
+        ORDER BY nome ASC
+    ");
+
+    $stmt->bind_param("i", $idEmpresa);
+    $stmt->execute();
+
+    $resultadoUsuarios = $stmt->get_result();
+
+    while ($usuario = $resultadoUsuarios->fetch_assoc()) {
+
+        if ($usuario['tipocadastro'] == 'EMPRESA/ADM') {
+            $listaAdministradores[] = $usuario;
+        } else {
+            $listaFuncionarios[] = $usuario;
+        }
+
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -53,333 +89,9 @@ $resultado_manual = $conn->query($query_manual);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../cadastro_produtos/cad_list_prods.css">
+    <link rel="stylesheet" href="config.css">
     <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png">
     <title>INVEX - Configurações</title>
-
-    <style>
-        /* =================================================================
-        INTERRUPÇÃO DE QUEBRAS INDESEJADAS & EXPANSÃO VISUAL PREMIUM
-        ================================================================== */
-        
-        .container-abas {
-            display: flex;
-            gap: 12px;
-            border-bottom: 2px solid #002b5c;
-            padding-bottom: 14px;
-            margin-bottom: 30px;
-            margin-top: 20px;
-        }
-
-        .botao-aba {
-            background-color: #001A36;
-            color: #ffffff;
-            border: 1px solid #002b5c;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.2s;
-        }
-
-        .botao-aba.ativa {
-            background-color: #00B7C3;
-            color: #000c19;
-            border-color: #00B7C3;
-            box-shadow: 0 0 12px rgba(0, 183, 195, 0.3);
-        }
-
-        .conteudo-aba {
-            display: none;
-            background-color: #00142a;
-            border: 1px solid #002b5c;
-            border-radius: 12px;
-            padding: 30px;
-            width: 100%;
-            max-width: 1200px; /* Ocupa melhor a tela horizontalmente */
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-        }
-
-        .conteudo-aba.ativa {
-            display: block;
-        }
-
-        /* SUB-MENU SUPERIOR INTERNO DE DESCONTOS */
-        .container-sub-modos {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            background-color: #000c19;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #002b5c;
-            width: fit-content;
-        }
-
-        .btn-sub-modo {
-            background: transparent;
-            border: none;
-            color: #a0aab5;
-            padding: 10px 20px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-sub-modo.ativo {
-            background-color: #001A36;
-            color: #00B7C3;
-            border: 1px solid #002b5c;
-        }
-
-        .titulo-secao {
-            color: #00B7C3;
-            margin-top: 0;
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .texto-explicativo {
-            font-size: 13.5px;
-            color: #a0aab5;
-            margin-bottom: 20px;
-        }
-
-        /* FILTROS E CONTROLES DA LISTAGEM */
-        .barra-ferramentas-lista {
-            display: table;
-            width: 100%;
-            margin-bottom: 12px;
-        }
-
-        .celula-busca {
-            display: table-cell;
-            width: 70%;
-            vertical-align: middle;
-        }
-
-        .celula-acoes {
-            display: table-cell;
-            width: 30%;
-            text-align: right;
-            vertical-align: middle;
-        }
-
-        .input-filtro-busca {
-            width: 100%;
-            max-width: 400px;
-            background-color: #000c19;
-            border: 1px solid #002b5c;
-            color: #ffffff;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 13px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .input-filtro-busca:focus {
-            border-color: #00B7C3;
-        }
-
-        .btn-marcar-todos {
-            background-color: #001A36;
-            border: 1px solid #002b5c;
-            color: #00B7C3;
-            padding: 8px 14px;
-            font-size: 12px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-marcar-todos:hover {
-            background-color: #002b5c;
-            color: #ffffff;
-        }
-
-        /* GRID DE SELEÇÃO CUSTOMIZADA */
-        .grid-lotes-container {
-            max-height: 280px;
-            overflow-y: auto;
-            border: 1px solid #002b5c;
-            border-radius: 8px;
-            background: #000c19;
-            margin-bottom: 25px;
-        }
-
-        .item-lote-linha {
-            display: table;
-            width: 100%;
-            padding: 12px 15px;
-            border-bottom: 1px solid #002b5c;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .item-lote-linha:last-child {
-            border-bottom: none;
-        }
-
-        .item-lote-linha:hover {
-            background: #00142a;
-        }
-
-        .celula-checkbox {
-            display: table-cell;
-            width: 40px;
-            vertical-align: middle;
-            text-align: center;
-        }
-
-        .celula-checkbox input[type="checkbox"] {
-            accent-color: #00B7C3;
-            width: 17px;
-            height: 17px;
-            cursor: pointer;
-        }
-
-        .celula-info-texto {
-            display: table-cell;
-            vertical-align: middle;
-            color: #ffffff;
-            font-size: 13.5px;
-            padding-left: 5px;
-        }
-
-        .celula-info-texto strong {
-            color: #00B7C3;
-        }
-
-        .badge-promo {
-            background: rgba(0, 183, 195, 0.15);
-            color: #00B7C3;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-left: 6px;
-        }
-
-        /* CORREÇÃO DOS CARDS DE RADIO - INFRAESTRUTURA EM TABELA */
-        .painel-opcao {
-            background: #001A36;
-            padding: 22px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border: 1px solid #002b5c;
-        }
-
-        .label-destaque {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #ffffff;
-            font-size: 14px;
-        }
-
-        .wrapper-radios-tabela {
-            display: table;
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 15px 0;
-            margin-left: -15px;
-            margin-right: -15px;
-        }
-
-        .radio-card-cell {
-            display: table-cell;
-            background: #000c19;
-            border: 1px solid #002b5c;
-            padding: 16px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            vertical-align: middle;
-            width: 50%;
-            transition: all 0.2s ease;
-        }
-
-        .radio-card-cell:hover {
-            background: #001124;
-            border-color: #004085;
-        }
-
-        .radio-conteudo-alinhado {
-            display: table;
-            width: 100%;
-        }
-
-        .radio-alinhado-input {
-            display: table-cell;
-            width: 30px;
-            vertical-align: middle;
-        }
-
-        .radio-alinhado-input input[type="radio"] {
-            accent-color: #00B7C3;
-            width: 18px;
-            height: 18px;
-            margin: 0;
-            cursor: pointer;
-        }
-
-        .radio-alinhado-label {
-            display: table-cell;
-            vertical-align: middle;
-            font-weight: bold;
-            font-size: 13.5px;
-        }
-
-        .input-porcentagem-container {
-            display: flex;
-            align-items: center;
-            background-color: #000c19;
-            border: 1px solid #002b5c;
-            border-radius: 6px;
-            padding: 4px 12px;
-            width: fit-content;
-        }
-
-        .input-porcentagem-container input {
-            border: none;
-            background: transparent;
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            width: 70px;
-            outline: none;
-        }
-
-        .texto-off {
-            font-size: 14px;
-            font-weight: bold;
-            color: #00B7C3;
-            margin-left: 10px;
-        }
-
-        .btn-salvar {
-            background: #00B7C3;
-            color: #000c19;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(0, 183, 195, 0.2);
-        }
-
-        .btn-salvar:hover {
-            background: #008fa2;
-        }
-    </style>
 </head>
 
 <body>
@@ -416,9 +128,21 @@ $resultado_manual = $conn->query($query_manual);
                     <button class="botao-aba ativa" onclick="alternarAba('aba-descontos', this)">🔥 Gerenciar Descontos</button>
                     <button class="botao-aba" onclick="alternarAba('aba-geral', this)">⚙️ Configurações Gerais</button>
                     <button class="botao-aba" onclick="alternarAba('aba-notificacoes', this)">🔔 Alertas e Estoque</button>
+
+                    <!-- parte que separa a config de adm pro funcionario  -->
+                    
+                  <?php if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') { ?>
+        <button class="botao-aba" onclick="alternarAba('aba-adm', this)">
+            ⚙️ Configurações de ADM
+        </button>
+    <?php } ?>
+
+    <!-- fim -->
+
                 </div>
 
                 <div id="aba-descontos" class="conteudo-aba ativa">
+                    <h3 class="titulo-secao"> Gerenciamento de descontos </h3>
                     
                     <div class="container-sub-modos">
                         <button class="btn-sub-modo ativo" id="btnModoVencimento" onclick="alternarSubModo('vencimento')">⏰ Por Vencimento (Até 30 dias)</button>
@@ -579,120 +303,109 @@ $resultado_manual = $conn->query($query_manual);
                     <h3 class="titulo-secao">Regras de Estoque Crítico</h3>
                     <div class="painel-opcao"><p style="margin:0; color:#a0aab5; font-style:italic;">Funcionalidade em desenvolvimento.</p></div>
                 </div>
-
             </div>
+
+<!-- Parte que só aparece pro adm -->
+<?php if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') { ?>
+
+<div id="aba-adm" class="conteudo-aba">
+
+    <h3 class="titulo-secao">Código da Empresa:</h3>
+
+    <p class="texto-explicativo">
+        Esse é o código da sua empresa. Passe esse código para seus funcionários durante o cadastro para que eles possam acessar o estoque da empresa.
+    </p>
+
+    <div class="painel-opcao" style="text-align:center;">
+
+        <h2 style="
+            font-size:32px;
+            color:#4CAF50;
+            letter-spacing:3px;
+            margin:15px 0;
+        ">
+            <?= htmlspecialchars($_SESSION['codigoEmpresa']) ?>
+        </h2>
+
+    </div>
+
+    <br>
+
+    <h3 class="titulo-secao">Lista de administradores:</h3>
+
+    <div class="grid-lotes-container">
+
+        <?php if (count($listaAdministradores) > 0) { ?>
+
+            <?php foreach ($listaAdministradores as $adm) { ?>
+
+                <div class="item-lote-linha">
+
+                <h3 class="titulo-secao"> Nome: </h3>
+                    <strong><?= htmlspecialchars($adm['nome']) ?></strong>
+
+                    <h3 class="titulo-secao"> E-mail: </h3>
+                    <span style="margin-left:auto;">
+                        <?= htmlspecialchars($adm['email']) ?>
+                    </span>
+
+                </div>
+
+            <?php } ?>
+
+        <?php } else { ?>
+
+            <p style="padding:15px;">
+                Nenhum administrador encontrado.
+            </p>
+
+        <?php } ?>
+
+    </div>
+
+    <br>
+
+    <h3 class="titulo-secao">Lista de funcionários:</h3>
+
+    <div class="grid-lotes-container">
+
+        <?php if (count($listaFuncionarios) > 0) { ?>
+
+            <?php foreach ($listaFuncionarios as $funcionario) { ?>
+
+                <div class="item-lote-linha">
+
+                <h3 class="titulo-secao"> Nome: </h3>
+                    <strong><?= htmlspecialchars($funcionario['nome']) ?></strong>
+
+                    <h3 class="titulo-secao"> E-mail: </h3>
+                    <span style="margin-left:auto;">
+                        <?= htmlspecialchars($funcionario['email']) ?>
+                    </span>
+
+                </div>
+
+            <?php } ?>
+
+        <?php } else { ?>
+
+            <p style="padding:15px;">
+                Nenhum funcionário encontrado.
+            </p>
+
+        <?php } ?>
+
+    </div>
+
+</div>
+
+<?php } ?>
+
+                <!-- fim -->
+
         </main>
     </div>
 
-    <script>
-        function alternarAba(idAba, botaoClicado) {
-            document.querySelectorAll('.conteudo-aba').forEach(c => c.classList.remove('ativa'));
-            document.querySelectorAll('.botao-aba').forEach(b => b.classList.remove('ativa'));
-            document.getElementById(idAba).classList.add('ativa');
-            botaoClicado.classList.add('ativa');
-        }
-
-        function alternarSubModo(modo) {
-            if(modo === 'vencimento') {
-                document.getElementById('modo-vencimento').style.display = 'block';
-                document.getElementById('modo-manual').style.display = 'none';
-                document.getElementById('btnModoVencimento').classList.add('ativo');
-                document.getElementById('btnModoManual').classList.remove('ativo');
-            } else {
-                document.getElementById('modo-vencimento').style.display = 'none';
-                document.getElementById('modo-manual').style.display = 'block';
-                document.getElementById('btnModoVencimento').classList.remove('ativo');
-                document.getElementById('btnModoManual').classList.add('ativo');
-            }
-        }
-
-        // Mecanismo de busca/filtro cliente-side rápido
-        function filtrarLotes(inputId, containerId) {
-            let input = document.getElementById(inputId).value.toLowerCase();
-            let container = document.getElementById(containerId);
-            let linhas = container.getElementsByClassName('item-lote-linha');
-
-            for (let i = 0; i < linhas.length; i++) {
-                let texto = linhas[i].textContent || linhas[i].innerText;
-                if (texto.toLowerCase().indexOf(input) > -1) {
-                    linhas[i].style.display = "table";
-                } else {
-                    linhas[i].style.display = "none";
-                }
-            }
-        }
-
-        // Função Alternadora para a opção "Aplicar a todos / Selecionar todos"
-        function marcarTodosLotes(containerId, botao) {
-            let container = document.getElementById(containerId);
-            let checkboxes = container.querySelectorAll('input[type="checkbox"]');
-            let todasMarcadas = true;
-
-            // Verifica o estado atual de exibição (ignora filtrados na busca)
-            checkboxes.forEach(cb => {
-                if(cb.closest('.item-lote-linha').style.display !== 'none' && !cb.checked) {
-                    todasMarcadas = false;
-                }
-            });
-
-            checkboxes.forEach(cb => {
-                if(cb.closest('.item-lote-linha').style.display !== 'none') {
-                    cb.checked = !todasMarcadas;
-                }
-            });
-
-            botao.innerHTML = todasMarcadas ? "☑️ Selecionar Todos" : "⬜ Desmarcar Todos";
-        }
-
-        document.getElementsByName('aplicar_desconto').forEach(r => {
-            r.addEventListener('change', function() {
-                document.getElementById('campoPorcentagemVenc').style.display = (this.value === 'nao') ? 'none' : 'block';
-            });
-        });
-
-        document.getElementsByName('aplicar_manual').forEach(r => {
-            r.addEventListener('change', function() {
-                document.getElementById('campoPorcentagemManual').style.display = (this.value === 'nao') ? 'none' : 'block';
-            });
-        });
-
-        // Validação Submissão Vencimento
-        document.getElementById('formVencimento').onsubmit = function(e) {
-            e.preventDefault();
-            const checks = document.querySelectorAll('input[name="lotes_vencimento[]"]:checked');
-            if(checks.length === 0) {
-                alert('Erro: Escolha ao menos um lote crítico ou use o botão Selecionar Todos!');
-                return false;
-            }
-            const acao = document.querySelector('input[name="aplicar_desconto"]:checked').value;
-            const pct = document.getElementById('porcentagemVenc').value;
-
-            if(acao === 'sim') {
-                if(pct < 1 || pct > 30) { alert('Erro: Limite de 1% a 30%!'); return false; }
-                if(confirm(`Aplicar ${pct}% nos lotes críticos selecionados?`)) this.submit();
-            } else {
-                if(confirm("Retornar lotes críticos marcados ao preço original?")) this.submit();
-            }
-        };
-
-        // Validação Submissão Manual
-        document.getElementById('formManual').onsubmit = function(e) {
-            e.preventDefault();
-            const checks = document.querySelectorAll('input[name="lotes_selecionados[]"]:checked');
-            if(checks.length === 0) {
-                alert('Erro: Escolha ao menos um lote da lista ou utilize o botão Selecionar Todos!');
-                return false;
-            }
-            const acao = document.querySelector('input[name="aplicar_manual"]:checked').value;
-            const pct = document.getElementById('porcentagemMan').value;
-
-            if(acao === 'sim') {
-                if(pct < 1 || pct > 30) { alert('Erro: Limite de 1% a 30%!'); return false; }
-                if(confirm(`Aplicar ${pct}% de desconto comercial nos lotes selecionados?`)) this.submit();
-            } else {
-                if(confirm("Retornar os lotes selecionados ao valor padrão?")) this.submit();
-            }
-        };
-    </script>
+    <script src="config.js"></script>
 </body>
 </html>
