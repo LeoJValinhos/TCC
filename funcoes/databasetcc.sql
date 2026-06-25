@@ -1,26 +1,25 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4.2
--- http://www.phpmyadmin.net
+-- version 5.1.3
+-- https://www.phpmyadmin.net/
 --
--- Máquina: localhost
--- Data de Criação: 16-Jun-2026 às 07:53
--- Versão do servidor: 5.6.13
--- versão do PHP: 5.4.17
+-- Host: localhost
+-- Tempo de geração: 25-Jun-2026 às 13:10
+-- Versão do servidor: 5.7.36
+-- versão do PHP: 8.1.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de Dados: `databasetcc`
+-- Banco de dados: `databasetcc`
 --
-CREATE DATABASE IF NOT EXISTS `databasetcc` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `databasetcc`;
 
 -- --------------------------------------------------------
 
@@ -28,8 +27,8 @@ USE `databasetcc`;
 -- Estrutura da tabela `cadastros`
 --
 
-CREATE TABLE IF NOT EXISTS `cadastros` (
-  `idCadastro` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `cadastros` (
+  `idCadastro` int(11) NOT NULL,
   `nome` varchar(30) NOT NULL,
   `sobrenome` varchar(60) NOT NULL,
   `senha` varchar(100) NOT NULL,
@@ -38,13 +37,8 @@ CREATE TABLE IF NOT EXISTS `cadastros` (
   `cpf` varchar(11) NOT NULL,
   `celular` varchar(11) NOT NULL,
   `idEmpresa` int(11) DEFAULT NULL,
-  `tipocadastro` enum('EMPRESA/ADM','FUNCIONARIO') NOT NULL,
-  PRIMARY KEY (`idCadastro`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `cpf` (`cpf`),
-  UNIQUE KEY `celular` (`celular`),
-  KEY `fk_usuario_empresa` (`idEmpresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=3 ;
+  `tipocadastro` enum('EMPRESA/ADM','FUNCIONARIO') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `cadastros`
@@ -60,19 +54,15 @@ INSERT INTO `cadastros` (`idCadastro`, `nome`, `sobrenome`, `senha`, `email`, `d
 -- Estrutura da tabela `empresa`
 --
 
-CREATE TABLE IF NOT EXISTS `empresa` (
-  `idEmpresa` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `empresa` (
+  `idEmpresa` int(11) NOT NULL,
   `nomeEmpresa` varchar(300) NOT NULL,
   `CNPJ` char(14) NOT NULL,
   `codigoEmpresa` varchar(7) NOT NULL,
   `idAdm` int(11) DEFAULT NULL,
   `nomeAdm` varchar(30) DEFAULT NULL,
-  `criado_em` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`idEmpresa`),
-  UNIQUE KEY `CNPJ` (`CNPJ`),
-  UNIQUE KEY `codigoEmpresa` (`codigoEmpresa`),
-  KEY `fk_adm` (`idAdm`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=3 ;
+  `criado_em` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `empresa`
@@ -88,8 +78,8 @@ INSERT INTO `empresa` (`idEmpresa`, `nomeEmpresa`, `CNPJ`, `codigoEmpresa`, `idA
 -- Estrutura da tabela `loja_virtual`
 --
 
-CREATE TABLE IF NOT EXISTS `loja_virtual` (
-  `idItem` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `loja_virtual` (
+  `idItem` int(11) NOT NULL,
   `nomeProduto` varchar(100) NOT NULL,
   `marcaProduto` varchar(255) NOT NULL,
   `descricaoProduto` varchar(255) DEFAULT NULL,
@@ -97,9 +87,8 @@ CREATE TABLE IF NOT EXISTS `loja_virtual` (
   `imagemProduto` varchar(255) NOT NULL,
   `meta` int(11) DEFAULT '2',
   `quantidadeParticipantes` int(11) DEFAULT '0',
-  `status` enum('Aberta','Aguardando outro participante','Concluida','Cancelada') DEFAULT 'Aberta',
-  PRIMARY KEY (`idItem`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+  `status` enum('Aberta','Aguardando outro participante','Concluida','Cancelada') DEFAULT 'Aberta'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `loja_virtual`
@@ -115,16 +104,12 @@ INSERT INTO `loja_virtual` (`idItem`, `nomeProduto`, `marcaProduto`, `descricaoP
 -- Estrutura da tabela `participantes_loja`
 --
 
-CREATE TABLE IF NOT EXISTS `participantes_loja` (
-  `idParticipacao` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `participantes_loja` (
+  `idParticipacao` int(11) NOT NULL,
   `idItem` int(11) NOT NULL,
   `id_primeiroParticipante` int(11) DEFAULT NULL,
-  `id_segundoParticipante` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idParticipacao`),
-  KEY `idItem` (`idItem`),
-  KEY `id_primeiroParticipante` (`id_primeiroParticipante`),
-  KEY `id_segundoParticipante` (`id_segundoParticipante`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+  `id_segundoParticipante` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `participantes_loja`
@@ -140,8 +125,8 @@ INSERT INTO `participantes_loja` (`idParticipacao`, `idItem`, `id_primeiroPartic
 -- Estrutura da tabela `produtos`
 --
 
-CREATE TABLE IF NOT EXISTS `produtos` (
-  `idProduto` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `produtos` (
+  `idProduto` int(11) NOT NULL,
   `NomeProduto` varchar(100) NOT NULL,
   `MarcaProduto` varchar(100) NOT NULL,
   `Descricao` varchar(255) DEFAULT NULL,
@@ -151,12 +136,8 @@ CREATE TABLE IF NOT EXISTS `produtos` (
   `criadopor_id` int(11) DEFAULT NULL,
   `preco_padrao_compra` decimal(10,2) NOT NULL DEFAULT '0.00',
   `preco_padrao_venda` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `estoque_minimo` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`idProduto`),
-  UNIQUE KEY `unique_produto_empresa` (`NomeProduto`,`MarcaProduto`,`idEmpresa`),
-  KEY `fk_funcionario` (`criadopor_id`),
-  KEY `fk_produto_empresa` (`idEmpresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=7 ;
+  `estoque_minimo` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `produtos`
@@ -168,7 +149,11 @@ INSERT INTO `produtos` (`idProduto`, `NomeProduto`, `MarcaProduto`, `Descricao`,
 (3, 'bolacha', 'trakinas', '', 1, 'Leonardo', '2026-06-08 20:29:06', 1, '0.00', '0.00', 0),
 (4, 'Amaciante', 'Confort', 'limpa coisas', 1, 'Leonardo', '2026-06-16 00:58:20', 1, '25.00', '30.00', 50),
 (5, 'Suco de Uva Integral 300ml', 'Aurora', 'Garrafa de vidro com suco de uva 100% integral, sem adiÃ§Ã£o de aÃ§Ãºcares ou conservantes.', 1, 'Leonardo', '2026-06-16 04:39:04', 1, '4.50', '7.50', 15),
-(6, 'Salgadinho Assado de Queijo 60g', 'Fandangos', 'Salgadinho de milho assado sabor queijo, pacote de 60 gramas.', 1, 'Leonardo', '2026-06-16 04:39:41', 1, '2.20', '4.50', 20);
+(6, 'Salgadinho Assado de Queijo 60g', 'Fandangos', 'Salgadinho de milho assado sabor queijo, pacote de 60 gramas.', 1, 'Leonardo', '2026-06-16 04:39:41', 1, '2.20', '4.50', 20),
+(7, 'Arroz Integral Agulhinha 5kg', 'Tio JoÃ£o', 'Arroz integral tipo 1, rico em fibras e minerais. Pacote de 5kg com grÃ£os selecionados.', 1, 'Leonardo', '2026-06-25 04:37:59', 1, '18.50', '29.90', 13),
+(8, 'CafÃ© Tradicional VÃ¡cuo 500g', 'PilÃ£o', 'CafÃ© torrado e moÃ­do tradicional, com ponto de torra acentuado e sabor forte e marcante.', 1, 'Leonardo', '2026-06-25 04:38:39', 1, '11.20', '18.50', 20),
+(9, 'Azeite de Oliva Extra Virgem 500ml', 'Gallo', 'Azeite de oliva extra virgem de acidez mÃ¡xima 0,5%. Garrafa de vidro de 500ml.', 1, 'Leonardo', '2026-06-25 04:39:22', 1, '22.00', '36.90', 8),
+(10, 'Leite Integral UHT 1L', 'ItambÃ©', 'Leite caixinha UHT integral homogeneizado. Caixa com 1 litro.', 1, 'Leonardo', '2026-06-25 04:40:04', 1, '3.07', '5.49', 40);
 
 -- --------------------------------------------------------
 
@@ -176,8 +161,8 @@ INSERT INTO `produtos` (`idProduto`, `NomeProduto`, `MarcaProduto`, `Descricao`,
 -- Estrutura da tabela `produtoslotes`
 --
 
-CREATE TABLE IF NOT EXISTS `produtoslotes` (
-  `idlote` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `produtoslotes` (
+  `idlote` int(11) NOT NULL,
   `idproduto` int(11) NOT NULL,
   `quantidade` int(11) NOT NULL,
   `validade` date DEFAULT NULL,
@@ -187,23 +172,163 @@ CREATE TABLE IF NOT EXISTS `produtoslotes` (
   `preco_compra` decimal(10,2) NOT NULL DEFAULT '0.00',
   `preco_venda` decimal(10,2) NOT NULL DEFAULT '0.00',
   `desconto` decimal(5,2) NOT NULL DEFAULT '0.00',
-  `status_lote` enum('normal','promocao','vencido') NOT NULL DEFAULT 'normal',
-  PRIMARY KEY (`idlote`),
-  KEY `idproduto` (`idproduto`),
-  KEY `fk_lote_empresa` (`idEmpresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=4 ;
+  `status_lote` enum('normal','promocao','vencido') NOT NULL DEFAULT 'normal'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `produtoslotes`
 --
 
 INSERT INTO `produtoslotes` (`idlote`, `idproduto`, `quantidade`, `validade`, `criado_em`, `idEmpresa`, `numero_lote`, `preco_compra`, `preco_venda`, `desconto`, `status_lote`) VALUES
-(1, 3, 200, '2028-07-09', '2026-06-08 20:29:20', 1, '', '0.00', '0.00', '0.00', 'normal'),
-(2, 4, 120, '2026-07-21', '2026-06-16 01:10:00', 1, '3', '3000.00', '3600.00', '0.00', ''),
-(3, 1, 149, '2026-06-15', '2026-06-16 01:19:49', 1, '4', '3000.00', '3500.00', '0.00', 'vencido');
+(1, 3, 200, '2028-07-09', '2026-06-08 20:29:20', 1, '', '0.00', '0.00', '10.00', 'promocao'),
+(2, 4, 97, '2026-07-21', '2026-06-16 01:10:00', 1, '3', '3000.00', '3600.00', '20.00', 'promocao'),
+(3, 1, 147, '2026-06-15', '2026-06-16 01:19:49', 1, '4', '3000.00', '3500.00', '15.00', 'vencido'),
+(4, 7, 48, '2030-02-12', '2026-06-25 04:43:01', 1, '7_2030-02-12', '18.50', '29.89', '0.00', 'normal'),
+(5, 9, 17, '2027-12-10', '2026-06-25 04:44:38', 1, '9_2027-12-10', '22.00', '36.90', '0.00', 'normal'),
+(6, 8, 80, '2027-04-15', '2026-06-25 04:45:31', 1, '8_2027-04-15', '11.20', '18.50', '0.00', 'normal'),
+(7, 10, 118, '2026-11-18', '2026-06-25 04:46:28', 1, '10_2026-11-18', '3.10', '5.49', '0.00', 'normal'),
+(8, 6, 100, '2028-05-05', '2026-06-25 04:47:08', 1, '6_2028-05-05', '1.40', '2.65', '0.00', 'normal'),
+(9, 5, 200, '2030-12-12', '2026-06-25 04:47:58', 1, '5_2030-12-12', '5.40', '7.20', '0.00', 'normal');
+
+-- --------------------------------------------------------
 
 --
--- Constraints for dumped tables
+-- Estrutura da tabela `saida`
+--
+
+CREATE TABLE `saida` (
+  `id_saida` int(11) NOT NULL,
+  `idlote` int(11) NOT NULL,
+  `id_lote` int(11) NOT NULL,
+  `quantidade_saida` int(11) NOT NULL,
+  `motivo_saida` varchar(255) NOT NULL,
+  `data_saida` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `saida`
+--
+
+INSERT INTO `saida` (`id_saida`, `idlote`, `id_lote`, `quantidade_saida`, `motivo_saida`, `data_saida`) VALUES
+(1, 2, 2, 2, 'Venda', '2026-06-25 00:33:55'),
+(2, 2, 2, 2, 'Ajuste', '2026-06-25 00:39:26'),
+(3, 7, 7, 1, 'Ajuste', '2026-06-25 04:53:22'),
+(4, 4, 4, 1, 'Vencimento', '2026-06-25 04:53:30'),
+(5, 5, 5, 1, 'Avaria', '2026-06-25 04:53:36'),
+(6, 7, 7, 1, 'Ajuste', '2026-06-25 04:53:41'),
+(7, 2, 2, 12, 'Vencimento', '2026-06-25 04:53:50'),
+(8, 5, 5, 7, 'Ajuste', '2026-06-25 04:54:01'),
+(9, 4, 4, 1, 'Ajuste', '2026-06-25 06:04:59');
+
+--
+-- Índices para tabelas despejadas
+--
+
+--
+-- Índices para tabela `cadastros`
+--
+ALTER TABLE `cadastros`
+  ADD PRIMARY KEY (`idCadastro`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `cpf` (`cpf`),
+  ADD UNIQUE KEY `celular` (`celular`),
+  ADD KEY `fk_usuario_empresa` (`idEmpresa`);
+
+--
+-- Índices para tabela `empresa`
+--
+ALTER TABLE `empresa`
+  ADD PRIMARY KEY (`idEmpresa`),
+  ADD UNIQUE KEY `CNPJ` (`CNPJ`),
+  ADD UNIQUE KEY `codigoEmpresa` (`codigoEmpresa`),
+  ADD KEY `fk_adm` (`idAdm`);
+
+--
+-- Índices para tabela `loja_virtual`
+--
+ALTER TABLE `loja_virtual`
+  ADD PRIMARY KEY (`idItem`);
+
+--
+-- Índices para tabela `participantes_loja`
+--
+ALTER TABLE `participantes_loja`
+  ADD PRIMARY KEY (`idParticipacao`),
+  ADD KEY `idItem` (`idItem`),
+  ADD KEY `id_primeiroParticipante` (`id_primeiroParticipante`),
+  ADD KEY `id_segundoParticipante` (`id_segundoParticipante`);
+
+--
+-- Índices para tabela `produtos`
+--
+ALTER TABLE `produtos`
+  ADD PRIMARY KEY (`idProduto`),
+  ADD UNIQUE KEY `unique_produto_empresa` (`NomeProduto`,`MarcaProduto`,`idEmpresa`),
+  ADD KEY `fk_funcionario` (`criadopor_id`),
+  ADD KEY `fk_produto_empresa` (`idEmpresa`);
+
+--
+-- Índices para tabela `produtoslotes`
+--
+ALTER TABLE `produtoslotes`
+  ADD PRIMARY KEY (`idlote`),
+  ADD KEY `idproduto` (`idproduto`),
+  ADD KEY `fk_lote_empresa` (`idEmpresa`);
+
+--
+-- Índices para tabela `saida`
+--
+ALTER TABLE `saida`
+  ADD PRIMARY KEY (`id_saida`);
+
+--
+-- AUTO_INCREMENT de tabelas despejadas
+--
+
+--
+-- AUTO_INCREMENT de tabela `cadastros`
+--
+ALTER TABLE `cadastros`
+  MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de tabela `empresa`
+--
+ALTER TABLE `empresa`
+  MODIFY `idEmpresa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de tabela `loja_virtual`
+--
+ALTER TABLE `loja_virtual`
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de tabela `participantes_loja`
+--
+ALTER TABLE `participantes_loja`
+  MODIFY `idParticipacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de tabela `produtos`
+--
+ALTER TABLE `produtos`
+  MODIFY `idProduto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de tabela `produtoslotes`
+--
+ALTER TABLE `produtoslotes`
+  MODIFY `idlote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de tabela `saida`
+--
+ALTER TABLE `saida`
+  MODIFY `id_saida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- Restrições para despejos de tabelas
 --
 
 --
@@ -239,6 +364,7 @@ ALTER TABLE `produtos`
 ALTER TABLE `produtoslotes`
   ADD CONSTRAINT `fk_lote_empresa` FOREIGN KEY (`idEmpresa`) REFERENCES `empresa` (`idEmpresa`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `produtoslotes_ibfk_1` FOREIGN KEY (`idproduto`) REFERENCES `produtos` (`idProduto`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
