@@ -119,6 +119,7 @@ if ($periodo_atual == "hoje") {
     .badge-vencido { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
     .badge-promocao { background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.3); }
 </style>
+
 <div class="container-tabela">
 
     <table class="tabela-dados">
