@@ -186,58 +186,47 @@ elseif ($tipo == "baixas" || $tipo == "perdas") {
     }
 }
 
-// 6. RELATÓRIO DE LUCRO (Adicionado para o Excel)
-
+// 6. RELATÓRIO DE LUCRO (ALINHADO COM A INTERFACE - EXCEL LIMPO)
 elseif ($tipo == "lucro") {
+    // Cabeçalhos idênticos à tabela da interface
+    fputcsv($output, ['Produto', 'Qtd Vendida', 'Data Venda', 'Preço Custo (Unidade)', 'Desconto', 'Valor Faturado', 'Lucro Estimado'], ';');
 
-    fputcsv($output, ['Produto', 'Custo', 'Venda', 'Desconto (%)', 'Lucro Estimado (R$)'], ';');
-
-   
-
-    // Consulta buscando o desconto na tabela produtoslotes
-
-    $sql = "SELECT p.NomeProduto, p.preco_padrao_compra, p.preco_padrao_venda, l.desconto
-
-            FROM produtos p
-
-            LEFT JOIN produtoslotes l ON p.idProduto = l.idproduto
-
-            WHERE p.idEmpresa = '$idEmpresa'
-
-            ORDER BY p.NomeProduto ASC";
-
-           
-
+    // Query correta que busca do histórico de saídas/vendas reais
+    $sql = "SELECT p.NomeProduto, s.quantidade_saida, s.data_saida, l.preco_compra, l.preco_venda, l.desconto
+            FROM saida s
+            INNER JOIN produtoslotes l ON s.idlote = l.idlote
+            INNER JOIN produtos p ON l.idproduto = p.IdProduto
+            WHERE l.idEmpresa = '$idEmpresa' AND LOWER(s.motivo_saida) = 'venda' " . (isset($filtro_saida) ? $filtro_saida : '') . "
+            ORDER BY s.id_saida DESC";
+            
     $result = $conn->query($sql);
 
-   
-
     while ($row = $result->fetch_assoc()) {
+        $data_venda = ($row['data_saida']) ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
+        $qtd = intval($row['quantidade_saida']);
+        $custo_unitario = floatval($row['preco_compra']);
+        $preco_venda = floatval($row['preco_venda']);
+        $porcentagem_desc = floatval($row['desconto']);
 
-        $desconto = isset($row['desconto']) ? $row['desconto'] : 0;
+        $custo_total = $qtd * $custo_unitario;
+        $venda_bruta = $qtd * $preco_venda;
+        $total_desconto = $venda_bruta * ($porcentagem_desc / 100);
+        
+        $faturamento_real = $venda_bruta - $total_desconto;
+        $lucro = $faturamento_real - $custo_total;
 
-        $preco_venda_final = $row['preco_padrao_venda'] * (1 - ($desconto / 100));
-
-        $lucro = $preco_venda_final - $row['preco_padrao_compra'];
-
-       
+        $texto_desconto = ($porcentagem_desc > 0) ? number_format($porcentagem_desc, 0) . '% OFF' : '-';
 
         fputcsv($output, [
-
             $row['NomeProduto'],
-
-            number_format($row['preco_padrao_compra'], 2, ',', '.'),
-
-            number_format($row['preco_padrao_venda'], 2, ',', '.'),
-
-            $desconto.'%',
-
-            number_format($lucro, 2, ',', '.')
-
+            $qtd . ' un',
+            $data_venda,
+            'R$ ' . number_format($custo_unitario, 2, ',', '.'),
+            $texto_desconto,
+            'R$ ' . number_format($faturamento_real, 2, ',', '.'),
+            'R$ ' . number_format($lucro, 2, ',', '.')
         ], ';');
-
     }
-
 }
 
 // 4. RELATÓRIO DE LOTES (COM CAMPO MARCA)
