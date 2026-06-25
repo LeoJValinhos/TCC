@@ -110,6 +110,7 @@ if (!$resultado) {
                 <th>Produto</th>
                 <th>Nº Lote</th>
                 <th>Qtd Vendida</th>
+                <th>Custo Unitário</th>
                 <th>Valor Total</th>
                 <th>Data da Venda</th>
                 <th>Motivo</th>
@@ -125,15 +126,14 @@ if (!$resultado) {
                     $preco_unitario = floatval($row['preco_venda']);
                     $desconto_porcentagem = floatval($row['desconto']);
                     
-                    // Cálculo do valor original total
-                    $valor_total_original = $preco_unitario * $qtd;
-                    
+                    // Cálculo dos valores baseados no desconto
                     if ($desconto_porcentagem > 0) {
-                        // Aplica o desconto unitário e multiplica pela quantidade
-                        $preco_com_desconto = $preco_unitario * (1 - ($desconto_porcentagem / 100));
-                        $valor_total_final = $preco_com_desconto * $qtd;
+                        $preco_unitario_final = $preco_unitario * (1 - ($desconto_porcentagem / 100));
+                        $valor_total_original = $preco_unitario * $qtd;
+                        $valor_total_final = $preco_unitario_final * $qtd;
                     } else {
-                        $valor_total_final = $valor_total_original;
+                        $preco_unitario_final = $preco_unitario;
+                        $valor_total_final = $preco_unitario * $qtd;
                     }
                     
                     echo "<tr>";
@@ -141,7 +141,17 @@ if (!$resultado) {
                     echo "<td style='color: #94a3b8;'>#" . htmlspecialchars($row['numero_lote']) . "</td>";
                     echo "<td style='color: #e2e8f0;'>" . $qtd . " un</td>";
                     
-                    // Coluna de Valor Total com a lógica de desconto visual
+                    // Nova Coluna: Custo Unitário (Com ou sem desconto)
+                    echo "<td>";
+                    if ($desconto_porcentagem > 0) {
+                        echo "<span class='preco-original'>R$ " . number_format($preco_unitario, 2, ',', '.') . "</span>";
+                        echo "<span class='preco-final' style='color: #94a3b8;'>R$ " . number_format($preco_unitario_final, 2, ',', '.') . "</span>";
+                    } else {
+                        echo "<span style='color: #94a3b8;'>R$ " . number_format($preco_unitario, 2, ',', '.') . "</span>";
+                    }
+                    echo "</td>";
+                    
+                    // Coluna de Valor Total
                     echo "<td>";
                     if ($desconto_porcentagem > 0) {
                         echo "<span class='preco-original'>R$ " . number_format($valor_total_original, 2, ',', '.') . "</span>";
@@ -157,7 +167,7 @@ if (!$resultado) {
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='6' style='text-align:center; color:#94a3b8; padding:25px;'>Nenhuma venda registrada neste período.</td></tr>";
+                echo "<tr><td colspan='7' style='text-align:center; color:#94a3b8; padding:25px;'>Nenhuma venda registrada neste período.</td></tr>";
             }
             ?>
         </tbody>
