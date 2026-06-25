@@ -1,39 +1,70 @@
 <?php
-// Busca os produtos cadastrados da empresa
-$sql = "SELECT NomeProduto, MarcaProduto, preco_padrao_compra, preco_padrao_venda 
-        FROM produtos 
-        WHERE idEmpresa = $idEmpresa 
-        ORDER BY NomeProduto ASC";
-$result = $conn->query($sql);
+// Garante que a sessão está ativa para não perder o idEmpresa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Captura o idEmpresa direto da sessão do usuário logado
+$idEmpresa = isset($_SESSION['idEmpresa']) ? intval($_SESSION['idEmpresa']) : 0;
+
+if ($idEmpresa > 0) {
+    // Busca os produtos cadastrados fazendo INNER JOIN com os lotes para trazer os preços reais
+    $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.validada, l.preco_compra, l.preco_venda, l.desconto, l.status_lote
+            FROM produtoslotes l
+            INNER JOIN produtos p ON l.idproduto = p.idProduto
+            WHERE l.idEmpresa = $idEmpresa 
+            ORDER BY p.NomeProduto ASC, l.numero_lote ASC";
+            
+    $result = $conn->query($sql);
+}
 ?>
 
-<div class="top" style="margin-bottom: 20px;">
-    <h2>Relatório de Produtos Cadastrados</h2>
-    <p class="subtitulo">Listagem geral de produtos e preços base</p>
-</div>
-
-<table style="width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid var(--border);">
+<table style="width: 100%; border-collapse: collapse; background: transparent;">
     <thead>
-        <tr style="background: rgba(0, 245, 212, 0.1); text-align: left; color: var(--primary);">
-            <th style="padding: 15px;">Produto</th>
-            <th style="padding: 15px;">Marca</th>
-            <th style="padding: 15px;">Preço Compra</th>
-            <th style="padding: 15px;">Preço Venda</th>
+        <tr style="border-bottom: 2px solid #00f5d4; text-align: left;">
+            <th style="padding: 15px; color: #00f5d4; font-size: 14px; font-weight: bold; text-transform: uppercase;">Produto</th>
+            <th style="padding: 15px; color: #00f5d4; font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: center;">Nº Lote</th>
+            <th style="padding: 15px; color: #00f5d4; font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: right;">Preço Compra</th>
+            <th style="padding: 15px; color: #00f5d4; font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: right;">Preço Venda</th>
+            <th style="padding: 15px; color: #00f5d4; font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: center;">Desconto</th>
+            <th style="padding: 15px; color: #00f5d4; font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: right;">Venda Final</th>
         </tr>
     </thead>
     <tbody>
-        <?php if ($result->num_rows > 0): ?>
-            <?php while($row = $result->fetch_assoc()): ?>
-                <tr style="border-bottom: 1px solid rgba(0, 183, 195, 0.1); color: var(--text);">
-                    <td style="padding: 15px;"><?= htmlspecialchars($row['NomeProduto']) ?></td>
-                    <td style="padding: 15px;"><?= htmlspecialchars($row['MarcaProduto']) ?></td>
-                    <td style="padding: 15px;">R$ <?= number_format($row['preco_padrao_compra'], 2, ',', '.') ?></td>
-                    <td style="padding: 15px;">R$ <?= number_format($row['preco_padrao_venda'], 2, ',', '.') ?></td>
+        <?php if ($idEmpresa > 0 && $result && $result->num_rows > 0): ?>
+            <?php while($row = $result->fetch_assoc()): 
+                $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
+                $p_compra = floatval($row['preco_compra']);
+                $p_venda_base = floatval($row['preco_venda']);
+                $desc = floatval($row['desconto']);
+                
+                // Preço final de venda considerando a porcentagem do desconto
+                $p_venda_final = $p_venda_base * (1 - ($desc / 100));
+            ?>
+                <tr style="border-bottom: 1px solid rgba(0, 245, 212, 0.1); font-size: 15px;">
+                    <td style="padding: 20px 15px; color: #ffffff; font-weight: bold;"><?= htmlspecialchars($row['NomeProduto']) ?></td>
+                    <td style="padding: 20px 15px; color: #94a3b8; text-align: center;"><?= $lote ?></td>
+                    <td style="padding: 20px 15px; color: #ffffff; text-align: right;">R$ <?= number_format($p_compra, 2, ',', '.') ?></td>
+                    <td style="padding: 20px 15px; color: #94a3b8; text-align: right;">R$ <?= number_format($p_venda_base, 2, ',', '.') ?></td>
+                    
+                    <td style="padding: 20px 15px; text-align: center;">
+                        <?php if ($desc > 0): ?>
+                            <span style="color: #ff3333; font-weight: bold;"><?= $desc ?>%</span>
+                        <?php else: ?>
+                            <span style="color: #94a3b8;">-</span>
+                        <?php endif; ?>
+                    </td>
+                    
+                    <td style="padding: 20px 15px; text-align: right; font-weight: bold; color: <?= $desc > 0 ? '#22c55e' : '#ffffff' ?>;">
+                        R$ <?= number_format($p_venda_final, 2, ',', '.') ?>
+                    </td>
                 </tr>
             <?php endwhile; ?>
         <?php else: ?>
             <tr>
-                <td colspan="4" style="padding: 20px; text-align: center; color: var(--sub);">Nenhum produto cadastrado.</td>
+                <td colspan="6" style="padding: 30px; text-align: center; color: #94a3b8; font-size: 15px;">
+                    Nenhum produto ou lote encontrado para esta categoria.
+                </td>
             </tr>
         <?php endif; ?>
     </tbody>
