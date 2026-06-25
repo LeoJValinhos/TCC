@@ -181,116 +181,94 @@ if ($tipo == 'baixas') $nome_relatorio = "PERDAS / BAIXAS";
             <?php
 
             /* =====================================================
+    RELATÓRIO: PRODUTOS (ALINHADO COM OS LOTES E DESCONTOS)
+   ===================================================== */
+if ($tipo == "produtos") {
+    echo "<thead>
+            <tr>
+                <th>Produto</th>
+                <th class='text-center'>Nº Lote</th>
+                <th>Marca</th>
+                <th class='text-right'>Preço Compra</th>
+                <th class='text-right'>Preço Venda</th>
+                <th class='text-center'>Desconto</th>
+                <th class='text-right'>Venda Final</th>
+            </tr>
+          </thead>
+          <tbody>";
 
-            RELATÓRIO: PRODUTOS
+    $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.preco_compra, l.preco_venda, l.desconto
+            FROM produtoslotes l
+            INNER JOIN produtos p ON l.idproduto = p.IdProduto
+            WHERE l.idEmpresa = $idEmpresa 
+            ORDER BY p.NomeProduto ASC, l.numero_lote ASC";
+            
+    $result = $conn->query($sql);
 
-            ===================================================== */
+    while ($row = $result->fetch_assoc()) {
+        $p_compra = floatval($row['preco_compra']);
+        $p_venda_base = floatval($row['preco_venda']);
+        $desc = floatval($row['desconto']);
+        
+        $p_venda_final = $p_venda_base * (1 - ($desc / 100));
+        $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
+        $marca = !empty($row['MarcaProduto']) ? htmlspecialchars($row['MarcaProduto']) : '-';
+        
+        $txt_desconto = ($desc > 0) ? $desc . '%' : '-';
 
-            if ($tipo == "produtos") {
-
-                echo "<thead>
-
-                        <tr>
-
-                            <th>Produto</th>
-
-                            <th>Marca</th>
-
-                            <th class='text-right'>Preço Compra</th>
-
-                            <th class='text-right'>Preço Venda</th>
-
-                        </tr>
-
-                      </thead>
-
-                      <tbody>";
-
-
-
-                $sql = "SELECT NomeProduto, MarcaProduto, preco_padrao_compra, preco_padrao_venda FROM produtos WHERE idEmpresa = $idEmpresa ORDER BY NomeProduto ASC";
-
-                $result = $conn->query($sql);
-
-
-
-                while ($row = $result->fetch_assoc()) {
-
-                    echo "<tr>
-
-                            <td>".htmlspecialchars($row['NomeProduto'])."</td>
-
-                            <td>".htmlspecialchars($row['MarcaProduto'])."</td>
-
-                            <td class='text-right'>R$ ".number_format($row['preco_padrao_compra'], 2, ',', '.')."</td>
-
-                            <td class='text-right'>R$ ".number_format($row['preco_padrao_venda'], 2, ',', '.')."</td>
-
-                          </tr>";
-
-                }
-
-            }
+        echo "<tr>
+                <td>".htmlspecialchars($row['NomeProduto'])."</td>
+                <td class='text-center'>".$lote."</td>
+                <td>".$marca."</td>
+                <td class='text-right'>R$ ".number_format($p_compra, 2, ',', '.')."</td>
+                <td class='text-right'>R$ ".number_format($p_venda_base, 2, ',', '.')."</td>
+                <td class='text-center'>".$txt_desconto."</td>
+                <td class='text-right' style='font-weight:bold;'>R$ ".number_format($p_venda_final, 2, ',', '.')."</td>
+              </tr>";
+    }
+}
 
 
 
             /* =====================================================
+    RELATÓRIO: LOTES (COM CAMPO MARCA)
+   ===================================================== */
+elseif ($tipo == "lotes") {
+    echo "<thead>
+            <tr>
+                <th>Produto</th>
+                <th>Nº Lote</th>
+                <th>Marca</th>
+                <th class='text-center'>Quantidade</th>
+                <th class='text-center'>Validade</th>
+                <th class='text-center'>Status</th>
+            </tr>
+          </thead>
+          <tbody>";
 
-            RELATÓRIO: LOTES
+    $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote 
+            FROM produtoslotes l 
+            INNER JOIN produtos p ON p.IdProduto = l.idproduto 
+            WHERE l.idEmpresa = $idEmpresa 
+            ORDER BY l.idlote DESC";
+            
+    $result = $conn->query($sql);
 
-            ===================================================== */
+    while ($row = $result->fetch_assoc()) {
+        $val = $row['validade'] ? date('d/m/Y', strtotime($row['validade'])) : '-';
+        $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
+        $marca = !empty($row['MarcaProduto']) ? htmlspecialchars($row['MarcaProduto']) : '-';
 
-            elseif ($tipo == "lotes") {
-
-                echo "<thead>
-
-                        <tr>
-
-                            <th>Produto</th>
-
-                            <th>Número Lote</th>
-
-                            <th class='text-center'>Quantidade</th>
-
-                            <th class='text-center'>Validade</th>
-
-                            <th class='text-center'>Status</th>
-
-                        </tr>
-
-                      </thead>
-
-                      <tbody>";
-
-
-
-                $sql = "SELECT l.numero_lote, l.quantidade, l.validade, l.status_lote, p.NomeProduto FROM produtoslotes l INNER JOIN p ON p.idProduto = l.idproduto WHERE l.idEmpresa = $idEmpresa ORDER BY p.NomeProduto ASC";
-
-                $result = $conn->query($sql);
-
-
-
-                while ($row = $result->fetch_assoc()) {
-
-                    $val = $row['validade'] ? date('d/m/Y', strtotime($row['validade'])) : 'N/A';
-
-                    echo "<tr>
-
-                            <td>".htmlspecialchars($row['NomeProduto'])."</td>
-
-                            <td>".htmlspecialchars($row['numero_lote'])."</td>
-
-                            <td class='text-center'>{$row['quantidade']} un</td>
-
-                            <td class='text-center'>{$val}</td>
-
-                            <td class='text-center'>".strtoupper($row['status_lote'])."</td>
-
-                          </tr>";
-
-                }
-
-            }
+        echo "<tr>
+                <td style='font-weight: 600;'>".htmlspecialchars($row['NomeProduto'])."</td>
+                <td>".$lote."</td>
+                <td>".$marca."</td>
+                <td class='text-center'>".intval($row['quantidade'])." un</td>
+                <td class='text-center'>".$val."</td>
+                <td class='text-center'>".strtoupper($row['status_lote'])."</td>
+              </tr>";
+    }
+}
 
 
 
@@ -351,57 +329,61 @@ if ($tipo == 'baixas') $nome_relatorio = "PERDAS / BAIXAS";
 
 
             /* =====================================================
+    RELATÓRIO: DESCONTOS (ALINHADO COM A INTERFACE E ESTOQUE)
+   ===================================================== */
+elseif ($tipo == "descontos") {
+    echo "<thead>
+            <tr>
+                <th>Produto</th>
+                <th>Nº Lote</th>
+                <th>Qtd em Estoque</th>
+                <th class='text-right'>Valor Original</th>
+                <th class='text-right'>Val. Unit. c/ Desconto</th>
+                <th class='text-center'>Desconto Aplicado</th>
+                <th class='text-right'>Valor Total Estoque</th>
+            </tr>
+          </thead>
+          <tbody>";
 
-            RELATÓRIO: DESCONTOS
-
-            ===================================================== */
-
-            elseif ($tipo == "descontos") {
-
-    echo "<thead><tr><th>Produto</th><th>Lote</th><th class='text-center'>Qtd</th><th class='text-center'>Desconto</th><th class='text-right'>Valor Desc. (R$)</th></tr></thead><tbody>";
-
-    $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.desconto, l.preco_venda
-
+    $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.preco_venda, l.desconto, l.status_lote
             FROM produtoslotes l
-
             INNER JOIN produtos p ON p.idProduto = l.idproduto
-
-            WHERE l.idEmpresa = '" . $idEmpresa . "' AND l.desconto > 0";
-
+            WHERE l.idEmpresa = '" . $idEmpresa . "' AND l.desconto > 0
+            ORDER BY l.desconto DESC, p.NomeProduto ASC";
+            
     $result = $conn->query($sql);
 
-   
-
     if ($result && $result->num_rows > 0) {
-
         while ($row = $result->fetch_assoc()) {
-
-            $valor_desc = ($row['quantidade'] * $row['preco_venda']) * ($row['desconto'] / 100);
+            $qtd = intval($row['quantidade']);
+            $preco_original = floatval($row['preco_venda']);
+            $porcentagem_desc = floatval($row['desconto']);
+            
+            $preco_com_desconto = $preco_original * (1 - ($porcentagem_desc / 100));
+            $valor_total_estoque = $preco_com_desconto * $qtd;
+            
+            $status_limpo = strtolower(trim($row['status_lote']));
+            $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
 
             echo "<tr>
-
-                <td>" . htmlspecialchars($row['NomeProduto']) . "</td>
-
-                <td>" . htmlspecialchars($row['numero_lote']) . "</td>
-
-                <td class='text-center'>{$row['quantidade']} un</td>
-
-                <td class='text-center'>{$row['desconto']}%</td>
-
-                <td class='text-right'>R$ " . number_format($valor_desc, 2, ',', '.') . "</td>
-
-            </tr>";
-
+                    <td style='font-weight: 600;'>";
+                        echo htmlspecialchars($row['NomeProduto']);
+                        if ($status_limpo == 'vencido') {
+                            echo " <span style='background: #ef4444; color: #ffffff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold;'>VENCIDO</span>";
+                        }
+            echo "  </td>
+                    <td>" . $lote . "</td>
+                    <td>" . $qtd . " un</td>
+                    <td class='text-right'>R$ " . number_format($preco_original, 2, ',', '.') . "</td>
+                    <td class='text-right'>R$ " . number_format($preco_com_desconto, 2, ',', '.') . "</td>
+                    <td class='text-center' style='color: #eab308; font-weight: bold;'>" . number_format($porcentagem_desc, 0) . "% OFF</td>
+                    <td class='text-right' style='color: #22c55e; font-weight: bold;'>R$ " . number_format($valor_total_estoque, 2, ',', '.') . "</td>
+                </tr>";
         }
-
     } else {
-
-        echo "<tr><td colspan='5' class='text-center'>Nenhum desconto registrado neste período.</td></tr>";
-
+        echo "<tr><td colspan='7' style='text-align:center; padding:20px;'>Nenhum lote com promoção ativa encontrado para o período selecionado.</td></tr>";
     }
-
     echo "</tbody>";
-
 }
 
 
@@ -460,187 +442,109 @@ if ($tipo == 'baixas') $nome_relatorio = "PERDAS / BAIXAS";
 
 
 
-            /* =====================================================
-
-   RELATÓRIO: VENDAS (AJUSTADO COM DESCONTO)
-
+       /* =====================================================
+   RELATÓRIO: VENDAS (AJUSTADO COM PREÇO UNITÁRIO ORIGINAL)
    ===================================================== */
-
 elseif ($tipo == "vendas") {
-
     echo "<thead>
-
             <tr>
-
                 <th>Produto</th>
-
                 <th>Lote</th>
-
                 <th class='text-center'>Qtd</th>
-
+                <th class='text-center'>P. Unitário</th>
                 <th class='text-center'>Desconto</th>
-
                 <th class='text-right'>Total Faturado</th>
-
                 <th class='text-center'>Data</th>
-
             </tr>
-
           </thead>
-
           <tbody>";
 
-
-
     $sql = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida
-
             FROM saida s
-
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
-
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
-
             WHERE l.idEmpresa = $idEmpresa AND LOWER(s.motivo_saida) = 'venda'
-
             ORDER BY s.id_saida DESC";
-
-   
-
+    
     $result = $conn->query($sql);
 
-
-
     if ($result && $result->num_rows > 0) {
-
         while ($row = $result->fetch_assoc()) {
-
             $qtd = intval($row['quantidade_saida']);
-
-            $p_unitario = floatval($row['preco_venda']);
-
+            $p_unitario_original = floatval($row['preco_venda']);
             $desc = floatval($row['desconto']);
-
-           
-
-            // Cálculo do valor final com desconto aplicado
-
-            $valor_final = ($p_unitario * (1 - ($desc / 100))) * $qtd;
-
+            
+            // O Total Faturado continua calculando o desconto normalmente
+            $valor_final = ($p_unitario_original * (1 - ($desc / 100))) * $qtd;
+            
             $data_v = $row['data_saida'] ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
 
-
-
             echo "<tr>
-
                     <td>".htmlspecialchars($row['NomeProduto'])."</td>
-
                     <td>#".htmlspecialchars($row['numero_lote'])."</td>
-
-                    <td class='text-center'>{$qtd} un</td>
-
-                    <td class='text-center'>{$desc}%</td>
-
+                    <td class='text-center'>{$qtd} un</td>";
+            
+            // Agora exibe o Preço Unitário NORMAL (sem desconto)
+            echo "<td class='text-center' style='color: #94a3b8;'>R$ ".number_format($p_unitario_original, 2, ',', '.')."</td>";
+            
+            echo "<td class='text-center'>{$desc}%</td>
                     <td class='text-right' style='color:#22c55e; font-weight:bold;'>R$ ".number_format($valor_final, 2, ',', '.')."</td>
-
                     <td class='text-center'>{$data_v}</td>
-
                   </tr>";
-
         }
-
     } else {
-
-        echo "<tr><td colspan='6' class='text-center'>Nenhuma venda registrada.</td></tr>";
-
+        echo "<tr><td colspan='7' class='text-center'>Nenhuma venda registrada.</td></tr>";
     }
-
     echo "</tbody>";
-
 }
 
 
-
             /* =====================================================
-
-            NOVO RELATÓRIO: PERDAS / BAIXAS
-
+            NOVO RELATÓRIO: PERDAS / BAIXAS (Com Custo Unitário)
             ===================================================== */
-
             elseif ($tipo == "baixas" || $tipo == "perdas") {
-
                 echo "<thead>
-
                         <tr>
-
                             <th>Produto</th>
-
                             <th>Lote</th>
-
                             <th class='text-center'>Qtd Perdida</th>
-
+                            <th class='text-right'>Custo Unitário</th>
                             <th class='text-right'>Prejuízo Total</th>
-
                             <th class='text-center'>Data da Baixa</th>
-
                             <th>Motivo</th>
-
                         </tr>
-
                       </thead>
-
                       <tbody>";
 
-
-
                 $sql = "SELECT p.NomeProduto, l.numero_lote, l.preco_compra, s.quantidade_saida, s.data_saida, s.motivo_saida
-
                         FROM saida s
-
                         INNER JOIN produtoslotes l ON s.idlote = l.idlote
-
                         INNER JOIN produtos p ON l.idproduto = p.IdProduto
-
                         WHERE l.idEmpresa = $idEmpresa AND LOWER(s.motivo_saida) <> 'venda'
-
                         ORDER BY s.id_saida DESC";
-
                 $result = $conn->query($sql);
 
+                if ($result && $result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $qtd = intval($row['quantidade_saida']);
+                        $custo = floatval($row['preco_compra']);
+                        $prejuizo = $custo * $qtd;
+                        $data_b = $row['data_saida'] ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
 
-
-                while ($row = $result->fetch_assoc()) {
-
-                    $qtd = intval($row['quantidade_saida']);
-
-                    $custo = floatval($row['preco_compra']);
-
-                    $prejuizo = $custo * $qtd;
-
-                    $data_b = $row['data_saida'] ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
-
-
-
-                    echo "<tr>
-
-                            <td>".htmlspecialchars($row['NomeProduto'])."</td>
-
-                            <td>#".htmlspecialchars($row['numero_lote'])."</td>
-
-                            <td class='text-center'>{$qtd} un</td>
-
-                            <td class='text-right' style='color:#ef4444; font-weight:bold;'>R$ ".number_format($prejuizo, 2, ',', '.')."</td>
-
-                            <td class='text-center'>{$data_b}</td>
-
-                            <td><span style='color:#b91c1c;'>".htmlspecialchars($row['motivo_saida'])."</span></td>
-
-                          </tr>";
-
+                        echo "<tr>
+                                <td>".htmlspecialchars($row['NomeProduto'])."</td>
+                                <td>#".htmlspecialchars($row['numero_lote'])."</td>
+                                <td class='text-center'>{$qtd} un</td>
+                                <td class='text-right'>R$ ".number_format($custo, 2, ',', '.')."</td>
+                                <td class='text-right' style='color:#ef4444; font-weight:bold;'>R$ ".number_format($prejuizo, 2, ',', '.')."</td>
+                                <td class='text-center'>{$data_b}</td>
+                                <td><span style='color:#b91c1c;'>".htmlspecialchars($row['motivo_saida'])."</span></td>
+                              </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='7' class='text-center'>Nenhuma perda ou baixa registrada.</td></tr>";
                 }
-
             }
-
-
 
             /* =====================================================
 
