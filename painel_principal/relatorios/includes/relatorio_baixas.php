@@ -92,7 +92,8 @@ if (!$resultado) {
                 <th>Produto</th>
                 <th>Nº Lote</th>
                 <th>Qtd Perdida</th>
-                <th>Custo Total (Prejuízo)</th>
+                <th>Custo Unitário</th>
+                <th>Prejuízo Total</th>
                 <th>Data da Baixa</th>
                 <th>Motivo / Ocorrência</th>
             </tr>
@@ -112,7 +113,10 @@ if (!$resultado) {
                     echo "<td style='color: #94a3b8;'>#" . htmlspecialchars($row['numero_lote']) . "</td>";
                     echo "<td>" . $qtd . " un</td>";
                     
-                    // Coluna de Custo com destaque em Vermelho indicando perda financeira
+                    // Nova coluna: Custo Unitário (Preço de compra do item)
+                    echo "<td style='color: #94a3b8;'>R$ " . number_format($custo_compra, 2, ',', '.') . "</td>";
+                    
+                    // Coluna de Custo Total / Prejuízo
                     echo "<td><span class='valor-prejuizo'>R$ " . number_format($prejuizo_total, 2, ',', '.') . "</span></td>";
                     
                     echo "<td>" . $data_baixa . "</td>";
@@ -120,7 +124,7 @@ if (!$resultado) {
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='6' style='text-align:center; color:#94a3b8; padding:25px;'>Nenhuma perda ou baixa registrada neste período.</td></tr>";
+                echo "<tr><td colspan='7' style='text-align:center; color:#94a3b8; padding:25px;'>Nenhuma perda ou baixa registrada neste período.</td></tr>";
             }
             ?>
         </tbody>
