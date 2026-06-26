@@ -216,7 +216,7 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
                                     <span class="texto-off">% OFF</span>
                                 </div>
                             </div>
-                            <button type="submit" class="btn-salvar">Executar nos Itens Próximos ao Vencimento</button>
+                            <button type="submit" class="btn-salvar">Executar nos itens próximos ao vencimento</button>
                         </form>
                     </div>
 
