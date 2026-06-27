@@ -1,77 +1,4 @@
 /* =====================================================
-ESTILOS DOS PRODUTOS (EM COLUNA CENTRALIZADA)
-===================================================== */
-.produtos{
-    display: flex;
-    flex-direction: column; 
-    gap: 20px;
-    align-items: center;    /* Mantém os cards perfeitamente no meio */
-    width: 100%;
-}
-
-.card{
-    width: 500px;           
-    max-width: 100%;
-    background: #001A36;    
-    border-radius: 20px;
-    padding: 40px;
-    border: 1px solid #00B7C3;
-    text-align: center;
-    box-shadow:
-        0 0 10px rgba(0,183,195,0.15),
-        0 0 25px rgba(0,183,195,0.08);
-    transition: 0.3s;
-}
-
-.card:hover{
-    transform: translateY(-5px);
-    box-shadow:
-        0 0 20px rgba(0,245,212,0.25),
-        0 0 40px rgba(0,245,212,0.12);
-}
-
-.card img{
-    width: 100%;
-    height: 200px;
-    object-fit: contain;
-}
-
-.preco{
-    color: #00F5D4;
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.barra{
-    width: 100%;
-    height: 10px;
-    background: #ddd;
-    border-radius: 20px;
-}
-
-.progresso{
-    height: 100%;
-    background: #1b57d0;
-    border-radius: 20px;
-}
-
-.status-aberta{
-    background: #d4edda;
-    color: #155724;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-.status-fechada{
-    background: #f8d7da;
-    color: #721c24;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-/* =====================================================
 RESET E CONFIGURAÇÃO DA PÁGINA
 ===================================================== */
 *{
@@ -219,34 +146,311 @@ SIDEBAR (FIXADA)
 }
 
 /* =====================================================
-MAIN (ÁREA DE CONTEÚDO COM POSIÇÃO RELATIVA)
+MAIN (ÁREA DE CONTEÚDO CORRIGIDA)
 ===================================================== */
 .main{
     flex: 1;
-    padding: 40px;
-    padding-top: 90px;  /* Deixa espaço para o título absoluto não cobrir o primeiro card */
+    padding: 40px;      
     margin-left: 220px; 
-    position: relative; /* Base para o título se posicionar */
+    position: relative; 
 }
 
-/* Força o título "Compras coletivas" a fixar no canto esquerdo, não importa o que aconteça nos cards */
-.main h1,
-.main h2,
-.top h2 {
-    position: absolute;
-    top: 30px;
-    left: 40px;
+.main h1 {
     font-size: 32px;
     color: var(--text) !important;
     font-weight: bold;
-    margin: 0;
+    margin-top: 10px;
+    margin-bottom: 30px; 
+    width: 100%;
+    text-align: left;    
 }
 
-/* Esconde subtítulos ou blocos vazios antigos que possam quebrar espaçamento */
+.main h2, .top h2 {
+    font-size: 32px;
+    color: var(--text) !important;
+    font-weight: bold;
+}
+
 .subtitulo {
     display: none;
 }
 
 .cards{
     width: 100%;
+}
+
+/* =====================================================
+ESTILOS DOS PRODUTOS (AGORA EM LADO A LADO / GRID)
+===================================================== */
+.produtos{
+    display: grid;
+    /* auto-fill cria colunas dinâmicas automáticas de no mínimo 260px */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+    gap: 20px; /* Espaço entre os cards tanto na horizontal quanto na vertical */
+    width: 100%;
+}
+
+.card{
+    width: 100%; /* Ocupa o tamanho que a coluna do Grid mandar */
+    background: #001A36;    
+    border-radius: 20px;
+    padding: 25px 20px; /* Reduzi um pouco o padding interno para caber melhor os textos compactos */
+    border: 1px solid #00B7C3;
+    text-align: center;
+    box-shadow:
+        0 0 10px rgba(0,183,195,0.15),
+        0 0 25px rgba(0,183,195,0.08);
+    transition: 0.3s;
+    
+    /* Garante que elementos internos fiquem bem organizados verticalmente */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card:hover{
+    transform: translateY(-5px);
+    box-shadow:
+        0 0 20px rgba(0,245,212,0.25),
+        0 0 40px rgba(0,245,212,0.12);
+}
+
+.card img{
+    width: 100%;
+    height: 140px; /* Reduzi um pouco a altura para ficar proporcional à largura menor */
+    object-fit: contain;
+    margin-bottom: 12px;
+}
+
+.card h3 {
+    font-size: 18px; /* Título ligeiramente menor para não quebrar muitas linhas */
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.card p {
+    color: var(--sub);
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.preco{
+    color: #00F5D4;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Progress Bar */
+.barra{
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    margin: 12px 0;
+    overflow: hidden;
+    border: 1px solid rgba(0, 183, 195, 0.2);
+}
+
+.progresso{
+    height: 100%;
+    background: linear-gradient(90deg, #1b57d0, #00B7C3);
+    border-radius: 20px;
+    transition: width 0.5s ease-in-out;
+}
+
+/* Badges de Status */
+.status-aberta{
+    background: rgba(21, 87, 36, 0.2);
+    color: #00F5D4;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 12px;
+    border: 1px solid #00B7C3;
+    display: inline-block;
+}
+
+.status-fechada{
+    background: rgba(248, 215, 218, 0.1);
+    color: #ef4444;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 12px;
+    border: 1px solid #ef4444;
+    display: inline-block;
+}
+
+/* Botões de Ação */
+.card button {
+    background: linear-gradient(90deg, #00B7C3, #00F5D4);
+    color: #02152E;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.card button:hover:not(:disabled) {
+    transform: scale(1.03);
+    box-shadow: 0 0 12px rgba(0, 245, 212, 0.3);
+}
+.nome-aba {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: var(--primary);
+}
+/* =====================================================
+MODAL DE DETALHES
+===================================================== */
+.modal {
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(2, 21, 46, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #001A36;
+    border: 1px solid #00B7C3;
+    border-radius: 20px;
+    width: 800px;
+    max-width: 90%;
+    padding: 40px;
+    position: relative;
+    display: flex;
+    gap: 40px;
+    box-shadow: 0 0 30px rgba(0, 183, 195, 0.3);
+}
+
+.fechar-modal {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: var(--primary);
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.fechar-modal:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.modal-img {
+    flex: 1;
+    background: #02152E;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed rgba(0,183,195,0.4);
+}
+
+.modal-img img {
+    max-width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+}
+
+.modal-info {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.modal-info h2 {
+    color: var(--primary);
+    font-size: 26px;
+    margin-bottom: 5px;
+}
+
+.modal-precos {
+    background: rgba(0, 245, 212, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary);
+}
+
+.participantes-lista {
+    list-style: none;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    color: var(--sub);
+}
+
+.participantes-lista li {
+    background: rgba(255,255,255,0.05);
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.modal-acoes {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-participar, .btn-cancelar {
+    padding: 12px 25px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 50%;
+}
+
+.btn-participar {
+    background: linear-gradient(90deg, #00B7C3, #00F5D4);
+    color: #02152E;
+}
+
+.btn-participar:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 245, 212, 0.4);
+}
+
+.btn-cancelar {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-cancelar:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+.btn-inativo {
+    background: #3a4b5c !important;
+    color: #7a8b9c !important;
+    cursor: not-allowed;
+    border: 1px solid #4a5b6c;
+}
+
+.btn-detalhes {
+    background: transparent !important;
+    border: 1px solid var(--primary) !important;
+    color: var(--primary) !important;
+}
+
+.btn-detalhes:hover {
+    background: rgba(0, 245, 212, 0.1) !important;
 }

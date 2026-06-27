@@ -38,7 +38,7 @@ require_once("produtos_simulado.php");
 
         <main class="main">
 
-            <h1>Compras coletivas</h1>
+            <h1 class="nome-aba">Compras coletivas</h1>
 
             <div class="produtos">
 
@@ -76,11 +76,7 @@ require_once("produtos_simulado.php");
 
                         <br><br>
 
-                        <?php if($produto['status'] != 'Concluida' && $produto['status'] != 'Cancelada'){ ?>
-                            <button onclick="participar(<?= $produto['idItem'] ?>)">Participar</button>
-                        <?php } else { ?>
-                            <button disabled>Compra indisponível</button>
-                        <?php } ?>
+                       <button class="btn-detalhes" onclick="abrirModal(<?= $produto['idItem'] ?>)">Ver Detalhes</button>
 
                     </div>
 
@@ -90,6 +86,35 @@ require_once("produtos_simulado.php");
 
         </main>
 
+    </div>
+    <div id="modalCompra" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="fechar-modal" onclick="fecharModal()">&times;</span>
+            
+            <div class="modal-img">
+                <img id="modalImagem" src="" alt="Produto">
+            </div>
+            
+            <div class="modal-info">
+                <h2 id="modalTitulo">Carregando...</h2>
+                <p id="modalMarca"></p>
+                <p id="modalDescricao"></p>
+                <br>
+                <div class="modal-precos">
+                    <p><strong>Preço Total:</strong> <span>R$ 0,00</span> <small>(Futuro)</small></p>
+                    <p><strong>Preço Unitário:</strong> <span>R$ 0,00</span> <small>(Futuro)</small></p>
+                </div>
+                <br>
+                <h3>Participantes (<span id="modalQtdPart">0</span>/2):</h3>
+                <ul class="participantes-lista" id="listaParticipantes">
+                    </ul>
+                
+                <div class="modal-acoes">
+                    <button id="btnParticiparModal" class="btn-participar">Participar</button>
+                    <button id="btnCancelarModal" class="btn-cancelar">Cancelar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="compras.js"></script>
