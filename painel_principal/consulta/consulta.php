@@ -118,7 +118,7 @@ require_once 'consulta_logica.php';
 
     <div class="top">
 
-        <h2>Consulta de Produtos e Lotes</h2>
+        <h2>Consulta de produtos e lotes</h2>
 
         <p class="subtitulo">
             Consulte os produtos cadastrados e seus respectivos lotes.
@@ -132,7 +132,7 @@ require_once 'consulta_logica.php';
                     <div class="area-listas">
 
                         <h1 class="titulo-lista">
-                            Lista de Produtos</h1>
+                            Lista de produtos</h1>
                         <?= $htmlListaProdutos ?>
                         <br>
                         <br>

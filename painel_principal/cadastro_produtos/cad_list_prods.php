@@ -80,7 +80,8 @@ $produtos_select = $conn->query("
         <main class="main">
             <div class="container">
 
-                <h2>Sistema de Estoque</h2>
+                <h2>Sistema de entrada de produtos e lotes</h2>
+                <p class="usuario">Aqui é para registrar produtos, e os lotes dos produtos já cadastrados. </p>
 
                 <p class="usuario">
                     Usuário logado:

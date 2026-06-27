@@ -38,7 +38,7 @@ require_once("produtos_simulado.php");
 
         <main class="main">
 
-            <h1>Compras Coletivas</h1>
+            <h1>Compras coletivas</h1>
 
             <div class="produtos">
 

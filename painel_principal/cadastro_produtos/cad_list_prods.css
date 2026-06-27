@@ -386,3 +386,8 @@ RESPONSIVO CELULAR
         flex-direction:column;
     }
 }
+        .texto-explicativo {
+            font-size: 13.5px;
+            color: #a0aab5;
+            margin-bottom: 20px;
+        }

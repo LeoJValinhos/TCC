@@ -149,11 +149,11 @@ value="<?php echo htmlspecialchars($pesquisa); ?>">
 <select name="ordenar">
 
 <option value="id_desc" <?php if($ordenar == "id_desc") echo "selected"; ?>>
-Código Decrescente
+Código decrescente
 </option>
 
 <option value="id_asc" <?php if($ordenar == "id_asc") echo "selected"; ?>>
-Código Crescente
+Código crescente
 </option>
 
 <option value="nome_asc" <?php if($ordenar == "nome_asc") echo "selected"; ?>>
