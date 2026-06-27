@@ -149,11 +149,11 @@ value="<?php echo htmlspecialchars($pesquisa); ?>">
 <select name="ordenar">
 
 <option value="id_desc" <?php if($ordenar == "id_desc") echo "selected"; ?>>
-Código Decrescente
+Código decrescente
 </option>
 
 <option value="id_asc" <?php if($ordenar == "id_asc") echo "selected"; ?>>
-Código Crescente
+Código crescente
 </option>
 
 <option value="nome_asc" <?php if($ordenar == "nome_asc") echo "selected"; ?>>
@@ -372,7 +372,8 @@ SELECT
     produtoslotes.quantidade,
     produtoslotes.validade,
     produtoslotes.preco_venda,
-    produtoslotes.desconto
+    produtoslotes.desconto,
+    produtoslotes.criadopor_nome
 FROM produtoslotes
 INNER JOIN produtos
 ON produtos.idProduto = produtoslotes.idproduto
@@ -459,6 +460,7 @@ if($resultado_lotes->num_rows > 0){
         <th>Produto</th>
         <th>Marca</th>
         <th>Quantidade</th>
+        <th>Criado por</th>
         <th>Validade</th>
         <th>Preço (Líquido)</th>
     </tr>
@@ -537,6 +539,7 @@ if($resultado_lotes->num_rows > 0){
         echo "<td>".$lote['NomeProduto']."</td>";
         echo "<td>".$lote['MarcaProduto']."</td>";
         echo "<td>".$lote['quantidade']."</td>";
+        echo "<td>".$lote['criadopor_nome']."</td>";
         echo "<td class='$classe'>".date("d/m/Y", strtotime($lote['validade']))."</td>";
         // ALTERAÇÃO: Adicionada a célula com o componente visual de preço calculado
         echo "<td>".$exibicao_preco."</td>";

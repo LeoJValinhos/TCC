@@ -27,13 +27,12 @@ TOTAL DE PRODUTOS DA EMPRESA
 
 $total_produtos = 0;
 
+// Consulta simplificada: busca direto na tabela produtoslotes
 $sql_total = "
 SELECT 
-    SUM(pl.quantidade) AS total_produtos
-FROM produtoslotes pl
-INNER JOIN produtos p
-    ON p.idProduto = pl.idProduto
-WHERE p.idEmpresa = ?
+    SUM(quantidade) AS total_produtos
+FROM produtoslotes
+WHERE idEmpresa = ?
 ";
 
 $stmt_total = $conn->prepare($sql_total);
@@ -48,11 +47,9 @@ $stmt_total->execute();
 $resultado_total = $stmt_total->get_result();
 
 if ($resultado_total->num_rows > 0) {
-
     $dados = $resultado_total->fetch_assoc();
-
-    if ($dados['total_produtos'] != null) {
-
+    
+    if ($dados['total_produtos'] !== null) {
         $total_produtos = $dados['total_produtos'];
     }
 }

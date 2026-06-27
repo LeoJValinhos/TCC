@@ -286,7 +286,7 @@ $GLOBALS['periodo_atual'] = $periodo;
 
 
 
-                <h2>Módulo de Relatórios Gerenciais</h2>
+                <h2>Módulo de relatórios gerenciais</h2>
 
 
 
@@ -358,7 +358,7 @@ $GLOBALS['periodo_atual'] = $periodo;
 
 
 
-                    <a href="?tipo=<?= $tipo ?>&periodo=todos" style="padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: bold; background: <?= $periodo=='todos'?'#00B7C3':'#1a233a' ?>; color: #fff;">Histórico Completo</a>
+                    <a href="?tipo=<?= $tipo ?>&periodo=todos" style="padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: bold; background: <?= $periodo=='todos'?'#00B7C3':'#1a233a' ?>; color: #fff;">Histórico completo</a>
 
 
 

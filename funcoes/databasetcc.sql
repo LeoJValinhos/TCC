@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 27-Jun-2026 às 00:50
+-- Tempo de geração: 27-Jun-2026 às 20:14
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -46,7 +46,8 @@ CREATE TABLE `cadastros` (
 
 INSERT INTO `cadastros` (`idCadastro`, `nome`, `sobrenome`, `senha`, `email`, `datanasc`, `cpf`, `celular`, `idEmpresa`, `tipocadastro`) VALUES
 (1, 'Leonardo', 'Valinhos', 'vini4675', 'root@root', '2007-03-20', '11111111111', '22222222222', 1, 'EMPRESA/ADM'),
-(2, 'vinicius', 'sales', '012345678', 'vini@vini', '2008-07-20', '01234567812', '88888888888', 2, 'EMPRESA/ADM');
+(2, 'vinicius', 'sales', '012345678', 'vini@vini', '2008-07-20', '01234567812', '88888888888', 2, 'EMPRESA/ADM'),
+(3, 'aa', 'sss', '12345678', 'leo@leleco', '2007-03-20', '22132132131', '13213212332', 1, 'EMPRESA/ADM');
 
 -- --------------------------------------------------------
 
@@ -69,7 +70,7 @@ CREATE TABLE `empresa` (
 --
 
 INSERT INTO `empresa` (`idEmpresa`, `nomeEmpresa`, `CNPJ`, `codigoEmpresa`, `idAdm`, `nomeAdm`, `criado_em`) VALUES
-(1, 'Leleco Interpraise', '33333333333333', '8554687', 1, 'Leonardo', '2026-06-08 20:25:10'),
+(1, 'Leleco Interpraise', '33333333333333', '8554687', 3, 'aa', '2026-06-08 20:25:10'),
 (2, 'vini corp', '01829742386474', '1622009', 2, 'vinicius', '2026-06-11 21:44:31');
 
 -- --------------------------------------------------------
@@ -88,15 +89,61 @@ CREATE TABLE `loja_virtual` (
   `meta` int(11) DEFAULT '2',
   `quantidadeParticipantes` int(11) DEFAULT '0',
   `status` enum('Aberta','Aguardando outro participante','Concluida','Cancelada') DEFAULT 'Aberta'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 --
 -- Extraindo dados da tabela `loja_virtual`
 --
 
 INSERT INTO `loja_virtual` (`idItem`, `nomeProduto`, `marcaProduto`, `descricaoProduto`, `quantidade`, `imagemProduto`, `meta`, `quantidadeParticipantes`, `status`) VALUES
-(5, 'Sabao em po', 'Brilhante', 'Sabao em po para limpeza', '200', '../../imagens/sabao_brilho.png', 2, 2, 'Concluida'),
-(6, 'Televisão 49 polegadas', 'Sansung', 'TV ULTRA 8K WIDE MUITO TOP 49 E TANTAS POLEGADAS', '850', '../../imagens/tvlg.png', 2, 1, 'Aguardando outro participante');
+(55, 'Sabão em Pó', 'Brilho', 'Sabão em pó para limpeza profunda', '200', '../../imagens/sabao_brilho.png', 2, 1, 'Aguardando outro participante'),
+(56, 'Amaciante de Roupas', 'Soft', 'Amaciante concentrado 1L', '150', '../../imagens/amaciante_soft.png', 2, 0, 'Aberta'),
+(57, 'Detergente Líquido', 'Limpex', 'Detergente neutro para louças 500ml', '300', '../../imagens/detergente_limpex.png', 3, 0, 'Aberta'),
+(58, 'Desinfetante Pinho', 'Força', 'Desinfetante uso geral 1L', '120', '../../imagens/desinfetante_forca.png', 2, 0, 'Aberta'),
+(59, 'Água Sanitária', 'Pura', 'Água sanitária para desinfecção 1L', '180', '../../imagens/agua_sanitaria_pura.png', 2, 0, 'Aberta'),
+(60, 'Esponja de Aço', 'Brilhante', 'Pacote com 4 unidades', '250', '../../imagens/esponja_brilhante.png', 4, 0, 'Aberta'),
+(61, 'Limpador Multiuso', 'Ação', 'Limpador spray multiuso 500ml', '140', '../../imagens/limpador_acao.png', 2, 0, 'Aberta'),
+(62, 'Saco de Lixo 50L', 'Resiste', 'Pacote com 10 unidades', '160', '../../imagens/saco_lixo_resiste.png', 2, 0, 'Aberta'),
+(63, 'Arroz Integral', 'Grão Ouro', 'Pacote de arroz integral 1kg', '90', '../../imagens/arroz_grao_ouro.png', 2, 0, 'Aberta'),
+(64, 'Feijão Carioca', 'Dona Benta', 'Feijão carioca tipo 1 1kg', '110', '../../imagens/feijao_dona_benta.png', 2, 0, 'Aberta'),
+(65, 'Macarrão Espaguete', 'Massa Boa', 'Macarrão sêmola espaguete 500g', '210', '../../imagens/macarrao_massa_boa.png', 3, 0, 'Aberta'),
+(66, 'Óleo de Soja', 'Leve', 'Óleo de soja garrafa 900ml', '170', '../../imagens/oleo_leve.png', 2, 0, 'Aberta'),
+(67, 'Açúcar Refinado', 'Doce Vida', 'Açúcar refinado pacote 1kg', '130', '../../imagens/acucar_doce_vida.png', 2, 0, 'Aberta'),
+(68, 'Sal Refinado', 'Iodado', 'Sal refinado de cozinha 1kg', '80', '../../imagens/sal_iodado.png', 4, 0, 'Aberta'),
+(69, 'Café Torrado e Moído', 'Aroma', 'Café a vácuo tradicional 500g', '140', '../../imagens/cafe_aroma.png', 2, 0, 'Aberta'),
+(70, 'Farinha de Trigo', 'Premium', 'Farinha de trigo tipo 1 1kg', '100', '../../imagens/farinha_premium.png', 2, 0, 'Aberta'),
+(71, 'Achocolatado em Pó', 'ChocoMax', 'Lata de achocolatado 400g', '125', '../../imagens/achocolatado_chocomax.png', 2, 0, 'Aberta'),
+(72, 'Cereal Matinal', 'NutriCroc', 'Cereal de milho tradicional 300g', '85', '../../imagens/cereal_nutricroc.png', 2, 0, 'Aberta'),
+(73, 'Biscoito Recheado', 'Doce Mania', 'Biscoito sabor chocolate 130g', '400', '../../imagens/biscoito_doce_mania.png', 5, 0, 'Aberta'),
+(74, 'Biscoito Salgado', 'Crack', 'Biscoito água e sal 350g', '190', '../../imagens/biscoito_crack.png', 3, 0, 'Aberta'),
+(75, 'Geleia de Morango', 'Fruta Pura', 'Pote de geleia de morango 300g', '60', '../../imagens/geleia_fruta_pura.png', 2, 0, 'Aberta'),
+(76, 'Torrada Tradicional', 'Crocante', 'Pacote de torradas leves 150g', '95', '../../imagens/torrada_crocante.png', 2, 0, 'Aberta'),
+(77, 'Leite em Pó', 'NutriVida', 'Leite em pó integral sachê 400g', '115', '../../imagens/leite_nutrivida.png', 2, 0, 'Aberta'),
+(78, 'Aveia em Flocos', 'Natural', 'Caixa de aveia em flocos finos 170g', '75', '../../imagens/aveia_natural.png', 3, 0, 'Aberta'),
+(79, 'Creme Dental', 'Sorriso Clean', 'Creme dental proteção máxima 90g', '280', '../../imagens/creme_dental_sorriso.png', 4, 0, 'Aberta'),
+(80, 'Sabonete em Barra', 'Suave', 'Sabonete hidratante toque macio 90g', '500', '../../imagens/sabonete_suave.png', 6, 0, 'Aberta'),
+(81, 'Shampoo Anticaspa', 'FiosFort', 'Shampoo controle de oleosidade 400ml', '90', '../../imagens/shampoo_fiosfort.png', 2, 0, 'Aberta'),
+(82, 'Condicionador Hidratante', 'FiosFort', 'Condicionador nutrição intensa 400ml', '85', '../../imagens/condicionador_fiosfort.png', 2, 0, 'Aberta'),
+(83, 'Desodorante Aerossol', 'Dry', 'Desodorante antitranspirante 150ml', '160', '../../imagens/desodorante_dry.png', 3, 0, 'Aberta'),
+(84, 'Papel Higiênico', 'Folha Dupla', 'Pacote com 12 rolos folha dupla', '135', '../../imagens/papel_folha_dupla.png', 2, 0, 'Aberta'),
+(85, 'Fio Dental', 'Menta', 'Fio dental sabor menta 50m', '220', '../../imagens/fio_dental_menta.png', 3, 0, 'Aberta'),
+(86, 'Sabonete Líquido', 'Refil', 'Sabonete líquido refil erva doce 200ml', '145', '../../imagens/sabonete_liquido_refil.png', 2, 0, 'Aberta'),
+(87, 'Refrigerante de Cola', 'MegaCola', 'Garrafa pet de refrigerante 2L', '350', '../../imagens/refrigerante_megacola.png', 4, 0, 'Aberta'),
+(88, 'Suco de Uva Integral', 'Puro Vale', 'Suco de uva tinto integral 1L', '70', '../../imagens/suco_puro_vale.png', 2, 0, 'Aberta'),
+(89, 'Água Mineral Sem Gás', 'Fonte', 'Garrafa de água mineral 500ml', '600', '../../imagens/agua_fonte.png', 6, 0, 'Aberta'),
+(90, 'Suco em Pó Tang', 'Frutão', 'Suco em pó sabor laranja 25g', '800', '../../imagens/suco_po_frutao.png', 10, 0, 'Aberta'),
+(91, 'Néctar de Pêssego', 'Caixinha', 'Suco de caixinha sabor pêssego 1L', '110', '../../imagens/nectar_pessêgo.png', 3, 0, 'Aberta'),
+(92, 'Chá Leão Matte', 'Ervas', 'Chá matte pronto para beber 1.5L', '95', '../../imagens/cha_leao_matte.png', 2, 0, 'Aberta'),
+(93, 'Água Tônica', 'Fresh', 'Lata de água tônica 350ml', '130', '../../imagens/agua_tonica_fresh.png', 3, 0, 'Aberta'),
+(94, 'Energético Monster', 'Power', 'Lata de bebida energética 473ml', '140', '../../imagens/energetico_power.png', 2, 0, 'Aberta'),
+(95, 'Extrato de Tomate', 'Vermelhinho', 'Lata de extrato de tomate 340g', '240', '../../imagens/extrato_vermelhinho.png', 4, 0, 'Aberta'),
+(96, 'Milho Verde em Conserva', 'Campo', 'Lata de milho verde cozido 170g', '195', '../../imagens/milho_campo.png', 3, 0, 'Aberta'),
+(97, 'Ervilha em Conserva', 'Campo', 'Lata de ervilha cozida no vapor 170g', '180', '../../imagens/ervilha_campo.png', 3, 0, 'Aberta'),
+(98, 'Atum Ralado em Óleo', 'Mar', 'Lata de atum ralado natural 170g', '115', '../../imagens/atum_mar.png', 2, 0, 'Aberta'),
+(99, 'Sardinha em Óleo', 'Costa', 'Lata de sardinha tradicional 125g', '160', '../../imagens/sardinha_costa.png', 3, 0, 'Aberta'),
+(100, 'Maionese Tradicional', 'Cremosa', 'Pote de maionese caseira 500g', '125', '../../imagens/maionese_cremosa.png', 2, 0, 'Aberta'),
+(101, 'Ketchup Tradicional', 'Picante', 'Frasco de ketchup tradicional 400g', '140', '../../imagens/ketchup_picante.png', 2, 0, 'Aberta'),
+(102, 'Mostarda Amarela', 'Picante', 'Frasco de mostarda amarela 180g', '135', '../../imagens/mostarda_picante.png', 2, 0, 'Aberta');
 
 -- --------------------------------------------------------
 
@@ -109,7 +156,7 @@ CREATE TABLE `participantes_loja` (
   `idItem` int(11) NOT NULL,
   `id_primeiroParticipante` int(11) DEFAULT NULL,
   `id_segundoParticipante` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `participantes_loja`
@@ -117,7 +164,8 @@ CREATE TABLE `participantes_loja` (
 
 INSERT INTO `participantes_loja` (`idParticipacao`, `idItem`, `id_primeiroParticipante`, `id_segundoParticipante`) VALUES
 (1, 5, 1, 2),
-(2, 6, 1, NULL);
+(2, 6, 1, NULL),
+(3, 55, 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -203,25 +251,28 @@ CREATE TABLE `saida` (
   `id_saida` int(11) NOT NULL,
   `idlote` int(11) NOT NULL,
   `id_lote` int(11) NOT NULL,
+  `criadopor_id` int(11) NOT NULL,
+  `criadopor_nome` varchar(255) NOT NULL,
   `quantidade_saida` int(11) NOT NULL,
   `motivo_saida` varchar(255) NOT NULL,
   `data_saida` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `saida`
 --
 
-INSERT INTO `saida` (`id_saida`, `idlote`, `id_lote`, `quantidade_saida`, `motivo_saida`, `data_saida`) VALUES
-(1, 2, 2, 2, 'Venda', '2026-06-25 00:33:55'),
-(2, 2, 2, 2, 'Ajuste', '2026-06-25 00:39:26'),
-(3, 7, 7, 1, 'Ajuste', '2026-06-25 04:53:22'),
-(4, 4, 4, 1, 'Vencimento', '2026-06-25 04:53:30'),
-(5, 5, 5, 1, 'Avaria', '2026-06-25 04:53:36'),
-(6, 7, 7, 1, 'Ajuste', '2026-06-25 04:53:41'),
-(7, 2, 2, 12, 'Vencimento', '2026-06-25 04:53:50'),
-(8, 5, 5, 7, 'Ajuste', '2026-06-25 04:54:01'),
-(9, 4, 4, 1, 'Ajuste', '2026-06-25 06:04:59');
+INSERT INTO `saida` (`id_saida`, `idlote`, `id_lote`, `criadopor_id`, `criadopor_nome`, `quantidade_saida`, `motivo_saida`, `data_saida`) VALUES
+(1, 2, 2, 0, '', 2, 'Venda', '2026-06-25 00:33:55'),
+(2, 2, 2, 0, '', 2, 'Ajuste', '2026-06-25 00:39:26'),
+(3, 7, 7, 0, '', 1, 'Ajuste', '2026-06-25 04:53:22'),
+(4, 4, 4, 0, '', 1, 'Vencimento', '2026-06-25 04:53:30'),
+(5, 5, 5, 0, '', 1, 'Avaria', '2026-06-25 04:53:36'),
+(6, 7, 7, 0, '', 1, 'Ajuste', '2026-06-25 04:53:41'),
+(7, 2, 2, 0, '', 12, 'Vencimento', '2026-06-25 04:53:50'),
+(8, 5, 5, 0, '', 7, 'Ajuste', '2026-06-25 04:54:01'),
+(9, 4, 4, 0, '', 1, 'Ajuste', '2026-06-25 06:04:59'),
+(43, 2, 2, 3, 'aa', 1, 'Venda', '2026-06-27 15:58:30');
 
 --
 -- Índices para tabelas despejadas
@@ -283,7 +334,8 @@ ALTER TABLE `produtoslotes`
 -- Índices para tabela `saida`
 --
 ALTER TABLE `saida`
-  ADD PRIMARY KEY (`id_saida`);
+  ADD PRIMARY KEY (`id_saida`),
+  ADD KEY `fk_criadopor` (`criadopor_id`);
 
 --
 -- AUTO_INCREMENT de tabelas despejadas
@@ -293,7 +345,7 @@ ALTER TABLE `saida`
 -- AUTO_INCREMENT de tabela `cadastros`
 --
 ALTER TABLE `cadastros`
-  MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
@@ -305,13 +357,13 @@ ALTER TABLE `empresa`
 -- AUTO_INCREMENT de tabela `loja_virtual`
 --
 ALTER TABLE `loja_virtual`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- AUTO_INCREMENT de tabela `participantes_loja`
 --
 ALTER TABLE `participantes_loja`
-  MODIFY `idParticipacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idParticipacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `produtos`
@@ -329,7 +381,7 @@ ALTER TABLE `produtoslotes`
 -- AUTO_INCREMENT de tabela `saida`
 --
 ALTER TABLE `saida`
-  MODIFY `id_saida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_saida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- Restrições para despejos de tabelas
@@ -369,6 +421,12 @@ ALTER TABLE `produtoslotes`
   ADD CONSTRAINT `fk_criado_por` FOREIGN KEY (`criadopor_id`) REFERENCES `cadastros` (`idCadastro`),
   ADD CONSTRAINT `fk_lote_empresa` FOREIGN KEY (`idEmpresa`) REFERENCES `empresa` (`idEmpresa`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `produtoslotes_ibfk_1` FOREIGN KEY (`idproduto`) REFERENCES `produtos` (`idProduto`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `saida`
+--
+ALTER TABLE `saida`
+  ADD CONSTRAINT `fk_criadopor` FOREIGN KEY (`criadopor_id`) REFERENCES `cadastros` (`idCadastro`) ON DELETE NO ACTION ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

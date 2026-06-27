@@ -23,7 +23,7 @@ $produtos_select = $conn->query("
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="cad_list_prods.css">
     <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png">
-    <title>Cadastro de Produtos</title>
+    <title>INVEX - Cadastro de produtos</title>
 
     <style>
         .vermelho-validade {
@@ -80,7 +80,8 @@ $produtos_select = $conn->query("
         <main class="main">
             <div class="container">
 
-                <h2>Sistema de Estoque</h2>
+                <h2>Sistema de entrada de produtos e lotes</h2>
+                <p class="usuario">Aqui é para registrar produtos, e os lotes dos produtos já cadastrados. </p>
 
                 <p class="usuario">
                     Usuário logado:

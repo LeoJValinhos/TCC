@@ -77,7 +77,7 @@ if ($tipo == 'baixas') $nome_relatorio = "PERDAS / BAIXAS";
 
     <meta charset="UTF-8">
 
-    <title>Relatório Gerencial - <?php echo $nome_relatorio; ?></title>
+    <title>Relatório gerencial - <?php echo $nome_relatorio; ?></title>
 
    
 
@@ -187,7 +187,7 @@ if ($tipo == 'baixas') $nome_relatorio = "PERDAS / BAIXAS";
 
             <h1>INVEX - SISTEMA DE GESTÃO DE ESTOQUE</h1>
 
-            <p>Relatório Gerencial Automatizado</p>
+            <p>Relatório Gerencial automatizado</p>
 
         </div>
 

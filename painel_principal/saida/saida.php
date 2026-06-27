@@ -13,8 +13,8 @@ $idEmpresa = $_SESSION['idEmpresa'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="saida.css">
-    <link rel="icon" type="image/png" href="../Imagens/Carrinho.png" width="70" height="70">
-    <title>INVEX - Saída de Produtos</title>
+    <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png" width="70" height="70">
+    <title>INVEX - Saída de produtos</title>
     <style>
         /* Ajustes inline para garantir que o layout quebre as amarras de largura máxima */
         .layout {
@@ -150,18 +150,18 @@ $idEmpresa = $_SESSION['idEmpresa'];
         <main class="main">
             
             <div class="top">
-                <h2>Saída de Produtos</h2>
+                <h2>Saída de produtos</h2>
                 <p class="subtitulo">Gerencie a baixa de itens do estoque geral da empresa.</p>
             </div>
 
             <div class="container-saida-central">
                 <div class="card-neon-invex">
-                    <h2 class="titulo-card">Registrar Saída</h2>
+                    <h2 class="titulo-card">Registrar saída</h2>
                     
                     <form id="formSaida" action="saida_logica.php" method="POST">
                         
                         <div class="form-group-invex">
-                            <label class="label-invex">Selecione o Lote do Produto</label>
+                            <label class="label-invex">Selecione o lote do produto</label>
                             
                             <div class="search-wrapper-invex">
                                 <input type="text" id="inputBusca" class="input-search-invex" placeholder="Digite o nome ou marca para filtrar os lotes..." autocomplete="off">
@@ -250,21 +250,21 @@ $idEmpresa = $_SESSION['idEmpresa'];
 
                         <div class="panel-valores-invex" id="panelValores" style="display: none;">
                             <div class="valor-card">
-                                <span class="valor-label">Preço Unitário</span>
+                                <span class="valor-label">Preço unitário</span>
                                 <div class="valor-row">
                                     <span class="valor-destaque" id="txtPrecoUnitario">R$ 0,00</span>
                                     <span class="badge-desconto-invex" id="tagDesconto" style="display: none;">0% OFF</span>
                                 </div>
                             </div>
                             <div class="valor-card total-box">
-                                <span class="valor-label">Subtotal Geral</span>
+                                <span class="valor-label">Subtotal geral</span>
                                 <span class="valor-destaque total-color" id="txtPrecoTotal">R$ 0,00</span>
                             </div>
                         </div>
 
                         <div class="grid-campos-saida">
                             <div class="grupo-campo-saida">
-                                <label for="quantidade">Quantidade de Saída</label>
+                                <label for="quantidade">Quantidade de saída</label>
                                 <input type="number" id="quantidade" name="quantidade" min="1" value="1" required>
                             </div>
 
@@ -280,7 +280,7 @@ $idEmpresa = $_SESSION['idEmpresa'];
                         </div>
 
                         <div class="container-botao-saida" style="margin-top: 30px;">
-                            <button type="submit" class="btn-confirmar-neon" style="width: 100%;">Confirmar Saída</button>
+                            <button type="submit" class="btn-confirmar-neon" style="width: 100%;">Confirmar saída</button>
                         </div>
                     </form>
                 </div>
