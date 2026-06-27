@@ -121,13 +121,13 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
         <main class="main">
             <div class="container">
 
-                <h2>Configurações do Sistema</h2>
+                <h2>Configurações do sistema</h2>
                 <p class="usuario">Usuário logado: <b><?= htmlspecialchars($_SESSION['nome']) ?></b></p>
 
                 <div class="container-abas">
-                    <button class="botao-aba ativa" onclick="alternarAba('aba-descontos', this)">🔥 Gerenciar Descontos</button>
-                    <button class="botao-aba" onclick="alternarAba('aba-geral', this)">⚙️ Configurações Gerais</button>
-                    <button class="botao-aba" onclick="alternarAba('aba-notificacoes', this)">🔔 Alertas e Estoque</button>
+                    <button class="botao-aba ativa" onclick="alternarAba('aba-descontos', this)">🔥 Gerenciar descontos</button>
+                    <button class="botao-aba" onclick="alternarAba('aba-geral', this)">⚙️ Configurações gerais</button>
+                    <button class="botao-aba" onclick="alternarAba('aba-notificacoes', this)">🔔 Alertas de estoque</button>
 
                     <!-- parte que separa a config de adm pro funcionario  -->
                     
@@ -145,12 +145,12 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
                     <h3 class="titulo-secao"> Gerenciamento de descontos </h3>
                     
                     <div class="container-sub-modos">
-                        <button class="btn-sub-modo ativo" id="btnModoVencimento" onclick="alternarSubModo('vencimento')">⏰ Por Vencimento (Até 30 dias)</button>
-                        <button class="btn-sub-modo" id="btnModoManual" onclick="alternarSubModo('manual')">🎯 Lotes Escolhidos Manualmente</button>
+                        <button class="btn-sub-modo ativo" id="btnModoVencimento" onclick="alternarSubModo('vencimento')">⏰ Por vencimento (até 30 dias)</button>
+                        <button class="btn-sub-modo" id="btnModoManual" onclick="alternarSubModo('manual')">🎯 Lotes escolhidos manualmente</button>
                     </div>
 
                     <div id="modo-vencimento">
-                        <h3 class="titulo-secao">Desconto em Lotes Próximos ao Vencimento</h3>
+                        <h3 class="titulo-secao">Desconto em lotes próximos ao vencimento</h3>
                         <p class="texto-explicativo">Selecione quais lotes críticos receberão o ajuste promocional ou aplique a todos simultaneamente.</p>
                         
                         <form action="gerenciar_descontos.php" method="POST" id="formVencimento">
@@ -161,7 +161,7 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
                                     <input type="text" class="input-filtro-busca" id="buscaVenc" onkeyup="filtrarLotes('buscaVenc', 'listaVenc')" placeholder="Pesquisar lote crítico...">
                                 </div>
                                 <div class="celula-acoes">
-                                    <button type="button" class="btn-marcar-todos" onclick="marcarTodosLotes('listaVenc', this)">☑️ Selecionar Todos</button>
+                                    <button type="button" class="btn-marcar-todos" onclick="marcarTodosLotes('listaVenc', this)">☑️ Selecionar todos</button>
                                 </div>
                             </div>
 
@@ -195,7 +195,7 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
                                             <div class="radio-alinhado-input">
                                                 <input type="radio" name="aplicar_desconto" value="sim" id="recSimVenc" checked>
                                             </div>
-                                            <div class="radio-alinhado-label" style="color:#28a745;">Aplicar Desconto Definido</div>
+                                            <div class="radio-alinhado-label" style="color:#28a745;">Aplicar desconto definido</div>
                                         </div>
                                     </label>
                                     <label class="radio-card-cell" for="recNaoVenc">
@@ -203,25 +203,26 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
                                             <div class="radio-alinhado-input">
                                                 <input type="radio" name="aplicar_desconto" value="nao" id="recNaoVenc">
                                             </div>
-                                            <div class="radio-alinhado-label" style="color:#dc3545;">Zerar Desconto (Preço Normal)</div>
+                                            <div class="radio-alinhado-label" style="color:#dc3545;">Zerar desconto (preço normal)</div>
                                         </div>
                                     </label>
                                 </div>
                             </div>
 
                             <div id="campoPorcentagemVenc" class="painel-opcao">
-                                <label class="label-destaque">Porcentagem do Desconto (%):</label>
+                                <label class="label-destaque">Porcentagem do desconto (%):</label>
                                 <div class="input-porcentagem-container">
                                     <input type="number" name="porcentagem_desconto" id="porcentagemVenc" min="1" max="30" value="10">
                                     <span class="texto-off">% OFF</span>
                                 </div>
                             </div>
+                            
                             <button type="submit" class="btn-salvar">Executar nos itens próximos ao vencimento</button>
                         </form>
                     </div>
 
                     <div id="modo-manual" style="display: none;">
-                        <h3 class="titulo-secao">Desconto por Escolha Manual de Lotes</h3>
+                        <h3 class="titulo-secao">Desconto por escolha manual de lotes</h3>
                         <p class="texto-explicativo">Configure descontos comerciais comuns em qualquer lote de estoque (Exclui os lotes em período crítico de vencimento).</p>
                         
                         <form action="gerenciar_descontos.php" method="POST" id="formManual">
@@ -266,7 +267,7 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
                                             <div class="radio-alinhado-input">
                                                 <input type="radio" name="aplicar_manual" value="sim" id="acaoAplicar" checked>
                                             </div>
-                                            <div class="radio-alinhado-label" style="color:#28a745;">Aplicar Desconto Definido</div>
+                                            <div class="radio-alinhado-label" style="color:#28a745;">Aplicar desconto definido</div>
                                         </div>
                                     </label>
                                     <label class="radio-card-cell" for="acaoZerar">
@@ -274,14 +275,14 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
                                             <div class="radio-alinhado-input">
                                                 <input type="radio" name="aplicar_manual" value="nao" id="acaoZerar">
                                             </div>
-                                            <div class="radio-alinhado-label" style="color:#dc3545;">Zerar Desconto (Preço Normal)</div>
+                                            <div class="radio-alinhado-label" style="color:#dc3545;">zerar desconto (Preço normal)</div>
                                         </div>
                                     </label>
                                 </div>
                             </div>
 
                             <div id="campoPorcentagemManual" class="painel-opcao">
-                                <label class="label-destaque">Porcentagem do Desconto (%):</label>
+                                <label class="label-destaque">Porcentagem do desconto (%):</label>
                                 <div class="input-porcentagem-container">
                                     <input type="number" name="porcentagem_manual" id="porcentagemMan" min="1" max="30" value="10">
                                     <span class="texto-off">% OFF</span>
