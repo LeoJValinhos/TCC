@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 25-Jun-2026 às 13:10
+-- Tempo de geração: 27-Jun-2026 às 00:50
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -167,6 +167,8 @@ CREATE TABLE `produtoslotes` (
   `quantidade` int(11) NOT NULL,
   `validade` date DEFAULT NULL,
   `criado_em` datetime DEFAULT CURRENT_TIMESTAMP,
+  `criadopor_id` int(11) NOT NULL,
+  `criadopor_nome` varchar(255) DEFAULT NULL,
   `idEmpresa` int(11) DEFAULT NULL,
   `numero_lote` varchar(50) NOT NULL,
   `preco_compra` decimal(10,2) NOT NULL DEFAULT '0.00',
@@ -179,16 +181,17 @@ CREATE TABLE `produtoslotes` (
 -- Extraindo dados da tabela `produtoslotes`
 --
 
-INSERT INTO `produtoslotes` (`idlote`, `idproduto`, `quantidade`, `validade`, `criado_em`, `idEmpresa`, `numero_lote`, `preco_compra`, `preco_venda`, `desconto`, `status_lote`) VALUES
-(1, 3, 200, '2028-07-09', '2026-06-08 20:29:20', 1, '', '0.00', '0.00', '10.00', 'promocao'),
-(2, 4, 97, '2026-07-21', '2026-06-16 01:10:00', 1, '3', '3000.00', '3600.00', '20.00', 'promocao'),
-(3, 1, 147, '2026-06-15', '2026-06-16 01:19:49', 1, '4', '3000.00', '3500.00', '15.00', 'vencido'),
-(4, 7, 48, '2030-02-12', '2026-06-25 04:43:01', 1, '7_2030-02-12', '18.50', '29.89', '0.00', 'normal'),
-(5, 9, 17, '2027-12-10', '2026-06-25 04:44:38', 1, '9_2027-12-10', '22.00', '36.90', '0.00', 'normal'),
-(6, 8, 80, '2027-04-15', '2026-06-25 04:45:31', 1, '8_2027-04-15', '11.20', '18.50', '0.00', 'normal'),
-(7, 10, 118, '2026-11-18', '2026-06-25 04:46:28', 1, '10_2026-11-18', '3.10', '5.49', '0.00', 'normal'),
-(8, 6, 100, '2028-05-05', '2026-06-25 04:47:08', 1, '6_2028-05-05', '1.40', '2.65', '0.00', 'normal'),
-(9, 5, 200, '2030-12-12', '2026-06-25 04:47:58', 1, '5_2030-12-12', '5.40', '7.20', '0.00', 'normal');
+INSERT INTO `produtoslotes` (`idlote`, `idproduto`, `quantidade`, `validade`, `criado_em`, `criadopor_id`, `criadopor_nome`, `idEmpresa`, `numero_lote`, `preco_compra`, `preco_venda`, `desconto`, `status_lote`) VALUES
+(1, 3, 200, '2028-07-09', '2026-06-08 20:29:20', 0, NULL, 1, '', '0.00', '0.00', '10.00', 'promocao'),
+(2, 4, 97, '2026-07-21', '2026-06-16 01:10:00', 0, NULL, 1, '3', '3000.00', '3600.00', '20.00', 'promocao'),
+(3, 1, 147, '2026-06-15', '2026-06-16 01:19:49', 0, NULL, 1, '4', '3000.00', '3500.00', '15.00', 'vencido'),
+(4, 7, 48, '2030-02-12', '2026-06-25 04:43:01', 0, NULL, 1, '7_2030-02-12', '18.50', '29.89', '0.00', 'normal'),
+(5, 9, 17, '2027-12-10', '2026-06-25 04:44:38', 0, NULL, 1, '9_2027-12-10', '22.00', '36.90', '0.00', 'normal'),
+(6, 8, 80, '2027-04-15', '2026-06-25 04:45:31', 0, NULL, 1, '8_2027-04-15', '11.20', '18.50', '0.00', 'normal'),
+(7, 10, 118, '2026-11-18', '2026-06-25 04:46:28', 0, NULL, 1, '10_2026-11-18', '3.10', '5.49', '0.00', 'normal'),
+(8, 6, 100, '2028-05-05', '2026-06-25 04:47:08', 0, NULL, 1, '6_2028-05-05', '1.40', '2.65', '0.00', 'normal'),
+(9, 5, 200, '2030-12-12', '2026-06-25 04:47:58', 0, NULL, 1, '5_2030-12-12', '5.40', '7.20', '0.00', 'normal'),
+(10, 4, 987897, '2007-03-20', '2026-06-26 21:12:20', 1, 'Leonardo', 1, 'LOTE-4', '10.00', '20.00', '0.00', 'vencido');
 
 -- --------------------------------------------------------
 
@@ -273,7 +276,8 @@ ALTER TABLE `produtos`
 ALTER TABLE `produtoslotes`
   ADD PRIMARY KEY (`idlote`),
   ADD KEY `idproduto` (`idproduto`),
-  ADD KEY `fk_lote_empresa` (`idEmpresa`);
+  ADD KEY `fk_lote_empresa` (`idEmpresa`),
+  ADD KEY `fk_criado_por` (`criadopor_id`);
 
 --
 -- Índices para tabela `saida`
@@ -319,7 +323,7 @@ ALTER TABLE `produtos`
 -- AUTO_INCREMENT de tabela `produtoslotes`
 --
 ALTER TABLE `produtoslotes`
-  MODIFY `idlote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idlote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `saida`
@@ -362,6 +366,7 @@ ALTER TABLE `produtos`
 -- Limitadores para a tabela `produtoslotes`
 --
 ALTER TABLE `produtoslotes`
+  ADD CONSTRAINT `fk_criado_por` FOREIGN KEY (`criadopor_id`) REFERENCES `cadastros` (`idCadastro`),
   ADD CONSTRAINT `fk_lote_empresa` FOREIGN KEY (`idEmpresa`) REFERENCES `empresa` (`idEmpresa`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `produtoslotes_ibfk_1` FOREIGN KEY (`idproduto`) REFERENCES `produtos` (`idProduto`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
