@@ -10,6 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $quantidade_saida = isset($_POST['quantidade']) ? intval($_POST['quantidade']) : 0;
     $motivo           = isset($_POST['motivo']) ? trim($_POST['motivo']) : '';
     
+    // Recupera os dados corretos conforme o seu verifica_login.php
+    $criadopor_id   = isset($_SESSION['idCadastro']) ? intval($_SESSION['idCadastro']) : 0;
+    $criadopor_nome = isset($_SESSION['nome']) ? trim($_SESSION['nome']) : '';
+    
     if ($idlote > 0 && $quantidade_saida > 0 && !empty($motivo)) {
         
         $stmt_check = $conn->prepare("SELECT quantidade FROM produtoslotes WHERE idlote = ?");
@@ -31,9 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $stmt_update->bind_param("ii", $quantidade_saida, $idlote);
                     $stmt_update->execute();
 
-                    // 2. Grava no histórico (salvando em ambas as variações de ID do lote)
-                    $stmt_history = $conn->prepare("INSERT INTO saida (idlote, id_lote, quantidade_saida, motivo_saida, data_saida) VALUES (?, ?, ?, ?, NOW())");
-                    $stmt_history->bind_param("iiis", $idlote, $idlote, $quantidade_saida, $motivo);
+                    // 2. Grava no histórico inserindo o ID e o Nome do usuário logado
+                    $stmt_history = $conn->prepare("INSERT INTO saida (idlote, id_lote, criadopor_id, criadopor_nome, quantidade_saida, motivo_saida, data_saida) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+                    
+                    // "iiisis" mapeia os tipos: int, int, int, string, int, string
+                    $stmt_history->bind_param("iiisis", $idlote, $idlote, $criadopor_id, $criadopor_nome, $quantidade_saida, $motivo);
                     $stmt_history->execute();
 
                     $conn->query("COMMIT");
