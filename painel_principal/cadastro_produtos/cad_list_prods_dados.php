@@ -167,17 +167,13 @@ if(isset($_POST['cadastrar_lote'])){
 
     $status_lote = "normal";
 
-if($desconto > 0){
+    if($desconto > 0){
+        $status_lote = "promocao";
+    }
 
-    $status_lote = "promocao";
-
-}
-
-if($validade < date("Y-m-d")){
-
-    $status_lote = "vencido";
-
-}
+    if($validade < date("Y-m-d")){
+        $status_lote = "vencido";
+    }
 
     $criado_em = date("Y-m-d H:i:s");
 
@@ -227,35 +223,41 @@ if($validade < date("Y-m-d")){
 
         }else{
 
+            // Alterado: adicionado criadopor_id e criadopor_nome logo após criado_em
             $stmt_lote = $conn->prepare("
             INSERT INTO produtoslotes
-          (
-             idproduto,
-             numero_lote,
-             quantidade,
-             validade,
-             preco_compra,
-             preco_venda,
-             desconto,
-             status_lote,
-             criado_em,
-             idEmpresa             
-          )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (
+                idproduto,
+                numero_lote,
+                quantidade,
+                validade,
+                preco_compra,
+                preco_venda,
+                desconto,
+                status_lote,
+                criado_em,
+                criadopor_id,
+                criadopor_nome,
+                idEmpresa             
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
+            // Alterado: Atualizada a string de tipos (isisdddssisi) e passadas as variáveis na ordem correta da tabela
             $stmt_lote->bind_param(
-              "isisdddssi",
-              $idproduto,
-              $numero_lote,
-              $quantidade,
-              $validade,
-              $preco_compra,
-              $preco_venda,
-              $desconto,
-              $status_lote,
-              $criado_em,
-              $idEmpresa
+                "isisdddssisi",
+                $idproduto,
+                $numero_lote,
+                $quantidade,
+                $validade,
+                $preco_compra,
+                $preco_venda,
+                $desconto,
+                $status_lote,
+                $criado_em,
+                $criado_por_id,
+                $criado_por_nome,
+                $idEmpresa
             );
 
             if($stmt_lote->execute()){
