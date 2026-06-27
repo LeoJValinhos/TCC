@@ -23,7 +23,7 @@ $produtos_select = $conn->query("
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="cad_list_prods.css">
     <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png">
-    <title>Cadastro de Produtos</title>
+    <title>INVEX - Cadastro de produtos</title>
 
     <style>
         .vermelho-validade {

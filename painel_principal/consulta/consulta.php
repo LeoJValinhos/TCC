@@ -13,8 +13,8 @@ require_once 'consulta_logica.php';
 
     <link rel="stylesheet"
     href="consulta.css">
-    <link rel="icon" type="image/png" href="../Imagens/Carrinho.png"width="70" height="70">
-    <title>INVEX</title>
+    <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png"width="70" height="70">
+    <title>INVEX - Consulta</title>
 
 </head>
 

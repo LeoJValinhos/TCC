@@ -7,8 +7,9 @@ require_once("produtos_simulado.php");
 
 <head>
     <meta charset="UTF-8">
-    <title>Compras coletivas</title>
+    <title>INVEX - Compras</title>
     <link rel="stylesheet" href="compras.css">
+    <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png"width="70" height="70">
 </head>
 
 <body>

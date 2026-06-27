@@ -13,8 +13,8 @@ $idEmpresa = $_SESSION['idEmpresa'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="saida.css">
-    <link rel="icon" type="image/png" href="../Imagens/Carrinho.png" width="70" height="70">
-    <title>INVEX - Saída de Produtos</title>
+    <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png" width="70" height="70">
+    <title>INVEX - Saída de produtos</title>
     <style>
         /* Ajustes inline para garantir que o layout quebre as amarras de largura máxima */
         .layout {
