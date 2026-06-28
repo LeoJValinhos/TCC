@@ -1,7 +1,7 @@
 <?php
 require_once("produtos_simulado.php");
 ?>
-
+<?php include_once '../topo_notificacoes.php'; ?>
 <!DOCTYPE html>
 <html>
 
