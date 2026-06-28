@@ -214,3 +214,127 @@ ELEMENTOS DE CONTEÚDO (CARDS, LABELS)
     color: var(--sub);
     font-size: 15px;
 }
+/* =========================================================================
+   ESTILIZAÇÃO EMBUTIDA DO SININHO (NÃO AFETA A TOPBAR ORIGINAL)
+   ========================================================================= */
+.topbar {
+    position: relative !important; /* Essencial para o dropdown alinhar corretamente */
+}
+
+.notificacao-container-global {
+    position: absolute !important;
+    right: 30px !important; /* Distância da borda direita da sua tela */
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-block !important;
+    z-index: 9999;
+}
+
+.notificacao-btn-global {
+    background: none !important;
+    border: none !important;
+    font-size: 22px !important;
+    cursor: pointer !important;
+    position: relative !important;
+    padding: 8px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.notificacao-btn-global:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.notificacao-contador-global {
+    position: absolute !important;
+    top: -2px !important;
+    right: -2px !important;
+    background-color: #ff334b !important;
+    color: #ffffff !important;
+    font-size: 10px !important;
+    font-weight: bold !important;
+    border-radius: 50% !important;
+    padding: 2px 5px !important;
+    min-width: 14px !important;
+    text-align: center !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5) !important;
+}
+
+/* CONTAINER DO DROPDOWN FLUTUANTE */
+.notificacao-dropdown-global {
+    display: none;
+    position: absolute !important;
+    right: 0 !important;
+    top: 45px !important;
+    background: #0f1924 !important;
+    border: 1px solid #1f3147 !important;
+    width: 320px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+    z-index: 100000 !important;
+    overflow: hidden;
+}
+
+.notificacao-dropdown-global.mostrar {
+    display: block !important;
+}
+
+.dropdown-header-global {
+    padding: 12px 16px !important;
+    font-weight: bold !important;
+    font-size: 13px !important;
+    color: #8fa0b2 !important;
+    border-bottom: 1px solid #1f3147 !important;
+    background: #0b131c !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dropdown-body-global {
+    max-height: 260px !important;
+    overflow-y: auto !important;
+}
+
+.notificacao-item-global {
+    padding: 12px 16px !important;
+    font-size: 13px !important;
+    color: #cbd5e1 !important;
+    border-bottom: 1px solid #162435 !important;
+    line-height: 1.4 !important;
+    text-align: left !important;
+}
+
+.notificacao-item-global:hover {
+    background: #152232 !important;
+}
+
+.notificacao-item-global.vencido { border-left: 4px solid #ff334b !important; }
+.notificacao-item-global.vencendo { border-left: 4px solid #ff9f43 !important; }
+.notificacao-item-global.critico { border-left: 4px solid #ffca28 !important; }
+
+.notificacao-vazia-global {
+    padding: 30px 16px !important;
+    color: #64748b !important;
+    text-align: center !important;
+    font-style: italic !important;
+    margin: 0 !important;
+}
+
+.dropdown-footer-global {
+    display: block !important;
+    text-align: center !important;
+    padding: 12px !important;
+    font-size: 12px !important;
+    color: #00e5ff !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+    background: #0b131c !important;
+    border-top: 1px solid #1f3147 !important;
+}
+
+.dropdown-footer-global:hover {
+    background: #152232 !important;
+    color: #33f0ff !important;
+}

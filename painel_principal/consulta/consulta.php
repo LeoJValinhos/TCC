@@ -1,6 +1,7 @@
 <?php
 require_once 'consulta_logica.php';
 ?>
+<?php include_once '../topo_notificacoes.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 

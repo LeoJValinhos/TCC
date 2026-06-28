@@ -57,7 +57,7 @@ if ($periodo_atual == "hoje") {
 }
 
 ?>
-
+<?php include_once '../topo_notificacoes.php'; ?>
 
 
 <style>

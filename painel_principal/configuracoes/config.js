@@ -105,4 +105,119 @@ function alternarAba(idAba, botaoClicado) {
             } else {
                 if(confirm("Retornar os lotes selecionados ao valor padrão?")) this.submit();
             }
+
+            // =========================================================================
+//  FUNÇÕES DA CENTRAL DE ALERTAS DE ESTOQUE
+// =========================================================================
+
+/**
+ * Filtra os alertas em tempo real por texto digitado e tipo selecionado
+ */
+function filtrarAlertas() {
+    const textoBusca = document.getElementById('buscaAlerta').value.toLowerCase();
+    const tipoSelecionado = document.getElementById('filtroTipoAlerta').value;
+    const cards = document.querySelectorAll('.card-alerta');
+
+    cards.forEach(card => {
+        const infoTexto = card.querySelector('.celula-info-texto').textContent.toLowerCase();
+        const tipoAlerta = card.getAttribute('data-tipo');
+
+        // Valida busca por texto
+        const bateTexto = infoTexto.includes(textoBusca);
+        // Valida filtro por tipo de alerta
+        const bateTipo = (tipoSelecionado === 'todos' || tipoAlerta === tipoSelecionado);
+
+        if (bateTexto && bateTipo) {
+            card.style.setProperty('display', 'flex', 'important');
+        } else {
+            card.style.setProperty('display', 'none', 'important');
+        }
+    });
+
+    verificarListaVazia();
+}
+
+/**
+ * Ordena os alertas dinamicamente com base nas datas (Crescente ou Decrescente)
+ */
+function ordenarAlertas() {
+    const container = document.getElementById('listaAlertasContainer');
+    const ordenacao = document.getElementById('ordenacaoAlerta').value;
+    const cards = Array.from(container.querySelectorAll('.card-alerta'));
+
+    cards.sort((a, b) => {
+        const dataA = new Date(a.getAttribute('data-data'));
+        const dataB = new Date(b.getAttribute('data-data'));
+
+        if (ordenacao === 'asc') {
+            return dataA - dataB; // Mais antigos primeiro
+        } else {
+            return dataB - dataA; // Mais recentes primeiro
+        }
+    });
+
+    // Reordena visualmente os elementos dentro do contêiner
+    cards.forEach(card => container.appendChild(card));
+}
+
+/**
+ * Apaga visualmente uma notificação (Alerta)
+ * Dica: Em um ambiente real, você pode disparar um fetch() aqui para o PHP remover do Banco de Dados
+ */
+function excluirAlerta(botao, idAlerta) {
+    if (confirm("Deseja mesmo remover esta notificação do painel?")) {
+        const cardAlerta = botao.closest('.card-alerta');
+        
+        // Efeito visual sumindo simples
+        cardAlerta.style.opacity = '0';
+        setTimeout(() => {
+            cardAlerta.remove();
+            verificarListaVazia();
+        }, 300);
+        
+        // Caso queira integrar com banco futuramente, a lógica seria:
+        // fetch(`apagar_alerta.php?id=${idAlerta}`, { method: 'DELETE' });
+    }
+}
+
+/**
+ * Verifica se todos os alertas foram limpos ou filtrados e exibe mensagem de lista vazia
+ */
+function verificarListaVazia() {
+    const container = document.getElementById('listaAlertasContainer');
+    const cardsVisiveis = container.querySelectorAll('.card-alerta:not([style*="display: none"])');
+    
+    // Remove mensagem anterior se existir
+    const msgAntiga = container.querySelector('.msg-vazia-alertas');
+    if (msgAntiga) msgAntiga.remove();
+
+    if (cardsVisiveis.length === 0) {
+        const msg = document.createElement('p');
+        msg.className = 'msg-vazia-alertas';
+        msg.style.cssText = 'padding:15px; color:#a0aab5; margin:0; font-style:italic;';
+        msg.textContent = 'Nenhuma notificação encontrada com os filtros atuais.';
+        container.appendChild(msg);
+    }
+}
+
+// Inicializa a ordenação padrão ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('listaAlertasContainer')) {
+        ordenarAlertas();
+    }
+});
+
+// Funções de controle do Modal de Restauração
+function abrirModalRestaurar() {
+    document.getElementById('customModalRestaurar').style.display = 'flex';
+}
+
+function fecharModalRestaurar() {
+    document.getElementById('customModalRestaurar').style.display = 'none';
+}
+
+function confirmarRestauracao() {
+    // Redireciona o fluxo para executar a restauração de backup no PHP
+    window.location.href = 'processar_config_alertas.php?action=restaurar_original';
+}
         };

@@ -1,0 +1,164 @@
+.titulo-secao {
+            color: #00B7C3;
+            margin-top: 0;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .texto-explicativo {
+            font-size: 13.5px;
+            color: #a0aab5;
+            margin-bottom: 20px;
+        }
+
+        /* FILTROS E CONTROLES DA LISTAGEM */
+        .barra-ferramentas-lista {
+            display: table;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .celula-busca {
+            display: table-cell;
+            width: 70%;
+            vertical-align: middle;
+        }
+
+        .celula-acoes {
+            display: table-cell;
+            width: 30%;
+            text-align: right;
+            vertical-align: middle;
+        }
+
+        .input-filtro-busca {
+            width: 100%;
+            max-width: 400px;
+            background-color: #000c19;
+            border: 1px solid #002b5c;
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-filtro-busca:focus {
+            border-color: #00B7C3;
+        }
+
+        .btn-marcar-todos {
+            background-color: #001A36;
+            border: 1px solid #002b5c;
+            color: #00B7C3;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-marcar-todos:hover {
+            background-color: #002b5c;
+            color: #ffffff;
+        }
+
+        /* GRID DE SELEÇÃO CUSTOMIZADA */
+        .grid-lotes-container {
+            max-height: 280px;
+            overflow-y: auto;
+            border: 1px solid #002b5c;
+            border-radius: 8px;
+            background: #000c19;
+            margin-bottom: 25px;
+        }
+
+        .item-lote-linha {
+            display: table;
+            width: 100%;
+            padding: 12px 15px;
+            border-bottom: 1px solid #002b5c;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .item-lote-linha:last-child {
+            border-bottom: none;
+        }
+
+        .item-lote-linha:hover {
+            background: #00142a;
+        }
+
+        .celula-checkbox {
+            display: table-cell;
+            width: 40px;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .celula-checkbox input[type="checkbox"] {
+            accent-color: #00B7C3;
+            width: 17px;
+            height: 17px;
+            cursor: pointer;
+        }
+
+        .celula-info-texto {
+            display: table-cell;
+            vertical-align: middle;
+            color: #ffffff;
+            font-size: 13.5px;
+            padding-left: 5px;
+        }
+
+        .celula-info-texto strong {
+            color: #00B7C3;
+        }
+
+        .badge-promo {
+            background: rgba(0, 183, 195, 0.15);
+            color: #00B7C3;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
+        /* CORREÇÃO DOS CARDS DE RADIO - INFRAESTRUTURA EM TABELA */
+        .painel-opcao {
+            background: #001A36;
+            padding: 22px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #002b5c;
+        }
+
+        .label-destaque {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .btn-salvar {
+            background: #00B7C3;
+            color: #000c19;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 183, 195, 0.2);
+        }
+
+        .btn-salvar:hover {
+            background: #008fa2;
+        }
