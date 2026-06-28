@@ -1,158 +1,381 @@
-/* Remove a margem padrão do navegador e define a fonte do site */
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+/* =====================================================
+RESET
+===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
-/* Container principal */
-.main-login {     
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    background: #0b0f1a;
-    justify-content: center;
-    align-items: center;
-    padding-top: 80px;
-    box-sizing: border-box;
+/* =====================================================
+BODY
+===================================================== */
+
+body{
+    overflow-x:hidden;
+
+    background:
+    radial-gradient(circle at top,
+    #071a3d 0%,
+    #031226 45%,
+    #000814 100%);
 }
 
-/* Card de login */
-.card-login{    
-    width: 60%;
-    max-width: 400px;
-    max-height: 90vh;
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 20px 25px;
-    background-color:#121a2b;
-    border-radius: 20px;
-    box-shadow: 0px 10px 40px #00000080;
-}
+/* =====================================================
+TOPO
+===================================================== */
 
-/* Título */
-.card-login > h1 { 
-    color:  #00e0ff;
-    font-weight: 800;
-    margin: 0 0 10px 0;
-    font-size: 22px;
-}
-
-/* 🔥 LINHAS COM 2 CAMPOS */
-.form-row {
-    width: 100%;
-    display: flex;
-    gap: 10px;
-}
-
-/* 🔥 CAMPOS DIVIDIDOS IGUAL */
-.form-row .textfield {
-    flex: 1;
-}
-
-/* Campos */
-.textfield{ 
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    margin: 6px 0;
-}
-
-/* Label */
-.textfield > label{ 
-    color:#00e0ff;
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-/* Input e Select */
-.textfield > input,
-.textfield > select { 
-    width: 100%;
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    background: #1c2740;
-    color: #ffffff;
-    font-size: 11pt;
-    box-shadow: 0px 5px 20px #00000050;
-    outline: none;
-    box-sizing: border-box;
-}
-
-/* Placeholder */
-.textfield > input::placeholder{ 
-    color: #9bb3c9;
-}
-
-/* Botão */
-.btn-login{ 
-    width: 100%;
-    padding: 12px 0px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 8px;
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 3px;
-    color: #02121f;
-    background: linear-gradient(45deg, #00cb6d, #00889a);
-    cursor: pointer;
-    box-shadow: 0px 10px 30px -10px #009e54;
-    transition: 0.3s;
-}
-
-/* Hover botão */
-.btn-login:hover{ 
-    transform: scale(1.05);
-}
-
-/* Topo */
 .topo{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background-color:#121a2b;
-    color: white;
-    display: flex;
-    align-items: center;
-    padding-left: 30px;
-    border-bottom: 1px solid #2a2e35;
-    z-index: 1000;
-    border-radius: 0 0 10px 10px;
-    gap: 20px;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:90px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 45px;
+
+    z-index:1000;
+
+    background:
+    linear-gradient(
+    90deg,
+    #07152f,
+    #08244d,
+    #07152f);
+
+    border-bottom:
+    1px solid rgba(0,255,255,.10);
+
+    box-shadow:
+    0 0 10px rgba(0,255,255,.08);
 }
 
-/* Título topo */
-.topo > h2{
-    font-size: 30px;
-    color: #00e0ff;
+.logo-topo{
+    display:flex;
+    align-items:center;
+    gap:18px;
 }
 
-/* Link */
-.link-registro {
-  color:  #009e54;
-  font-weight: bold;
-  padding: 5px;
+.logo-topo img{
+    width:60px;
+    height:60px;
 }
 
-.link-registro:hover {
-  text-decoration: underline;
+.topo h2{
+
+    color:#00dfff;
+
+    font-size:38px;
+
+    text-shadow:
+    0 0 8px rgba(0,223,255,.35);
 }
 
-/* Texto */
+/* =====================================================
+CONTAINER
+===================================================== */
+
+.main-login{
+
+    width:100%;
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    gap:140px;
+
+    padding-top:130px;
+    padding-left:40px;
+    padding-right:40px;
+}
+
+/* =====================================================
+CARD
+===================================================== */
+
+.card-login{
+
+    width:620px;
+
+    padding:35px;
+
+    background:
+    rgba(8,18,40,.85);
+
+    backdrop-filter:blur(10px);
+
+    border-radius:30px;
+
+    border:
+    1px solid rgba(0,255,255,.06);
+
+    box-shadow:
+    0 0 20px rgba(0,180,255,.08);
+}
+
+.card-login h1{
+
+    color:#00e5ff;
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+    font-size:58px;
+
+    font-weight:700;
+}
+
+/* =====================================================
+FORM ROW
+===================================================== */
+
+.form-row{
+    display:flex;
+    gap:15px;
+}
+
+.form-row .textfield{
+    flex:1;
+}
+
+/* =====================================================
+CAMPOS
+===================================================== */
+
+.textfield{
+
+    width:100%;
+
+    display:flex;
+    flex-direction:column;
+
+    margin-bottom:14px;
+}
+
+.textfield label{
+
+    color:#00e5ff;
+
+    font-size:17px;
+
+    margin-bottom:8px;
+}
+
+.textfield input,
+.textfield select{
+
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    background:#1c2b4a;
+
+    color:white;
+
+    font-size:17px;
+
+    transition:0.3s;
+}
+
+.textfield input::placeholder{
+    color:#9fb0cc;
+}
+
+.textfield input:focus,
+.textfield select:focus{
+
+    box-shadow:
+    0 0 10px rgba(0,229,255,.25);
+}
+
+/* =====================================================
+BOTÃO
+===================================================== */
+
+.btn-login{
+
+    width:100%;
+
+    margin-top:12px;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-size:22px;
+
+    font-weight:800;
+
+    letter-spacing:4px;
+
+    color:#041521;
+
+    background:
+    linear-gradient(
+    90deg,
+    #00d66b,
+    #00b6c8);
+
+    transition:.3s;
+
+    box-shadow:
+    0 0 15px rgba(0,255,170,.20);
+}
+
+.btn-login:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 0 20px rgba(0,255,170,.35);
+}
+
+/* =====================================================
+TEXTO LOGIN
+===================================================== */
+
 p{
-    color: #00cb6d;
-    text-align: center;
-    font-size: 14px;
-    margin-top: 10px;
+
+    text-align:center;
+
+    margin-top:18px;
+
+    color:#21d975;
+
+    font-size:16px;
 }
+
+.link-registro{
+
+    color:#21d975;
+
+    font-weight:bold;
+
+    text-decoration:none;
+}
+
+.link-registro:hover{
+    text-decoration:underline;
+}
+
+/* =====================================================
+MASCOTE
+===================================================== */
+
+.lado-direito{
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.lado-direito img{
+
+    width:420px;
+
+    filter:
+    drop-shadow(0 0 15px rgba(0,229,255,.35));
+
+    animation:flutuar 3s ease-in-out infinite;
+}
+
+@keyframes flutuar{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+/* =====================================================
+EMPRESA
+===================================================== */
 
 #empresa_existente,
 #nova_empresa{
-    width: 100%;
+    width:100%;
+}
+
+/* =====================================================
+RESPONSIVO
+===================================================== */
+
+@media(max-width:1200px){
+
+    .main-login{
+        gap:50px;
+    }
+
+    .lado-direito img{
+        width:330px;
+    }
+}
+
+@media(max-width:980px){
+
+    .lado-direito{
+        display:none;
+    }
+
+    .card-login{
+        width:90%;
+        max-width:700px;
+    }
+}
+
+@media(max-width:700px){
+
+    .form-row{
+        flex-direction:column;
+    }
+
+    .card-login{
+        padding:25px;
+    }
+
+    .card-login h1{
+        font-size:42px;
+    }
+
+    .textfield label{
+        font-size:15px;
+    }
+
+    .textfield input,
+    .textfield select{
+        font-size:15px;
+    }
+
+    .btn-login{
+        font-size:18px;
+    }
+
+    .topo h2{
+        font-size:28px;
+    }
 }
