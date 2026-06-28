@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 27-Jun-2026 às 20:14
+-- Tempo de geração: 28-Jun-2026 às 08:42
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -20,6 +20,21 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `databasetcc`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `alertas_ocultos`
+--
+
+CREATE TABLE `alertas_ocultos` (
+  `id_oculto` int(11) NOT NULL,
+  `idEmpresa` int(11) NOT NULL,
+  `idProduto` int(11) DEFAULT NULL,
+  `numero_lote` varchar(50) DEFAULT NULL,
+  `tipo_alerta` varchar(20) NOT NULL,
+  `data_ocultado` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -48,6 +63,18 @@ INSERT INTO `cadastros` (`idCadastro`, `nome`, `sobrenome`, `senha`, `email`, `d
 (1, 'Leonardo', 'Valinhos', 'vini4675', 'root@root', '2007-03-20', '11111111111', '22222222222', 1, 'EMPRESA/ADM'),
 (2, 'vinicius', 'sales', '012345678', 'vini@vini', '2008-07-20', '01234567812', '88888888888', 2, 'EMPRESA/ADM'),
 (3, 'aa', 'sss', '12345678', 'leo@leleco', '2007-03-20', '22132132131', '13213212332', 1, 'EMPRESA/ADM');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `configuracoes_alertas`
+--
+
+CREATE TABLE `configuracoes_alertas` (
+  `id_config` int(11) NOT NULL,
+  `idEmpresa` int(11) NOT NULL,
+  `dias_antecedencia_vencimento` int(11) DEFAULT '30'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -184,24 +211,25 @@ CREATE TABLE `produtos` (
   `criadopor_id` int(11) DEFAULT NULL,
   `preco_padrao_compra` decimal(10,2) NOT NULL DEFAULT '0.00',
   `preco_padrao_venda` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `estoque_minimo` int(11) NOT NULL DEFAULT '0'
+  `estoque_minimo` int(11) NOT NULL DEFAULT '0',
+  `estoque_minimo_original` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `produtos`
 --
 
-INSERT INTO `produtos` (`idProduto`, `NomeProduto`, `MarcaProduto`, `Descricao`, `idEmpresa`, `criadopor_nome`, `criadoem`, `criadopor_id`, `preco_padrao_compra`, `preco_padrao_venda`, `estoque_minimo`) VALUES
-(1, 'sabÃ£o em pÃ³', 'Brilho', '', 1, 'Leonardo', '2026-06-08 20:28:52', 1, '0.00', '0.00', 0),
-(2, 'detergente', 'ype', '', 1, 'Leonardo', '2026-06-08 20:29:00', 1, '0.00', '0.00', 0),
-(3, 'bolacha', 'trakinas', '', 1, 'Leonardo', '2026-06-08 20:29:06', 1, '0.00', '0.00', 0),
-(4, 'Amaciante', 'Confort', 'limpa coisas', 1, 'Leonardo', '2026-06-16 00:58:20', 1, '25.00', '30.00', 50),
-(5, 'Suco de Uva Integral 300ml', 'Aurora', 'Garrafa de vidro com suco de uva 100% integral, sem adiÃ§Ã£o de aÃ§Ãºcares ou conservantes.', 1, 'Leonardo', '2026-06-16 04:39:04', 1, '4.50', '7.50', 15),
-(6, 'Salgadinho Assado de Queijo 60g', 'Fandangos', 'Salgadinho de milho assado sabor queijo, pacote de 60 gramas.', 1, 'Leonardo', '2026-06-16 04:39:41', 1, '2.20', '4.50', 20),
-(7, 'Arroz Integral Agulhinha 5kg', 'Tio JoÃ£o', 'Arroz integral tipo 1, rico em fibras e minerais. Pacote de 5kg com grÃ£os selecionados.', 1, 'Leonardo', '2026-06-25 04:37:59', 1, '18.50', '29.90', 13),
-(8, 'CafÃ© Tradicional VÃ¡cuo 500g', 'PilÃ£o', 'CafÃ© torrado e moÃ­do tradicional, com ponto de torra acentuado e sabor forte e marcante.', 1, 'Leonardo', '2026-06-25 04:38:39', 1, '11.20', '18.50', 20),
-(9, 'Azeite de Oliva Extra Virgem 500ml', 'Gallo', 'Azeite de oliva extra virgem de acidez mÃ¡xima 0,5%. Garrafa de vidro de 500ml.', 1, 'Leonardo', '2026-06-25 04:39:22', 1, '22.00', '36.90', 8),
-(10, 'Leite Integral UHT 1L', 'ItambÃ©', 'Leite caixinha UHT integral homogeneizado. Caixa com 1 litro.', 1, 'Leonardo', '2026-06-25 04:40:04', 1, '3.07', '5.49', 40);
+INSERT INTO `produtos` (`idProduto`, `NomeProduto`, `MarcaProduto`, `Descricao`, `idEmpresa`, `criadopor_nome`, `criadoem`, `criadopor_id`, `preco_padrao_compra`, `preco_padrao_venda`, `estoque_minimo`, `estoque_minimo_original`) VALUES
+(1, 'sabÃ£o em pÃ³', 'Brilho', '', 1, 'Leonardo', '2026-06-08 20:28:52', 1, '0.00', '0.00', 0, NULL),
+(2, 'detergente', 'ype', '', 1, 'Leonardo', '2026-06-08 20:29:00', 1, '0.00', '0.00', 0, NULL),
+(3, 'bolacha', 'trakinas', '', 1, 'Leonardo', '2026-06-08 20:29:06', 1, '0.00', '0.00', 0, NULL),
+(4, 'Amaciante', 'Confort', 'limpa coisas', 1, 'Leonardo', '2026-06-16 00:58:20', 1, '25.00', '30.00', 50, NULL),
+(5, 'Suco de Uva Integral 300ml', 'Aurora', 'Garrafa de vidro com suco de uva 100% integral, sem adiÃ§Ã£o de aÃ§Ãºcares ou conservantes.', 1, 'Leonardo', '2026-06-16 04:39:04', 1, '4.50', '7.50', 15, NULL),
+(6, 'Salgadinho Assado de Queijo 60g', 'Fandangos', 'Salgadinho de milho assado sabor queijo, pacote de 60 gramas.', 1, 'Leonardo', '2026-06-16 04:39:41', 1, '2.20', '4.50', 20, NULL),
+(7, 'Arroz Integral Agulhinha 5kg', 'Tio JoÃ£o', 'Arroz integral tipo 1, rico em fibras e minerais. Pacote de 5kg com grÃ£os selecionados.', 1, 'Leonardo', '2026-06-25 04:37:59', 1, '18.50', '29.90', 13, NULL),
+(8, 'CafÃ© Tradicional VÃ¡cuo 500g', 'PilÃ£o', 'CafÃ© torrado e moÃ­do tradicional, com ponto de torra acentuado e sabor forte e marcante.', 1, 'Leonardo', '2026-06-25 04:38:39', 1, '11.20', '18.50', 20, NULL),
+(9, 'Azeite de Oliva Extra Virgem 500ml', 'Gallo', 'Azeite de oliva extra virgem de acidez mÃ¡xima 0,5%. Garrafa de vidro de 500ml.', 1, 'Leonardo', '2026-06-25 04:39:22', 1, '22.00', '36.90', 8, NULL),
+(10, 'Leite Integral UHT 1L', 'ItambÃ©', 'Leite caixinha UHT integral homogeneizado. Caixa com 1 litro.', 1, 'Leonardo', '2026-06-25 04:40:04', 1, '3.07', '5.49', 40, NULL);
 
 -- --------------------------------------------------------
 
@@ -279,6 +307,12 @@ INSERT INTO `saida` (`id_saida`, `idlote`, `id_lote`, `criadopor_id`, `criadopor
 --
 
 --
+-- Índices para tabela `alertas_ocultos`
+--
+ALTER TABLE `alertas_ocultos`
+  ADD PRIMARY KEY (`id_oculto`);
+
+--
 -- Índices para tabela `cadastros`
 --
 ALTER TABLE `cadastros`
@@ -287,6 +321,12 @@ ALTER TABLE `cadastros`
   ADD UNIQUE KEY `cpf` (`cpf`),
   ADD UNIQUE KEY `celular` (`celular`),
   ADD KEY `fk_usuario_empresa` (`idEmpresa`);
+
+--
+-- Índices para tabela `configuracoes_alertas`
+--
+ALTER TABLE `configuracoes_alertas`
+  ADD PRIMARY KEY (`id_config`);
 
 --
 -- Índices para tabela `empresa`
@@ -342,10 +382,22 @@ ALTER TABLE `saida`
 --
 
 --
+-- AUTO_INCREMENT de tabela `alertas_ocultos`
+--
+ALTER TABLE `alertas_ocultos`
+  MODIFY `id_oculto` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `cadastros`
 --
 ALTER TABLE `cadastros`
   MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de tabela `configuracoes_alertas`
+--
+ALTER TABLE `configuracoes_alertas`
+  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
