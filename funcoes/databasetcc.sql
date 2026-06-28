@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 28-Jun-2026 às 11:38
+-- Tempo de geração: 28-Jun-2026 às 11:40
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -148,31 +148,7 @@ INSERT INTO `loja_virtual` (`idItem`, `nomeProduto`, `marcaProduto`, `descricaoP
 (75, 'Geleia de Morango', 'Predilecta', 'Pote de geleia de morango 230g', '60', '../../imagens/geleia_fruta_pura.png', 2, 0, 'Aberta'),
 (76, 'Torrada Tradicional', 'Schar', 'Pacote de torradas leves 150g', '95', '../../imagens/torrada_crocante.png', 2, 0, 'Aberta'),
 (77, 'Leite em Pó', 'Itambé', 'Leite em pó integral sachê 400g', '115', '../../imagens/leite_nutrivida.png', 2, 0, 'Aberta'),
-(78, 'Aveia em Flocos', 'Yoki', 'Caixa de aveia em flocos finos 170g', '75', '../../imagens/aveia_natural.png', 3, 0, 'Aberta'),
-(79, 'Creme Dental', 'Colgate', 'Creme dental proteção máxima 90g', '280', '../../imagens/creme_dental_sorriso.png', 4, 0, 'Aberta'),
-(80, 'Sabonete em Barra', 'Suave', 'Sabonete hidratante toque macio 90g', '500', '../../imagens/sabonete_suave.png', 6, 0, 'Aberta'),
-(81, 'Shampoo Anticaspa', 'FiosFort', 'Shampoo controle de oleosidade 400ml', '90', '../../imagens/shampoo_fiosfort.png', 2, 0, 'Aberta'),
-(82, 'Condicionador Hidratante', 'FiosFort', 'Condicionador nutrição intensa 400ml', '85', '../../imagens/condicionador_fiosfort.png', 2, 0, 'Aberta'),
-(83, 'Desodorante Aerossol', 'Dry', 'Desodorante antitranspirante 150ml', '160', '../../imagens/desodorante_dry.png', 3, 0, 'Aberta'),
-(84, 'Papel Higiênico', 'Folha Dupla', 'Pacote com 12 rolos folha dupla', '135', '../../imagens/papel_folha_dupla.png', 2, 0, 'Aberta'),
-(85, 'Fio Dental', 'Menta', 'Fio dental sabor menta 50m', '220', '../../imagens/fio_dental_menta.png', 3, 0, 'Aberta'),
-(86, 'Sabonete Líquido', 'Refil', 'Sabonete líquido refil erva doce 200ml', '145', '../../imagens/sabonete_liquido_refil.png', 2, 0, 'Aberta'),
-(87, 'Refrigerante de Cola', 'MegaCola', 'Garrafa pet de refrigerante 2L', '350', '../../imagens/refrigerante_megacola.png', 4, 0, 'Aberta'),
-(88, 'Suco de Uva Integral', 'Puro Vale', 'Suco de uva tinto integral 1L', '70', '../../imagens/suco_puro_vale.png', 2, 0, 'Aberta'),
-(89, 'Água Mineral Sem Gás', 'Fonte', 'Garrafa de água mineral 500ml', '600', '../../imagens/agua_fonte.png', 6, 0, 'Aberta'),
-(90, 'Suco em Pó Tang', 'Frutão', 'Suco em pó sabor laranja 25g', '800', '../../imagens/suco_po_frutao.png', 10, 0, 'Aberta'),
-(91, 'Néctar de Pêssego', 'Caixinha', 'Suco de caixinha sabor pêssego 1L', '110', '../../imagens/nectar_pessêgo.png', 3, 0, 'Aberta'),
-(92, 'Chá Leão Matte', 'Ervas', 'Chá matte pronto para beber 1.5L', '95', '../../imagens/cha_leao_matte.png', 2, 0, 'Aberta'),
-(93, 'Água Tônica', 'Fresh', 'Lata de água tônica 350ml', '130', '../../imagens/agua_tonica_fresh.png', 3, 0, 'Aberta'),
-(94, 'Energético Monster', 'Power', 'Lata de bebida energética 473ml', '140', '../../imagens/energetico_power.png', 2, 0, 'Aberta'),
-(95, 'Extrato de Tomate', 'Vermelhinho', 'Lata de extrato de tomate 340g', '240', '../../imagens/extrato_vermelhinho.png', 4, 0, 'Aberta'),
-(96, 'Milho Verde em Conserva', 'Campo', 'Lata de milho verde cozido 170g', '195', '../../imagens/milho_campo.png', 3, 0, 'Aberta'),
-(97, 'Ervilha em Conserva', 'Campo', 'Lata de ervilha cozida no vapor 170g', '180', '../../imagens/ervilha_campo.png', 3, 0, 'Aberta'),
-(98, 'Atum Ralado em Óleo', 'Mar', 'Lata de atum ralado natural 170g', '115', '../../imagens/atum_mar.png', 2, 0, 'Aberta'),
-(99, 'Sardinha em Óleo', 'Costa', 'Lata de sardinha tradicional 125g', '160', '../../imagens/sardinha_costa.png', 3, 0, 'Aberta'),
-(100, 'Maionese Tradicional', 'Cremosa', 'Pote de maionese caseira 500g', '125', '../../imagens/maionese_cremosa.png', 2, 0, 'Aberta'),
-(101, 'Ketchup Tradicional', 'Picante', 'Frasco de ketchup tradicional 400g', '140', '../../imagens/ketchup_picante.png', 2, 0, 'Aberta'),
-(102, 'Mostarda Amarela', 'Picante', 'Frasco de mostarda amarela 180g', '135', '../../imagens/mostarda_picante.png', 2, 0, 'Aberta');
+(78, 'Aveia em Flocos', 'Yoki', 'Caixa de aveia em flocos finos 170g', '75', '../../imagens/aveia_natural.png', 3, 0, 'Aberta');
 
 -- --------------------------------------------------------
 
