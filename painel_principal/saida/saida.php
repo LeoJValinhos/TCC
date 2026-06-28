@@ -1,3 +1,4 @@
+
 <?php
 include '../../funcoes/verifica_login.php';
 include '../../funcoes/conexao.php';
@@ -6,6 +7,7 @@ date_default_timezone_set('America/Sao_Paulo');
 
 $idEmpresa = $_SESSION['idEmpresa'];
 ?>
+<?php include_once '../topo_notificacoes.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
