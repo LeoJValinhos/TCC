@@ -176,4 +176,4 @@
     // Inicia e atualiza a cada 4 segundos de forma assíncrona
     atualizarAlertasInvex();
     setInterval(atualizarAlertasInvex, 4000);
-</script>
+</script>br
