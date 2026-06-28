@@ -146,27 +146,29 @@
                     
                        let htmlItens = '';
                     data.alertas.forEach(alerta => {
-                        let bordaCor = '';
-                        let textoAlerta = '';
+    let bordaCor = '';
+    let textoAlerta = '';
 
-                        if (alerta.tipo === 'vencido') {
-                            bordaCor = 'border-left: 4px solid #ff334b !important;'; // Vermelho vivo
-                            let dataFormatada = alerta.validade.split('-').reverse().join('/');
-                            textoAlerta = `🚨 O produto <span style="color: #ff5266 !important; font-weight: 600 !important;">${alerta.NomeProduto}</span> JÁ VENCIDO em ${dataFormatada} (${alerta.quantidade} un).`;
-                        } else if (alerta.tipo === 'vencendo') {
-                            bordaCor = 'border-left: 4px solid #ff9f43 !important;'; // Laranja
-                            let dataFormatada = alerta.validade.split('-').reverse().join('/');
-                            textoAlerta = `⏳ O produto <span style="color: #00e5ff !important; font-weight: 600 !important;">${alerta.NomeProduto}</span> vence em ${dataFormatada} (${alerta.quantidade} un).`;
-                        } else if (alerta.tipo === 'estoque_baixo') {
-                            bordaCor = 'border-left: 4px solid #ffca28 !important;'; // Amarelo
-                            textoAlerta = `📦 <span style="color: #00e5ff !important; font-weight: 600 !important;">${alerta.NomeProduto}</span> atingiu o estoque mínimo! Restam ${alerta.quantidade} un.`;
-                        }
+    if (alerta.tipo === 'vencido') {
+        bordaCor = 'border-left: 4px solid #ff334b !important;';
+        textoAlerta = `🚨 ${alerta.NomeProduto} está VENCIDO!`;
+    } else if (alerta.tipo === 'vencendo') {
+        bordaCor = 'border-left: 4px solid #ff9f43 !important;';
+        textoAlerta = `⏳ ${alerta.NomeProduto} vence em breve.`;
+    } else if (alerta.tipo === 'esgotado') {
+        // NOVO ESTILO PARA ESGOTADO
+        bordaCor = 'border-left: 4px solid #808080 !important;'; 
+        textoAlerta = `🚫 <span style="color: #808080 !important; font-weight: 600;">${alerta.NomeProduto}</span>: ESGOTADO!`;
+    } else if (alerta.tipo === 'estoque_baixo') {
+        bordaCor = 'border-left: 4px solid #ffca28 !important;';
+        textoAlerta = `📦 ${alerta.NomeProduto}: Estoque baixo (${alerta.quantidade} un).`;
+    }
 
-                        htmlItens += `
-                            <div class="sininho-item-invex" style="display: flex !important; align-items: flex-start !important; gap: 10px !important; padding: 12px 16px !important; border-bottom: 1px solid #162436 !important; font-size: 13px !important; color: #b0c1d4 !important; line-height: 1.4 !important; text-align: left !important; ${bordaCor}">
-                                <span>${textoAlerta}</span>
-                            </div>`;
-                    });
+    htmlItens += `
+        <div class="sininho-item-invex" style="display: flex !important; align-items: flex-start !important; gap: 10px !important; padding: 12px 16px !important; border-bottom: 1px solid #162436 !important; font-size: 13px !important; color: #b0c1d4 !important; ${bordaCor}">
+            <span>${textoAlerta}</span>
+        </div>`;
+});
                     lista.innerHTML = htmlItens;
                 }
             })
