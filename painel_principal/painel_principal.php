@@ -1,7 +1,7 @@
 <?php
 require_once 'painel_principal_contagem.php';
 ?>
-
+<?php include 'topo_notificacoes.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 

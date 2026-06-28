@@ -1,3 +1,4 @@
+
 <?php
 require_once 'cad_list_prods_dados.php';
 
@@ -14,7 +15,7 @@ $produtos_select = $conn->query("
     ORDER BY NomeProduto ASC
 ");
 ?>
-
+<?php include_once '../topo_notificacoes.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 

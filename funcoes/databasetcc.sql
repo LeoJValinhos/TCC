@@ -80,6 +80,18 @@ CREATE TABLE `configuracoes_alertas` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `configuracoes_alertas`
+--
+
+CREATE TABLE `configuracoes_alertas` (
+  `id_config` int(11) NOT NULL,
+  `idEmpresa` int(11) NOT NULL,
+  `dias_antecedencia_vencimento` int(11) DEFAULT '30'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `empresa`
 --
 
@@ -371,6 +383,12 @@ ALTER TABLE `alertas_ocultos`
 --
 ALTER TABLE `cadastros`
   MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de tabela `configuracoes_alertas`
+--
+ALTER TABLE `configuracoes_alertas`
+  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `configuracoes_alertas`
