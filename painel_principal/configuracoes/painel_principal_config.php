@@ -397,23 +397,25 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
             <?php endforeach; ?>
         <?php endif; ?>
 
-        <?php if (!empty($alertas_estoque_baixo)): ?>
-            <?php foreach($alertas_estoque_baixo as $prod_baixo): ?>
-                <?php 
-                    $isZerado = ($prod_baixo['total_estoque'] == 0);
-                    $cor = $isZerado ? "#6c757d" : "#ffc107";
-                    $bg = $isZerado ? "#1e2227" : "#2c2214";
-                    $badgeText = $isZerado ? "ESGOTADO" : "ESTOQUE BAIXO";
-                ?>
-                <div class="item-lote-linha card-alerta" data-tipo="critico" data-qtd="<?= $prod_baixo['total_estoque'] ?>" style="border-left: 5px solid <?= $cor ?>; display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: <?= $bg ?>; margin-bottom: 8px;">
-                    <div class="celula-info-texto" style="margin: 0;">
-                        <span class="badge-promo" style="background-color: <?= $cor ?>; color: #111; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 8px;"><?= $badgeText ?></span>
-                        Produto: <strong><?= htmlspecialchars($prod_baixo['NomeProduto']) ?> (<?= htmlspecialchars($prod_baixo['MarcaProduto']) ?>)</strong> | Qtd: <strong style="color:<?= $cor ?>;"><?= $prod_baixo['total_estoque'] ?> un</strong>
-                    </div>
-                    <button type="button" class="btn-apagar-alerta" onclick="prepararExclusaoAlerta(<?= $prod_baixo['idProduto'] ?>, '', 'estoque', this)" style="background: none; border: none; color: #ff4d4d; cursor: pointer;">🗑️</button>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
+      <?php if (!empty($alertas_estoque_baixo)): ?>
+    <?php foreach($alertas_estoque_baixo as $prod_baixo): ?>
+        <?php 
+            // Lógica que diferencia o visual
+            $isZerado = ($prod_baixo['total_estoque'] <= 0); 
+            $cor = $isZerado ? "#808080" : "#ffc107"; // Vermelho se 0, Amarelo se Baixo
+            $bg = $isZerado ? "#3c3c3c" : "#2c2214";
+            $badgeText = $isZerado ? "ESGOTADO" : "ESTOQUE BAIXO";
+        ?>
+        <div class="item-lote-linha card-alerta" data-tipo="estoque" data-qtd="<?= $prod_baixo['total_estoque'] ?>" style="border-left: 5px solid <?= $cor ?>; display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: <?= $bg ?>; margin-bottom: 8px;">
+            <div class="celula-info-texto" style="margin: 0;">
+                <span style="background-color: <?= $cor ?>; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 8px;"><?= $badgeText ?></span>
+                Produto: <strong><?= htmlspecialchars($prod_baixo['NomeProduto']) ?></strong> | 
+                Qtd Atual: <strong style="color:<?= $cor ?>;"><?= $prod_baixo['total_estoque'] ?> un</strong>
+            </div>
+            <button type="button" class="btn-apagar-alerta" onclick="prepararExclusaoAlerta(<?= $prod_baixo['idProduto'] ?>, '', 'estoque', this)" style="background: none; border: none; color: #ff4d4d; cursor: pointer;">🗑️</button>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>
 
         <?php if(empty($alertas_vencidos) && empty($alertas_proximos) && empty($alertas_estoque_baixo)): ?>
             <p style="padding:15px; color:#a0aab5; margin:0; font-style:italic;">🎉 Tudo limpo por aqui!</p>
