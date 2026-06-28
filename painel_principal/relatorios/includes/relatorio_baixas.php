@@ -33,7 +33,7 @@ if (!$resultado) {
     die("<div style='color:red; padding:20px; background:#fff;'><strong>Erro na Consulta de Baixas:</strong> " . $conn->error . "</div>");
 }
 ?>
-
+<?php include_once '../topo_notificacoes.php'; ?>
 <style>
     .container-tabela {
         width: 100%;
