@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 28-Jun-2026 às 08:42
+-- Tempo de geração: 28-Jun-2026 às 11:40
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -34,7 +34,7 @@ CREATE TABLE `alertas_ocultos` (
   `numero_lote` varchar(50) DEFAULT NULL,
   `tipo_alerta` varchar(20) NOT NULL,
   `data_ocultado` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -62,7 +62,20 @@ CREATE TABLE `cadastros` (
 INSERT INTO `cadastros` (`idCadastro`, `nome`, `sobrenome`, `senha`, `email`, `datanasc`, `cpf`, `celular`, `idEmpresa`, `tipocadastro`) VALUES
 (1, 'Leonardo', 'Valinhos', 'vini4675', 'root@root', '2007-03-20', '11111111111', '22222222222', 1, 'EMPRESA/ADM'),
 (2, 'vinicius', 'sales', '012345678', 'vini@vini', '2008-07-20', '01234567812', '88888888888', 2, 'EMPRESA/ADM'),
-(3, 'aa', 'sss', '12345678', 'leo@leleco', '2007-03-20', '22132132131', '13213212332', 1, 'EMPRESA/ADM');
+(3, 'aa', 'sss', '12345678', 'leo@leleco', '2007-03-20', '22132132131', '13213212332', 1, 'EMPRESA/ADM'),
+(4, 'Jorge', 'Harrison', '012345678', 'Jorge@gmail.com', '2007-03-16', '48798978779', '77987798789', 3, 'EMPRESA/ADM');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `configuracoes_alertas`
+--
+
+CREATE TABLE `configuracoes_alertas` (
+  `id_config` int(11) NOT NULL,
+  `idEmpresa` int(11) NOT NULL,
+  `dias_antecedencia_vencimento` int(11) DEFAULT '30'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -98,7 +111,8 @@ CREATE TABLE `empresa` (
 
 INSERT INTO `empresa` (`idEmpresa`, `nomeEmpresa`, `CNPJ`, `codigoEmpresa`, `idAdm`, `nomeAdm`, `criado_em`) VALUES
 (1, 'Leleco Interpraise', '33333333333333', '8554687', 3, 'aa', '2026-06-08 20:25:10'),
-(2, 'vini corp', '01829742386474', '1622009', 2, 'vinicius', '2026-06-11 21:44:31');
+(2, 'vini corp', '01829742386474', '1622009', 2, 'vinicius', '2026-06-11 21:44:31'),
+(3, 'JHLF', '78787897898789', '2424760', 4, 'Jorge', '2026-06-27 17:29:27');
 
 -- --------------------------------------------------------
 
@@ -123,54 +137,30 @@ CREATE TABLE `loja_virtual` (
 --
 
 INSERT INTO `loja_virtual` (`idItem`, `nomeProduto`, `marcaProduto`, `descricaoProduto`, `quantidade`, `imagemProduto`, `meta`, `quantidadeParticipantes`, `status`) VALUES
-(55, 'Sabão em Pó', 'Brilho', 'Sabão em pó para limpeza profunda', '200', '../../imagens/sabao_brilho.png', 2, 1, 'Aguardando outro participante'),
-(56, 'Amaciante de Roupas', 'Soft', 'Amaciante concentrado 1L', '150', '../../imagens/amaciante_soft.png', 2, 0, 'Aberta'),
+(55, 'Sabão em Pó', 'Brilhante', 'Sabão em pó para limpeza profunda', '200', '../../imagens/sabao_brilho.png', 2, 2, 'Concluida'),
+(56, 'Amaciante de Roupas', 'Soft', 'Amaciante concentrado 1L', '150', '../../imagens/amaciante_soft.png', 2, 2, 'Concluida'),
 (57, 'Detergente Líquido', 'Limpex', 'Detergente neutro para louças 500ml', '300', '../../imagens/detergente_limpex.png', 3, 0, 'Aberta'),
 (58, 'Desinfetante Pinho', 'Força', 'Desinfetante uso geral 1L', '120', '../../imagens/desinfetante_forca.png', 2, 0, 'Aberta'),
 (59, 'Água Sanitária', 'Pura', 'Água sanitária para desinfecção 1L', '180', '../../imagens/agua_sanitaria_pura.png', 2, 0, 'Aberta'),
-(60, 'Esponja de Aço', 'Brilhante', 'Pacote com 4 unidades', '250', '../../imagens/esponja_brilhante.png', 4, 0, 'Aberta'),
-(61, 'Limpador Multiuso', 'Ação', 'Limpador spray multiuso 500ml', '140', '../../imagens/limpador_acao.png', 2, 0, 'Aberta'),
-(62, 'Saco de Lixo 50L', 'Resiste', 'Pacote com 10 unidades', '160', '../../imagens/saco_lixo_resiste.png', 2, 0, 'Aberta'),
-(63, 'Arroz Integral', 'Grão Ouro', 'Pacote de arroz integral 1kg', '90', '../../imagens/arroz_grao_ouro.png', 2, 0, 'Aberta'),
-(64, 'Feijão Carioca', 'Dona Benta', 'Feijão carioca tipo 1 1kg', '110', '../../imagens/feijao_dona_benta.png', 2, 0, 'Aberta'),
-(65, 'Macarrão Espaguete', 'Massa Boa', 'Macarrão sêmola espaguete 500g', '210', '../../imagens/macarrao_massa_boa.png', 3, 0, 'Aberta'),
-(66, 'Óleo de Soja', 'Leve', 'Óleo de soja garrafa 900ml', '170', '../../imagens/oleo_leve.png', 2, 0, 'Aberta'),
-(67, 'Açúcar Refinado', 'Doce Vida', 'Açúcar refinado pacote 1kg', '130', '../../imagens/acucar_doce_vida.png', 2, 0, 'Aberta'),
-(68, 'Sal Refinado', 'Iodado', 'Sal refinado de cozinha 1kg', '80', '../../imagens/sal_iodado.png', 4, 0, 'Aberta'),
-(69, 'Café Torrado e Moído', 'Aroma', 'Café a vácuo tradicional 500g', '140', '../../imagens/cafe_aroma.png', 2, 0, 'Aberta'),
-(70, 'Farinha de Trigo', 'Premium', 'Farinha de trigo tipo 1 1kg', '100', '../../imagens/farinha_premium.png', 2, 0, 'Aberta'),
-(71, 'Achocolatado em Pó', 'ChocoMax', 'Lata de achocolatado 400g', '125', '../../imagens/achocolatado_chocomax.png', 2, 0, 'Aberta'),
-(72, 'Cereal Matinal', 'NutriCroc', 'Cereal de milho tradicional 300g', '85', '../../imagens/cereal_nutricroc.png', 2, 0, 'Aberta'),
-(73, 'Biscoito Recheado', 'Doce Mania', 'Biscoito sabor chocolate 130g', '400', '../../imagens/biscoito_doce_mania.png', 5, 0, 'Aberta'),
-(74, 'Biscoito Salgado', 'Crack', 'Biscoito água e sal 350g', '190', '../../imagens/biscoito_crack.png', 3, 0, 'Aberta'),
-(75, 'Geleia de Morango', 'Fruta Pura', 'Pote de geleia de morango 300g', '60', '../../imagens/geleia_fruta_pura.png', 2, 0, 'Aberta'),
-(76, 'Torrada Tradicional', 'Crocante', 'Pacote de torradas leves 150g', '95', '../../imagens/torrada_crocante.png', 2, 0, 'Aberta'),
-(77, 'Leite em Pó', 'NutriVida', 'Leite em pó integral sachê 400g', '115', '../../imagens/leite_nutrivida.png', 2, 0, 'Aberta'),
-(78, 'Aveia em Flocos', 'Natural', 'Caixa de aveia em flocos finos 170g', '75', '../../imagens/aveia_natural.png', 3, 0, 'Aberta'),
-(79, 'Creme Dental', 'Sorriso Clean', 'Creme dental proteção máxima 90g', '280', '../../imagens/creme_dental_sorriso.png', 4, 0, 'Aberta'),
-(80, 'Sabonete em Barra', 'Suave', 'Sabonete hidratante toque macio 90g', '500', '../../imagens/sabonete_suave.png', 6, 0, 'Aberta'),
-(81, 'Shampoo Anticaspa', 'FiosFort', 'Shampoo controle de oleosidade 400ml', '90', '../../imagens/shampoo_fiosfort.png', 2, 0, 'Aberta'),
-(82, 'Condicionador Hidratante', 'FiosFort', 'Condicionador nutrição intensa 400ml', '85', '../../imagens/condicionador_fiosfort.png', 2, 0, 'Aberta'),
-(83, 'Desodorante Aerossol', 'Dry', 'Desodorante antitranspirante 150ml', '160', '../../imagens/desodorante_dry.png', 3, 0, 'Aberta'),
-(84, 'Papel Higiênico', 'Folha Dupla', 'Pacote com 12 rolos folha dupla', '135', '../../imagens/papel_folha_dupla.png', 2, 0, 'Aberta'),
-(85, 'Fio Dental', 'Menta', 'Fio dental sabor menta 50m', '220', '../../imagens/fio_dental_menta.png', 3, 0, 'Aberta'),
-(86, 'Sabonete Líquido', 'Refil', 'Sabonete líquido refil erva doce 200ml', '145', '../../imagens/sabonete_liquido_refil.png', 2, 0, 'Aberta'),
-(87, 'Refrigerante de Cola', 'MegaCola', 'Garrafa pet de refrigerante 2L', '350', '../../imagens/refrigerante_megacola.png', 4, 0, 'Aberta'),
-(88, 'Suco de Uva Integral', 'Puro Vale', 'Suco de uva tinto integral 1L', '70', '../../imagens/suco_puro_vale.png', 2, 0, 'Aberta'),
-(89, 'Água Mineral Sem Gás', 'Fonte', 'Garrafa de água mineral 500ml', '600', '../../imagens/agua_fonte.png', 6, 0, 'Aberta'),
-(90, 'Suco em Pó Tang', 'Frutão', 'Suco em pó sabor laranja 25g', '800', '../../imagens/suco_po_frutao.png', 10, 0, 'Aberta'),
-(91, 'Néctar de Pêssego', 'Caixinha', 'Suco de caixinha sabor pêssego 1L', '110', '../../imagens/nectar_pessêgo.png', 3, 0, 'Aberta'),
-(92, 'Chá Leão Matte', 'Ervas', 'Chá matte pronto para beber 1.5L', '95', '../../imagens/cha_leao_matte.png', 2, 0, 'Aberta'),
-(93, 'Água Tônica', 'Fresh', 'Lata de água tônica 350ml', '130', '../../imagens/agua_tonica_fresh.png', 3, 0, 'Aberta'),
-(94, 'Energético Monster', 'Power', 'Lata de bebida energética 473ml', '140', '../../imagens/energetico_power.png', 2, 0, 'Aberta'),
-(95, 'Extrato de Tomate', 'Vermelhinho', 'Lata de extrato de tomate 340g', '240', '../../imagens/extrato_vermelhinho.png', 4, 0, 'Aberta'),
-(96, 'Milho Verde em Conserva', 'Campo', 'Lata de milho verde cozido 170g', '195', '../../imagens/milho_campo.png', 3, 0, 'Aberta'),
-(97, 'Ervilha em Conserva', 'Campo', 'Lata de ervilha cozida no vapor 170g', '180', '../../imagens/ervilha_campo.png', 3, 0, 'Aberta'),
-(98, 'Atum Ralado em Óleo', 'Mar', 'Lata de atum ralado natural 170g', '115', '../../imagens/atum_mar.png', 2, 0, 'Aberta'),
-(99, 'Sardinha em Óleo', 'Costa', 'Lata de sardinha tradicional 125g', '160', '../../imagens/sardinha_costa.png', 3, 0, 'Aberta'),
-(100, 'Maionese Tradicional', 'Cremosa', 'Pote de maionese caseira 500g', '125', '../../imagens/maionese_cremosa.png', 2, 0, 'Aberta'),
-(101, 'Ketchup Tradicional', 'Picante', 'Frasco de ketchup tradicional 400g', '140', '../../imagens/ketchup_picante.png', 2, 0, 'Aberta'),
-(102, 'Mostarda Amarela', 'Picante', 'Frasco de mostarda amarela 180g', '135', '../../imagens/mostarda_picante.png', 2, 0, 'Aberta');
+(60, 'Esponja de Aço', 'Brilhus', 'Pacote com 4 unidades', '250', '../../imagens/esponja_brilhante.png', 4, 0, 'Aberta'),
+(61, 'Limpador Multiuso', 'Uau', 'Limpador spray multiuso 500ml', '140', '../../imagens/limpador_acao.png', 2, 0, 'Aberta'),
+(62, 'Saco de Lixo 50L', 'DoverRoll', 'Pacote com 10 unidades', '160', '../../imagens/saco_lixo_resiste.png', 2, 0, 'Aberta'),
+(63, 'Arroz Integral', 'Grão de ouro', 'Pacote de arroz integral 1kg', '90', '../../imagens/arroz_grao_ouro.png', 2, 0, 'Aberta'),
+(64, 'Feijão Carioca', 'Dona Dê', 'Feijão carioca tipo 1 1kg', '110', '../../imagens/feijao_dona_benta.png', 2, 0, 'Aberta'),
+(65, 'Macarrão Espaguete', 'Amália', 'Macarrão sêmola espaguete 500g', '210', '../../imagens/macarrao_massa_boa.png', 3, 0, 'Aberta'),
+(66, 'Óleo de Soja', 'Soya', 'Óleo de soja garrafa 900ml', '170', '../../imagens/oleo_leve.png', 2, 0, 'Aberta'),
+(67, 'Açúcar Refinado', 'União', 'Açúcar refinado pacote 1kg', '130', '../../imagens/acucar_doce_vida.png', 2, 0, 'Aberta'),
+(68, 'Sal Refinado', 'Cisne', 'Sal refinado de cozinha 1kg', '80', '../../imagens/sal_iodado.png', 4, 0, 'Aberta'),
+(69, 'Café Torrado e Moído', 'Pilão', 'Café a vácuo tradicional 500g', '140', '../../imagens/cafe_aroma.png', 2, 0, 'Aberta'),
+(70, 'Farinha de Trigo', 'Dona Benta', 'Farinha de trigo tipo 1 1kg', '100', '../../imagens/farinha_premium.png', 2, 0, 'Aberta'),
+(71, 'Achocolatado em Pó', 'Nescau', 'Lata de achocolatado 400g', '125', '../../imagens/achocolatado_chocomax.png', 2, 0, 'Aberta'),
+(72, 'Cereal Matinal', 'Sucrilhos', 'Cereal de milho tradicional 300g', '85', '../../imagens/cereal_nutricroc.png', 2, 0, 'Aberta'),
+(73, 'Biscoito Recheado', 'Passatempo', 'Biscoito sabor chocolate 130g', '400', '../../imagens/biscoito_doce_mania.png', 5, 0, 'Aberta'),
+(74, 'Biscoito Salgado', 'Marilan', 'Biscoito água e sal 350g', '190', '../../imagens/biscoito_crack.png', 3, 0, 'Aberta'),
+(75, 'Geleia de Morango', 'Predilecta', 'Pote de geleia de morango 230g', '60', '../../imagens/geleia_fruta_pura.png', 2, 0, 'Aberta'),
+(76, 'Torrada Tradicional', 'Schar', 'Pacote de torradas leves 150g', '95', '../../imagens/torrada_crocante.png', 2, 0, 'Aberta'),
+(77, 'Leite em Pó', 'Itambé', 'Leite em pó integral sachê 400g', '115', '../../imagens/leite_nutrivida.png', 2, 0, 'Aberta'),
+(78, 'Aveia em Flocos', 'Yoki', 'Caixa de aveia em flocos finos 170g', '75', '../../imagens/aveia_natural.png', 3, 0, 'Aberta');
 
 -- --------------------------------------------------------
 
@@ -192,7 +182,8 @@ CREATE TABLE `participantes_loja` (
 INSERT INTO `participantes_loja` (`idParticipacao`, `idItem`, `id_primeiroParticipante`, `id_segundoParticipante`) VALUES
 (1, 5, 1, 2),
 (2, 6, 1, NULL),
-(3, 55, 3, NULL);
+(8, 55, 3, 2),
+(10, 56, 3, 4);
 
 -- --------------------------------------------------------
 
@@ -391,7 +382,13 @@ ALTER TABLE `alertas_ocultos`
 -- AUTO_INCREMENT de tabela `cadastros`
 --
 ALTER TABLE `cadastros`
-  MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de tabela `configuracoes_alertas`
+--
+ALTER TABLE `configuracoes_alertas`
+  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `configuracoes_alertas`
@@ -403,7 +400,7 @@ ALTER TABLE `configuracoes_alertas`
 -- AUTO_INCREMENT de tabela `empresa`
 --
 ALTER TABLE `empresa`
-  MODIFY `idEmpresa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idEmpresa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `loja_virtual`
@@ -415,7 +412,7 @@ ALTER TABLE `loja_virtual`
 -- AUTO_INCREMENT de tabela `participantes_loja`
 --
 ALTER TABLE `participantes_loja`
-  MODIFY `idParticipacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idParticipacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `produtos`
