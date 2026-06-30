@@ -1,15 +1,32 @@
-<?php
-date_default_timezone_set('America/Sao_Paulo');
 
+<?php
+include '../config_global.php';
+include '../config_scripts.php';
+
+$simboloMoeda = $config['simbolo_moeda'];
+$casasDecimais = (int)$config['casas_decimais'];
+$formatoData = $config['formato_data'];
+$codigoMoeda = $config['codigo_moeda'] ?? 'BRL';
+
+$step = "0." . str_repeat("0", max(0, $casasDecimais - 1)) . "1";
+
+if ($casasDecimais == 0) {
+    $step = "1";
+}
+
+date_default_timezone_set('America/Sao_Paulo');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 if (!isset($_SESSION)) {
     session_start();
 }
-
+include_once 'alertas.php'; 
+include __DIR__ . '/../config_global.php';
 include '../../funcoes/verifica_login.php';
 include '../../funcoes/conexao.php';
 
 
-include_once 'alertas.php'; 
+
 
 $idEmpresa = isset($_SESSION['idEmpresa']) ? $_SESSION['idEmpresa'] : null;
 
@@ -19,6 +36,28 @@ if (!$idEmpresa) {
 
 $data_hoje = date('Y-m-d');
 $data_limite_30_dias = date('Y-m-d', strtotime('+30 days'));
+
+$sqlConfig = "SELECT * FROM configuracoes_gerais WHERE idEmpresa = '$idEmpresa' LIMIT 1";
+$resultConfig = mysqli_query($conn, $sqlConfig);
+
+if(mysqli_num_rows($resultConfig) > 0){
+
+    $config = mysqli_fetch_assoc($resultConfig);
+
+}else{
+
+    mysqli_query($conn,"
+        INSERT INTO configuracoes_gerais
+        (idEmpresa)
+        VALUES
+        ('$idEmpresa')
+    ");
+
+    $resultConfig = mysqli_query($conn, $sqlConfig);
+
+    $config = mysqli_fetch_assoc($resultConfig);
+
+}
 
 /* =========================================================================
    BUSCA 1: APENAS LOTES PRÓXIMOS AO VENCIMENTO (Vencimento <= 30 dias)
@@ -128,6 +167,7 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
                 </div>
 
                 <div id="aba-descontos" class="conteudo-aba ativa">
+                    
                     <h3 class="titulo-secao"> Gerenciamento de descontos </h3>
                     
                     <div class="container-sub-modos">
@@ -328,11 +368,673 @@ if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') {
                         fecharModalLimite();
                     }
                     </script>
-                </div> <div id="aba-geral" class="conteudo-aba">
-                    <h3 class="titulo-secao">Dados do Estabelecimento</h3>
-                    <div class="painel-opcao"><p style="margin:0; color:#a0aab5; font-style:italic;">Funcionalidade em desenvolvimento.</p></div>
+                    </div>
+                     <div id="aba-geral" class="conteudo-aba">
+                        <form action="salvar_config_gerais.php" method="POST">
+
+<div class="config-page">
+
+    <h2 class="config-title">
+        <i class="fa fa-sliders"></i>
+        Configurações gerais
+    </h2>
+
+    <div class="config-grid">
+
+        <!-- ================= NOTIFICAÇÕES ================= -->
+
+        <div class="config-card">
+
+            <div class="card-header">
+                <i class="fa fa-bell"></i>
+                <span>Notificações</span>
+            </div>
+
+            <p class="card-text">
+                Escolha como deseja receber os alertas emitidos pelo sistema INVEX.
+            </p>
+
+            <div class="switch-item">
+
+                <div>
+                    <strong>Alertas por e-mail</strong>
+                    <small>Receber notificações importantes por e-mail.</small>
                 </div>
 
+                <label class="switch">
+                    <input
+                    type="checkbox"
+                    name="alerta_email"
+                   <?= $config['alerta_email'] ? 'checked' : '' ?>
+>
+                    <span class="slider"></span>
+                </label>
+
+            </div>
+
+            <div class="switch-item">
+
+                <div>
+                    <strong>Alertas no login</strong>
+                    <small>Mostrar avisos sempre que entrar no sistema.</small>
+                </div>
+
+                <label class="switch">
+                    <input
+    type="checkbox"
+    name="alerta_login"
+    <?= $config['alerta_login'] ? 'checked' : '' ?>
+>
+                    <span class="slider"></span>
+                </label>
+
+            </div>
+
+            <div class="switch-item">
+
+                <div>
+                    <strong>Som dos alertas</strong>
+                    <small>Reproduzir um som quando surgir um novo alerta.</small>
+                </div>
+
+                <label class="switch">
+                    <input
+    type="checkbox"
+    name="som_alerta"
+    <?= $config['som_alerta'] ? 'checked' : '' ?>
+>
+                    <span class="slider"></span>
+                </label>
+
+            </div>
+
+        </div>
+
+        <!-- ================= FORMATAÇÃO ================= -->
+
+        <div class="config-card">
+
+            <div class="card-header">
+                <i class="fa fa-file-text"></i>
+                <span>Formatação</span>
+            </div>
+
+            <div class="campo">
+
+                <label>Casas decimais</label>
+
+                <small>
+                    Define quantos números aparecerão após a vírgula em preços, quantidades e valores monetários.
+                </small>
+
+                <select name="casas_decimais">
+                    <option value="0" <?= $config['casas_decimais']==0?'selected':'' ?>>0</option>
+<option value="1" <?= $config['casas_decimais']==1?'selected':'' ?>>1</option>
+<option value="2" <?= $config['casas_decimais']==2?'selected':'' ?>>2</option>
+<option value="3" <?= $config['casas_decimais']==3?'selected':'' ?>>3</option>
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label>Símbolo da moeda</label>
+
+                <small>
+                    Símbolo utilizado em todos os valores exibidos pelo sistema.
+                </small>
+
+                <select name="simbolo_moeda">
+                    <option value="R$" <?= $config['simbolo_moeda']=="R$"?'selected':'' ?>>R$</option>
+<option value="$" <?= $config['simbolo_moeda']=="$"?'selected':'' ?>>$</option>
+<option value="€" <?= $config['simbolo_moeda']=="€"?'selected':'' ?>>€</option>
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label>Formato da data</label>
+
+                <small>
+                    Define como as datas serão apresentadas em todas as telas.
+                </small>
+
+                <select name="formato_data">
+                    <option value="d/m/Y" <?= $config['formato_data']=="d/m/Y"?'selected':'' ?>>DD/MM/AAAA</option>
+<option value="m/d/Y" <?= $config['formato_data']=="m/d/Y"?'selected':'' ?>>MM/DD/AAAA</option>
+<option value="Y-m-d" <?= $config['formato_data']=="Y-m-d"?'selected':'' ?>>AAAA-MM-DD</option>
+                </select>
+
+            </div>
+
+        </div>
+
+        <!-- ================= MANUTENÇÃO ================= -->
+
+        <div class="config-card manutencao-full">
+
+            <div class="card-header">
+                <i class="fa fa-cogs"></i>
+                <span>Manutenção</span>
+            </div>
+
+            <p class="card-text">
+                Ferramentas administrativas para manter o sistema funcionando corretamente.
+            </p>
+
+            <button class="btn-card">
+                <i class="fa fa-trash"></i>
+                Limpar logs antigos
+            </button>
+
+            <button class="btn-card">
+                <i class="fa fa-database"></i>
+                Realizar backup
+            </button>
+
+            <button class="btn-card">
+                <i class="fa fa-refresh"></i>
+                Atualizar sistema
+            </button>
+
+        </div>
+
+        
+        </div>
+
+    </div>
+
+    <div class="save-area">
+
+        <button type="submit" class="save-button">
+
+    <i class="fa fa-save"></i>
+
+    Salvar alterações
+
+</button>
+
+        <p>
+            As alterações serão aplicadas imediatamente após serem salvas.
+        </p>
+
+    </div>
+
+</div>
+</form>
+</div>
+
+<style>
+.manutencao-full {
+grid-column: span 2;
+}
+
+/*==================================================
+    PÁGINA
+==================================================*/
+
+.config-page{
+
+    width:100%;
+
+    min-height:100vh;
+
+    padding:35px;
+
+    box-sizing:border-box;
+
+}
+
+.config-title{
+
+    color:#19f4e7;
+
+    font-size:34px;
+
+    font-weight:700;
+
+    margin-bottom:35px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+/*==================================================
+    GRID
+==================================================*/
+
+.config-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:28px;
+
+}
+
+/*==================================================
+    CARD
+==================================================*/
+
+.config-card{
+
+    background:#0b1724;
+
+    border:1px solid rgba(0,255,255,.18);
+
+    border-radius:16px;
+
+    padding:28px;
+
+    min-height:360px;
+
+    transition:.25s;
+
+}
+
+.config-card:hover{
+
+    transform:translateY(-4px);
+
+    border-color:#18e8e8;
+
+    box-shadow:0 0 18px rgba(0,255,255,.10);
+
+}
+
+/*==================================================
+    HEADER CARD
+==================================================*/
+
+.card-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:18px;
+
+}
+
+.card-header i{
+
+    color:#17f5e7;
+
+    font-size:22px;
+
+}
+
+.card-header span{
+
+    color:#17f5e7;
+
+    font-size:23px;
+
+    font-weight:700;
+
+}
+
+/*==================================================
+    TEXTO
+==================================================*/
+
+.card-text{
+
+    color:#93a7b6;
+
+    line-height:22px;
+
+    margin-bottom:22px;
+
+    font-size:14px;
+
+}
+
+/*==================================================
+    CAMPOS
+==================================================*/
+
+.campo{
+
+    margin-bottom:22px;
+
+}
+
+.campo label{
+
+    display:block;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    margin-bottom:6px;
+
+}
+
+.campo small{
+
+    display:block;
+
+    color:#7e97a7;
+
+    font-size:12px;
+
+    line-height:18px;
+
+    margin-bottom:10px;
+
+}
+
+/*==================================================
+    SELECT
+==================================================*/
+
+.config-card select{
+
+    width:100%;
+
+    height:46px;
+
+    border-radius:8px;
+
+    background:#152638;
+
+    border:1px solid #33506a;
+
+    color:white;
+
+    padding:0 14px;
+
+    font-size:15px;
+
+    outline:none;
+
+    transition:.2s;
+
+}
+
+.config-card select:focus{
+
+    border-color:#19e8e8;
+
+}
+
+/*==================================================
+    SWITCH
+==================================================*/
+
+.switch-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:20px 0;
+
+    gap:20px;
+
+}
+
+.switch-item strong{
+
+    display:block;
+
+    color:white;
+
+    font-size:15px;
+
+    margin-bottom:4px;
+
+}
+
+.switch-item small{
+
+    color:#87a2b6;
+
+    font-size:12px;
+
+}
+
+/*==================================================
+    SWITCH ESTILO IOS
+==================================================*/
+
+.switch{
+
+    position:relative;
+
+    display:inline-block;
+
+    width:54px;
+
+    height:28px;
+
+}
+
+.switch input{
+
+    opacity:0;
+
+    width:0;
+
+    height:0;
+
+}
+
+.slider{
+
+    position:absolute;
+
+    cursor:pointer;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    bottom:0;
+
+    background:#344a5f;
+
+    border-radius:50px;
+
+    transition:.25s;
+
+}
+
+.slider:before{
+
+    position:absolute;
+
+    content:"";
+
+    width:22px;
+
+    height:22px;
+
+    left:3px;
+
+    top:3px;
+
+    background:white;
+
+    border-radius:50%;
+
+    transition:.25s;
+
+}
+
+.switch input:checked + .slider{
+
+    background:#19dede;
+
+}
+
+.switch input:checked + .slider:before{
+
+    transform:translateX(26px);
+
+}
+
+/*==================================================
+    BOTÕES
+==================================================*/
+
+.btn-card{
+
+    width:100%;
+
+    height:48px;
+
+    margin-top:15px;
+
+    background:#162a3c;
+
+    border:1px solid rgba(0,255,255,.18);
+
+    color:#19eeee;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    transition:.2s;
+
+}
+
+.btn-card i{
+
+    margin-right:10px;
+
+}
+
+.btn-card:hover{
+
+    background:#1b3146;
+
+    border-color:#19f4e7;
+
+}
+
+/*==================================================
+    COLOR
+==================================================*/
+
+.config-card input[type=color]{
+
+    width:100%;
+
+    height:48px;
+
+    border:none;
+
+    cursor:pointer;
+
+    background:none;
+
+}
+
+/*==================================================
+    SALVAR
+==================================================*/
+
+.save-area{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    margin-top:40px;
+
+}
+
+.save-button{
+
+    background:#1cd8d8;
+
+    color:#001521;
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:15px 50px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.save-button i{
+
+    margin-right:10px;
+
+}
+
+.save-button:hover{
+
+    background:#27ecec;
+
+    transform:translateY(-2px);
+
+}
+
+.save-area p{
+
+    margin-top:14px;
+
+    color:#8ca4b5;
+
+    font-size:13px;
+
+}
+
+/*==================================================
+    RESPONSIVO
+==================================================*/
+
+@media(max-width:1100px){
+
+.config-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.config-card{
+
+min-height:auto;
+
+}
+
+}
+
+</style>
 
 
 <div id="aba-notificacoes" class="conteudo-aba">

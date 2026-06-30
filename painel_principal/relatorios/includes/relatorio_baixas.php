@@ -1,9 +1,43 @@
+
 <?php
+
+include '../config_global.php';
+include '../config_scripts.php';
+
+function formatarMoeda($valor, $simbolo, $casas)
+{
+    return $simbolo . ' ' . number_format((float)$valor, $casas, ',', '.');
+}
+
+function formatarData($data, $formato)
+{
+    if (!$data) return '-';
+    return date($formato . ' H:i', strtotime($data));
+}
+
+function formatarDataSimples($data, $formato)
+{
+    if (!$data) return '-';
+    return date($formato, strtotime($data));
+}
+
+$simboloMoeda = $config['simbolo_moeda'];
+$casasDecimais = (int)$config['casas_decimais'];
+$formatoData = $config['formato_data'];
+$codigoMoeda = $config['codigo_moeda'] ?? 'BRL';
+
+$step = "0." . str_repeat("0", max(0, $casasDecimais - 1)) . "1";
+
+if ($casasDecimais == 0) {
+    $step = "1";
+}
+
 date_default_timezone_set('America/Sao_Paulo');
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
 // Conexão padrão com o banco
 $conn = new mysqli("localhost", "root", "usbw", "databasetcc");
+
 if ($conn->connect_error) { die("Erro de conexão: " . $conn->connect_error); }
 
 // Captura o período selecionado vindo do buscar_relatorio.php
@@ -20,7 +54,7 @@ if ($periodo_atual == "hoje") {
 }
 
 // Busca as saídas cujo motivo NÃO seja 'venda' (trazendo o preço de compra para calcular o prejuízo)
-$sql_baixas = "SELECT p.NomeProduto, l.numero_lote, l.preco_compra, s.quantidade_saida, s.data_saida, s.motivo_saida
+$sql_baixas = "SELECT p.NomeProduto, l.numero_lote, l.preco_compra, s.quantidade_saida, s.data_saida, s.motivo_saida, s.criadopor_nome
                FROM saida s
                INNER JOIN produtoslotes l ON s.idlote = l.idlote
                INNER JOIN produtos p ON l.idproduto = p.IdProduto
@@ -96,6 +130,7 @@ if (!$resultado) {
                 <th>Prejuízo Total</th>
                 <th>Data da Baixa</th>
                 <th>Motivo / Ocorrência</th>
+                <th>Feito por</th>
             </tr>
         </thead>
         <tbody>
@@ -105,26 +140,31 @@ if (!$resultado) {
                     $data_baixa = ($row['data_saida']) ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
                     
                     $qtd = intval($row['quantidade_saida']);
-                    $custo_compra = floatval($row['preco_compra']);
+                    $custo_compra = isset($row['preco_compra']) ? floatval($row['preco_compra']) : 0;
                     $prejuizo_total = $custo_compra * $qtd;
                     
                     echo "<tr>";
-                    echo "<td style='font-weight: 600; color: #fff;'>" . htmlspecialchars($row['NomeProduto']) . "</td>";
-                    echo "<td style='color: #94a3b8;'>#" . htmlspecialchars($row['numero_lote']) . "</td>";
-                    echo "<td>" . $qtd . " un</td>";
-                    
-                    // Nova coluna: Custo Unitário (Preço de compra do item)
-                    echo "<td style='color: #94a3b8;'>R$ " . number_format($custo_compra, 2, ',', '.') . "</td>";
-                    
-                    // Coluna de Custo Total / Prejuízo
-                    echo "<td><span class='valor-prejuizo'>R$ " . number_format($prejuizo_total, 2, ',', '.') . "</span></td>";
-                    
-                    echo "<td>" . $data_baixa . "</td>";
-                    echo "<td><span class='badge-perda'>" . htmlspecialchars($row['motivo_saida']) . "</span></td>";
-                    echo "</tr>";
+echo "<td style='font-weight: 600; color: #fff;'>" . htmlspecialchars($row['NomeProduto']) . "</td>";
+echo "<td style='color: #94a3b8;'>#" . htmlspecialchars($row['numero_lote']) . "</td>";
+echo "<td>" . $qtd . " un</td>";
+
+// Custo unitário com moeda formatada
+echo "<td style='color: #94a3b8;'>" 
+    . formatarMoeda($custo_compra, $simboloMoeda, $casasDecimais) .
+"</td>";
+
+// Prejuízo total com moeda formatada
+echo "<td><span class='valor-prejuizo'>" 
+    . formatarMoeda($prejuizo_total, $simboloMoeda, $casasDecimais) .
+"</span></td>";
+
+echo "<td>" . $data_baixa . "</td>";
+echo "<td><span class='badge-perda'>" . htmlspecialchars($row['motivo_saida']) . "</span></td>";
+echo "<td>" . htmlspecialchars($row['criadopor_nome']) . "</td>";
+echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='7' style='text-align:center; color:#94a3b8; padding:25px;'>Nenhuma perda ou baixa registrada neste período.</td></tr>";
+                echo "<tr><td colspan='8' style='text-align:center; color:#94a3b8; padding:25px;'>Nenhuma perda ou baixa registrada neste período.</td></tr>";
             }
             ?>
         </tbody>

@@ -1,7 +1,14 @@
 
 <?php
+
+include '../config_global.php';
+include '../config_scripts.php';
 require_once 'cad_list_prods_dados.php';
 
+$simboloMoeda = $config['simbolo_moeda'];
+$casasDecimais = (int)$config['casas_decimais'];
+$formatoData = $config['formato_data'];
+$codigoMoeda = $config['codigo_moeda'] ?? 'BRL';
 /* =====================================================
 BUSCAR PRODUTOS PARA O SELECT DE LOTES
 ===================================================== */
@@ -15,7 +22,21 @@ $produtos_select = $conn->query("
     ORDER BY NomeProduto ASC
 ");
 ?>
+/*
+Todos os preços desta tela são armazenados em BRL.
+
+A exibição poderá ser convertida futuramente
+pela função formatMoney().
+*/
 <?php include_once '../topo_notificacoes.php'; ?>
+
+<?php
+$step = "0." . str_repeat("0", max(0, $casasDecimais - 1)) . "1";
+
+if ($casasDecimais == 0) {
+    $step = "1";
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -25,6 +46,8 @@ $produtos_select = $conn->query("
     <link rel="stylesheet" href="cad_list_prods.css">
     <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png">
     <title>INVEX - Cadastro de produtos</title>
+
+
 
     <style>
         .vermelho-validade {
@@ -104,11 +127,11 @@ $produtos_select = $conn->query("
                             <label>Descrição</label>
                             <textarea name="descricao"></textarea>
 
-                            <label>Preço padrão de compra (R$)</label>
-                            <input type="number" name="preco_padrao_compra" step="0.01" min="0" required>
+                            <label>Preço padrão de compra (<?= htmlspecialchars($simboloMoeda) ?>)</label>
+                            <input type="number" name="preco_padrao_compra" step="<?= $step ?>" min="0"  placeholder="0<?= $casasDecimais > 0 ? ',' . str_repeat('0', $casasDecimais) : '' ?>" required>
 
-                            <label>Preço padrão de venda (R$)</label>
-                            <input type="number" name="preco_padrao_venda" step="0.01" min="0" required>
+                            <label>Preço padrão de venda (<?= htmlspecialchars($simboloMoeda) ?>)</label>
+                            <input type="number" name="preco_padrao_venda" step="<?= $step ?>" min="0"  placeholder="0<?= $casasDecimais > 0 ? ',' . str_repeat('0', $casasDecimais) : '' ?>" required>
 
                             <label>Estoque mínimo</label>
                             <input type="number" name="estoque_minimo" min="0" required>
@@ -138,14 +161,11 @@ $produtos_select = $conn->query("
                             <label>Validade</label>
                             <input type="date" name="validade" required>
 
-                            <label>Preço de compra do lote (R$)</label>
-                            <input type="number" name="preco_compra" step="0.01" min="0" required>
+                            <label>Preço de compra do lote (<?= htmlspecialchars($simboloMoeda) ?>)</label>
+                            <input type="number" name="preco_compra" step="<?= $step ?>" min="0"  placeholder="0<?= $casasDecimais > 0 ? ',' . str_repeat('0', $casasDecimais) : '' ?>" required>
 
-                            <label>Preço de venda do lote (R$)</label>
-                            <input type="number" name="preco_venda" step="0.01" min="0" required>
-
-                            <label>Desconto (%)</label>
-                            <input type="number" name="desconto" step="0.01" min="0" max="100" value="0">
+                            <label>Preço de venda do lote (<?= htmlspecialchars($simboloMoeda) ?>)</label>
+                            <input type="number" name="preco_venda" step="<?= $step ?>" min="0"  placeholder="0<?= $casasDecimais > 0 ? ',' . str_repeat('0', $casasDecimais) : '' ?>" required>
 
                             <input type="submit" name="cadastrar_lote" value="Cadastrar lote">
                         </form>

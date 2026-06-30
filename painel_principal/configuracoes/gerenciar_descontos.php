@@ -9,7 +9,7 @@ include '../../funcoes/verifica_login.php';
 include '../../funcoes/conexao.php';
 
 $idEmpresa = isset($_SESSION['idEmpresa']) ? $_SESSION['idEmpresa'] : null;
-
+$criadopor_nome = $_SESSION['nome'] ?? 'Sistema';
 if (!$idEmpresa) {
     die("Erro Crítico: Sessão inválida.");
 }
@@ -39,9 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $ids_venc_formatados = implode(',', array_map('intval', $lotes_venc));
 
         if ($aplicar === 'sim') {
-            // Ajustado de 'promocao' de acordo com o enum do seu banco
-            $sql = "UPDATE produtoslotes SET desconto = $porcentagem, status_lote = 'promocao' 
-                    WHERE idEmpresa = $idEmpresa AND idLote IN ($ids_venc_formatados)";
+    $sql = "UPDATE produtoslotes 
+            SET desconto = $porcentagem, status_lote = 'promocao',
+                criadopor_nome = '$criadopor_nome'
+            WHERE idEmpresa = $idEmpresa 
+            AND idLote IN ($ids_venc_formatados)";
             $msg = "Sucesso: Desconto de vencimento aplicado nos itens selecionados!";
         } else {
             // Ajustado para 'normal' de acordo com a omissão/enum da imagem image_720bc8.png
@@ -74,10 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $ids_formatados = implode(',', array_map('intval', $lotes));
 
         if ($acao_manual === 'sim') {
-            // Ajustado para 'promocao'
-            $sql = "UPDATE produtoslotes SET desconto = $porcentagem, status_lote = 'promocao' 
-                    WHERE idEmpresa = $idEmpresa AND idLote IN ($ids_formatados)";
-            $msg = "Sucesso: Desconto comercial de {$porcentagem}% aplicado nos lotes!";
+    $sql = "UPDATE produtoslotes 
+            SET desconto = $porcentagem,
+                status_lote = 'promocao',
+                criadopor_nome = '$criadopor_nome'
+            WHERE idEmpresa = $idEmpresa 
+            AND idLote IN ($ids_formatados)";
         } else {
             // Ajustado para 'normal'
             $sql = "UPDATE produtoslotes SET desconto = 0, status_lote = 'normal' 

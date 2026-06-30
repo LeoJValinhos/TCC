@@ -1,3 +1,4 @@
+
 <?php
 
 
@@ -186,7 +187,7 @@ $GLOBALS['periodo_atual'] = $periodo;
 
 
 
-<body>
+<body class="<?= $config['tema'] ?>">
 
 
 

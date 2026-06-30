@@ -1,7 +1,24 @@
+
 <?php
+include '../config_global.php';
+include '../config_scripts.php';
 require_once("produtos_simulado.php");
+
+$simboloMoeda = $config['simbolo_moeda'];
+$casasDecimais = (int)$config['casas_decimais'];
+$formatoData = $config['formato_data'];
+$codigoMoeda = $config['codigo_moeda'] ?? 'BRL';
+
+$step = "0." . str_repeat("0", max(0, $casasDecimais - 1)) . "1";
+
+if ($casasDecimais == 0) {
+    $step = "1";
+}
+
 ?>
+
 <?php include_once '../topo_notificacoes.php'; ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -13,7 +30,6 @@ require_once("produtos_simulado.php");
 </head>
 
 <body>
-
     <header class="topbar">
         <div class="top-left">
             <img src="../../Imagens/carrinho2.png" width="70" height="70" alt="Logo Carrinho">
@@ -101,10 +117,20 @@ require_once("produtos_simulado.php");
                 <p id="modalMarca"></p>
                 <p id="modalDescricao"></p>
                 <br>
-                <div class="modal-precos">
-                    <p><strong>Preço Total:</strong> <span>R$ 0,00</span> <small>(Futuro)</small></p>
-                    <p><strong>Preço Unitário:</strong> <span>R$ 0,00</span> <small>(Futuro)</small></p>
-                </div>
+                
+                    <div class="modal-precos">
+    <p>
+        <strong>Preço Total:</strong>
+        <span id="modalPrecoTotal">-</span>
+        <small>(Futuro)</small>
+    </p>
+
+    <p>
+        <strong>Preço Unitário:</strong>
+        <span id="modalPrecoUnitario">-</span>
+        <small>(Futuro)</small>
+    </p>
+</div>
                 <br>
                 <h3>Participantes (<span id="modalQtdPart">0</span>/2):</h3>
                 <ul class="participantes-lista" id="listaParticipantes">

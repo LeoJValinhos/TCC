@@ -1,12 +1,30 @@
 
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+session_start();
+
 include '../../funcoes/verifica_login.php';
 include '../../funcoes/conexao.php';
+include '../config_global.php';
+include '../config_scripts.php';
 
+
+
+$formatoData = $config['formato_data'];
+$codigoMoeda = $config['codigo_moeda'] ?? 'BRL';
+/*
+Todos os valores desta página são armazenados em BRL.
+
+A exibição poderá ser convertida futuramente
+pela função formatMoney().
+*/
 date_default_timezone_set('America/Sao_Paulo');
 
 $idEmpresa = $_SESSION['idEmpresa'];
 ?>
+
 <?php include_once '../topo_notificacoes.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -15,8 +33,11 @@ $idEmpresa = $_SESSION['idEmpresa'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="saida.css">
-    <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png" width="70" height="70">
+
+    <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png">
+
     <title>INVEX - Saída de produtos</title>
+</head>
     <style>
         /* Ajustes inline para garantir que o layout quebre as amarras de largura máxima */
         .layout {
@@ -146,7 +167,7 @@ $idEmpresa = $_SESSION['idEmpresa'];
                 <a href="../relatorios/buscar_relatorio.php">📊 Relatórios</a>
                 <a href="../configuracoes/painel_principal_config.php">⚙️ Configurações</a>
             </nav>
-            <a href="../index.html" class="logout">🚪 Sair</a>
+            <a href="../../index.html" class="logout">🚪 Sair</a>
         </aside>
 
         <main class="main">
@@ -202,7 +223,7 @@ $idEmpresa = $_SESSION['idEmpresa'];
                                                 if (!empty($row['validade'])) {
                                                     $hoje = new DateTime();
                                                     $data_validade = new DateTime($row['validade']);
-                                                    $data_formatada = $data_validade->format('d/m/Y');
+                                                    $data_formatada = $data_validade->format($formatoData);
                                                     
                                                     if($data_validade < $hoje) {
                                                         $classe_data = "text-critical";
@@ -254,13 +275,13 @@ $idEmpresa = $_SESSION['idEmpresa'];
                             <div class="valor-card">
                                 <span class="valor-label">Preço unitário</span>
                                 <div class="valor-row">
-                                    <span class="valor-destaque" id="txtPrecoUnitario">R$ 0,00</span>
+                                    <span class="valor-destaque" id="txtPrecoUnitario"><?= formatar_moeda(0, $config) ?></span>
                                     <span class="badge-desconto-invex" id="tagDesconto" style="display: none;">0% OFF</span>
                                 </div>
                             </div>
                             <div class="valor-card total-box">
                                 <span class="valor-label">Subtotal geral</span>
-                                <span class="valor-destaque total-color" id="txtPrecoTotal">R$ 0,00</span>
+                                <span class="valor-destaque total-color" id="txtPrecoTotal"><?= formatar_moeda(0, $config) ?></span>
                             </div>
                         </div>
 
@@ -293,6 +314,7 @@ $idEmpresa = $_SESSION['idEmpresa'];
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+        
             const inputBusca = document.getElementById("inputBusca");
             const dropdownLotes = document.getElementById("dropdownLotes");
             const idLoteInput = document.getElementById("idlote_selecionado");
@@ -332,40 +354,47 @@ $idEmpresa = $_SESSION['idEmpresa'];
                 });
             });
 
-            function atualizarPainelPrecos() {
-                let qtd = parseInt(inputQuantidade.value) || 0;
-                
-                if(selectMotivo.value !== "Venda") {
-                    tagDesconto.style.display = "none";
-                    txtPrecoUnitario.innerText = "R$ 0,00";
-                    txtPrecoTotal.innerText = "R$ 0,00 (Baixa de Estoque)";
-                    return;
-                }
+           function atualizarPainelPrecos() {
 
-                if (precoAtual > 0) {
-                    panelValores.style.display = "flex";
-                    
-                    let precoComDesconto = precoAtual;
-                    if (descontoAtual > 0) {
-                        precoComDesconto = precoAtual - (precoAtual * (descontoAtual / 100));
-                        tagDesconto.innerText = descontoAtual + "% OFF";
-                        tagDesconto.style.display = "inline-block";
-                    } else {
-                        tagDesconto.style.display = "none";
-                    }
+    let qtd = parseInt(inputQuantidade.value) || 0;
 
-                    let total = precoComDesconto * qtd;
+    if (selectMotivo.value !== "Venda") {
+        tagDesconto.style.display = "none";
+        txtPrecoUnitario.innerText = formatMoney(0);
+        txtPrecoTotal.innerText = formatMoney(0) + " (Baixa de Estoque)";
+        return;
+    }
 
-                    txtPrecoUnitario.innerText = precoAtual.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    txtPrecoTotal.innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                } else {
-                    panelValores.style.display = "none";
-                }
-            }
+    if (precoAtual > 0) {
 
-            inputQuantidade.addEventListener("input", atualizarPainelPrecos);
-            selectMotivo.addEventListener("change", atualizarPainelPrecos);
+        panelValores.style.display = "flex";
 
+        let precoComDesconto = precoAtual;
+
+        if (descontoAtual > 0) {
+            precoComDesconto = precoAtual - (precoAtual * (descontoAtual / 100));
+            tagDesconto.innerText = descontoAtual + "% OFF";
+            tagDesconto.style.display = "inline-block";
+        } else {
+            tagDesconto.style.display = "none";
+        }
+
+        const total = precoComDesconto * qtd;
+
+        txtPrecoUnitario.innerText = formatMoney(precoAtual);
+        txtPrecoTotal.innerText = formatMoney(total);
+
+    } else {
+
+        panelValores.style.display = "none";
+
+    }
+
+}
+
+inputQuantidade.addEventListener("input", atualizarPainelPrecos);
+selectMotivo.addEventListener("change", atualizarPainelPrecos);
+            
             linhas.forEach(linha => {
                 linha.addEventListener("click", function() {
                     linhas.forEach(l => l.classList.remove("selected"));

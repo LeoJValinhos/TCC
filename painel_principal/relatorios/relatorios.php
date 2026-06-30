@@ -1,5 +1,5 @@
-<?php
 
+<?php
 // Configurações de fuso horário e ocultação de avisos
 
 date_default_timezone_set('America/Sao_Paulo');
@@ -7,14 +7,14 @@ date_default_timezone_set('America/Sao_Paulo');
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
 
-
 // Conexão padrão do INVEX
 
 $conn = new mysqli("localhost", "root", "usbw", "databasetcc");
 
+$conn->set_charset("utf8mb4");
 if ($conn->connect_error) { die("Erro de conexão: " . $conn->connect_error); }
 
-
+session_start();
 
 // Captura as variáveis globais vindas do buscar_relatorio.php
 
@@ -27,7 +27,36 @@ if (isset($_GET['periodo'])) { $periodo_atual = $_GET['periodo']; }
 $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : "dashboard";
 
 
+include '../config_global.php';
+include '../config_scripts.php';
 
+function formatarMoeda($valor, $simbolo, $casas)
+{
+    return $simbolo . ' ' . number_format((float)$valor, $casas, ',', '.');
+}
+
+function formatarData($data, $formato)
+{
+    if (!$data) return '-';
+    return date($formato . ' H:i', strtotime($data));
+}
+
+function formatarDataSimples($data, $formato)
+{
+    if (!$data) return '-';
+    return date($formato, strtotime($data));
+}
+
+$simboloMoeda = $config['simbolo_moeda'];
+$casasDecimais = (int)$config['casas_decimais'];
+$formatoData = $config['formato_data'];
+$codigoMoeda = $config['codigo_moeda'] ?? 'BRL';
+
+$step = "0." . str_repeat("0", max(0, $casasDecimais - 1)) . "1";
+
+if ($casasDecimais == 0) {
+    $step = "1";
+}
 // MONTAGEM DOS FILTROS DE DATA DINÂMICOS (CORRIGIDO USANDO DATA_SAIDA REAL)
 
 $filtro_saida = "";
@@ -55,10 +84,10 @@ if ($periodo_atual == "hoje") {
     $filtro_lote  = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
 
 }
-
 ?>
-<?php include_once '../topo_notificacoes.php'; ?>
 
+<?php include_once '../topo_notificacoes.php'; ?>
+<?php include_once '../carregar_config_gerais.php'; ?>
 
 <style>
     /* --- CONFIGURAÇÃO DO CONTAINER DA TABELA --- */
@@ -134,7 +163,7 @@ if ($periodo_atual == "hoje") {
 
         if ($tipo == "dashboard"):
 
-            $sql = "SELECT p.NomeProduto, l.numero_lote, s.quantidade_saida, s.data_saida, s.motivo_saida
+            $sql = "SELECT p.NomeProduto, l.numero_lote, s.quantidade_saida, s.data_saida, s.motivo_saida, s.criadopor_nome
 
                     FROM saida s
 
@@ -166,6 +195,8 @@ if ($periodo_atual == "hoje") {
 
                     <th>Ocorrência / Motivo</th>
 
+                    <th>Feito por</th>
+                    
                 </tr>
 
             </thead>
@@ -178,7 +209,7 @@ if ($periodo_atual == "hoje") {
 
                     while ($row = $resultado->fetch_assoc()) {
 
-                        $data_exibir = ($row['data_saida']) ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
+                        $data_exibir = formatarData($row['data_saida'], $formatoData);
 
                         $motivo_limpo = strtolower(trim($row['motivo_saida']));
 
@@ -207,6 +238,7 @@ if ($periodo_atual == "hoje") {
                                 <td>" . $data_exibir . "</td>
 
                                 <td style='color: #94a3b8; font-style: italic;'>" . htmlspecialchars($row['motivo_saida']) . "</td>
+ <td style='color:#94a3b8;'>" . htmlspecialchars($row['criadopor_nome'] ?? '-') . "</td>
 
                               </tr>";
 
@@ -229,16 +261,19 @@ if ($periodo_atual == "hoje") {
         /* =================================================================
            2. CENÁRIO: RELATÓRIO DE DESCONTOS APLICADOS (LOTES EM PROMOÇÃO)
            ================================================================= */
+           
         elseif ($tipo == "descontos"):
             // Seleciona diretamente os lotes com desconto ativo (> 0), trazendo a validade e status para a verificação
-            $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.preco_venda, l.desconto, l.validade, l.status_lote
+            $sql = "SELECT p.NomeProduto, l.numero_lote, l.quantidade, l.preco_venda, l.desconto, l.validade, l.status_lote, l.criadopor_nome
                     FROM produtoslotes l
                     INNER JOIN produtos p ON l.idproduto = p.IdProduto
                     WHERE l.idEmpresa = '$idEmpresa' AND l.desconto > 0 " . $filtro_lote . "
                     ORDER BY l.desconto DESC, p.NomeProduto ASC";
             $resultado = $conn->query($sql);
+            
         ?>
             <thead>
+        
                 <tr>
                     <th>Produto</th>
                     <th>Nº Lote</th>
@@ -247,6 +282,7 @@ if ($periodo_atual == "hoje") {
                     <th style="text-align: right;">Val. Unit. c/ Desconto</th>
                     <th style="text-align: center;">Desconto Aplicado</th>
                     <th style="text-align: right;">Valor Total Estoque</th>
+                    <th>Feito por</th>
                 </tr>
             </thead>
             <tbody>
@@ -275,18 +311,32 @@ if ($periodo_atual == "hoje") {
                                     }
                                     
                         echo "  </td>
-                                <td style='color: #94a3b8;'> " . $lote . " </td>
-                                <td>" . $qtd . " un</td>
-                                <td style='text-align: right; color: #94a3b8;'>R$ " . number_format($preco_original, 2, ',', '.') . "</td>
-                                <td style='text-align: right; color: #ffffff; font-weight: 500;'>R$ " . number_format($preco_com_desconto, 2, ',', '.') . "</td>
-                                <td style='text-align: center; color: #eab308; font-weight: bold;'>
-                                    " . number_format($porcentagem_desc, 0) . "% OFF
-                                </td>
-                                <td style='text-align: right; color: #22c55e; font-weight: bold;'>R$ " . number_format($valor_total_estoque, 2, ',', '.') . "</td>
-                              </tr>";
+                               <td style='color: #94a3b8;'> " . $lote . " </td>
+<td>" . $qtd . " un</td>
+
+<td style='text-align: right; color: #94a3b8;'>
+    " . formatarMoeda($preco_original, $simboloMoeda, $casasDecimais) . "
+</td>
+
+<td style='text-align: right; color: #ffffff; font-weight: 500;'>
+    " . formatarMoeda($preco_com_desconto, $simboloMoeda, $casasDecimais) . "
+</td>
+
+<td style='text-align: center; color: #eab308; font-weight: bold;'>
+    " . number_format($porcentagem_desc, 0) . "% OFF
+</td>
+
+<td style='text-align: right; color: #22c55e; font-weight: bold;'>
+    " . formatarMoeda($valor_total_estoque, $simboloMoeda, $casasDecimais) . "
+</td>
+
+<td style='color:#94a3b8;'>
+    " . htmlspecialchars($row['criadopor_nome'] ?? '-') . "
+</td>
+</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='7' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhum lote com promoção ativa encontrado para o período selecionado.</td></tr>";
+                    echo "<tr><td colspan='8' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhum lote com promoção ativa encontrado para o período selecionado.</td></tr>";
                 }
                 ?>
             </tbody>
@@ -310,6 +360,7 @@ if ($periodo_atual == "hoje") {
             $resultado = $conn->query($sql);
         ?>
             <thead>
+                
                 <tr>
                     <th>Produto</th>
                     <th>Qtd Vendida</th>
@@ -342,20 +393,36 @@ if ($periodo_atual == "hoje") {
                         $cor_lucro = ($lucro >= 0) ? '#22c55e' : '#ef4444';
 
                         echo "<tr>
-                                <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto']) . "</td>
-                                <td>" . $qtd . " un</td>
-                                <td>" . $data_venda . "</td>
-                                <td style='text-align: right; color: #94a3b8;'>R$ " . number_format($custo_unitario, 2, ',', '.') . "</td>
-                                <td style='text-align: center;'>";
-                                    if ($porcentagem_desc > 0) {
-                                        echo "<span style='color: #eab308; font-weight: bold;'>" . number_format($porcentagem_desc, 0) . "% OFF</span>";
-                                    } else {
-                                        echo "<span style='color: #64748b;'>-</span>";
-                                    }
-                        echo "  </td>
-                                <td style='text-align: right; color: #38bdf8;'>R$ " . number_format($faturamento_real, 2, ',', '.') . "</td>
-                                <td style='text-align: right; color: " . $cor_lucro . "; font-weight: bold;'>R$ " . number_format($lucro, 2, ',', '.') . "</td>
-                              </tr>";
+    <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto'] ?? '') . "</td>
+
+    <td>" . $qtd . " un</td>
+
+    <td>" . $data_venda . "</td>
+
+    <td style='text-align: right; color: #94a3b8;'>
+        " . formatarMoeda($custo_unitario, $simboloMoeda, $casasDecimais) . "
+    </td>
+
+    <td style='text-align: center;'>";
+
+if ($porcentagem_desc > 0) {
+    echo "<span style='color: #eab308; font-weight: bold;'>
+            " . number_format($porcentagem_desc, 0) . "% OFF
+          </span>";
+} else {
+    echo "<span style='color: #64748b;'>-</span>";
+}
+
+echo "</td>
+
+    <td style='text-align: right; color: #38bdf8;'>
+        " . formatarMoeda($faturamento_real, $simboloMoeda, $casasDecimais) . "
+    </td>
+
+    <td style='text-align: right; color: " . $cor_lucro . "; font-weight: bold;'>
+        " . formatarMoeda($lucro, $simboloMoeda, $casasDecimais) . "
+    </td>
+</tr>";
                     }
                 } else {
                     echo "<tr><td colspan='7' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhuma venda encontrada para calcular lucros neste período.</td></tr>";
@@ -371,7 +438,7 @@ if ($periodo_atual == "hoje") {
            4. CENÁRIO: RELATÓRIO DE PRODUTOS CADASTRADOS (PREÇOS E DESCONTOS)
            ================================================================= */
         elseif ($tipo == "produtos"):
-            $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.preco_compra, l.preco_venda, l.desconto
+            $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.preco_compra, l.preco_venda, l.desconto, l.criadopor_nome
                     FROM produtoslotes l
                     INNER JOIN produtos p ON l.idproduto = p.IdProduto
                     WHERE l.idEmpresa = '$idEmpresa' " . $filtro_lote . "
@@ -379,6 +446,7 @@ if ($periodo_atual == "hoje") {
             $resultado = $conn->query($sql);
         ?>
             <thead>
+                
                 <tr>
                     <th>Produto</th>
                     <th style="text-align: center;">Nº Lote</th>
@@ -387,6 +455,7 @@ if ($periodo_atual == "hoje") {
                     <th style="text-align: right;">Preço Venda</th>
                     <th style="text-align: center;">Desconto</th>
                     <th style="text-align: right;">Venda Final</th>
+                    <th style="text-align: right;">Feito por</th>
                 </tr>
             </thead>
             <tbody>
@@ -402,26 +471,41 @@ if ($periodo_atual == "hoje") {
                         $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
                         $marca = !empty($row['MarcaProduto']) ? htmlspecialchars($row['MarcaProduto']) : '-';
 
-                        echo "<tr>
-                                <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto']) . "</td>
-                                <td style='color: #94a3b8; text-align: center;'>" . $lote . "</td>
-                                <td style='color: #ffffff;'>" . $marca . "</td>
-                                <td style='color: #ffffff; text-align: right;'>R$ " . number_format($p_compra, 2, ',', '.') . "</td>
-                                <td style='color: #94a3b8; text-align: right;'>R$ " . number_format($p_venda_base, 2, ',', '.') . "</td>
-                                <td style='text-align: center;'>";
-                                    if ($desc > 0) {
-                                        echo "<span style='color: #ef4444; font-weight: bold;'>" . $desc . "%</span>";
-                                    } else {
-                                        echo "<span style='color: #94a3b8;'>-</span>";
-                                    }
-                        echo "  </td>
-                                <td style='text-align: right; font-weight: bold; color: " . ($desc > 0 ? '#22c55e' : '#e2e8f0') . ";'>
-                                    R$ " . number_format($p_venda_final, 2, ',', '.') . "
-                                </td>
-                              </tr>";
+                   echo "<tr>
+        <td style='font-weight: 600;'>" . htmlspecialchars($row['NomeProduto']) . "</td>
+
+        <td style='color: #94a3b8; text-align: center;'>" . $lote . "</td>
+
+        <td style='color: #ffffff;'>" . $marca . "</td>
+
+        <td style='color: #ffffff; text-align: right;'>
+            " . formatarMoeda($p_compra, $simboloMoeda, $casasDecimais) . "
+        </td>
+
+        <td style='color: #94a3b8; text-align: right;'>
+            " . formatarMoeda($p_venda_base, $simboloMoeda, $casasDecimais) . "
+        </td>
+
+        <td style='text-align: center;'>";
+
+            if ($desc > 0) {
+                echo "<span style='color: #ef4444; font-weight: bold;'>" . number_format($desc, 0) . "%</span>";
+            } else {
+                echo "<span style='color: #94a3b8;'>-</span>";
+            }
+
+echo "  </td>
+
+        <td style='text-align: right; font-weight: bold; color: " . ($desc > 0 ? '#22c55e' : '#e2e8f0') . ";'>
+            " . formatarMoeda($p_venda_final, $simboloMoeda, $casasDecimais) . "
+            </td>
+        <td style='color:#94a3b8;'>
+    " . htmlspecialchars($row['criadopor_nome'] ?? '-') . "
+</td>
+      </tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='7' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhum produto ou lote encontrado para o período selecionado.</td></tr>";
+                    echo "<tr><td colspan='8' style='text-align:center; color:#94a3b8; padding:20px;'>Nenhum produto ou lote encontrado para o período selecionado.</td></tr>";
                 }
                 ?>
             </tbody>
@@ -431,7 +515,7 @@ if ($periodo_atual == "hoje") {
            5. CENÁRIO: ABA EXCLUSIVA DE LOTES GERAIS (COM MARCA)
            ================================================================= */
         elseif ($tipo == "lotes"):
-            $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote
+            $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote, l.criadopor_nome
                     FROM produtoslotes l
                     INNER JOIN produtos p ON l.idproduto = p.IdProduto
                     WHERE l.idEmpresa = '$idEmpresa' " . $filtro_lote . "
@@ -439,6 +523,7 @@ if ($periodo_atual == "hoje") {
             $resultado = $conn->query($sql);
         ?>
             <thead>
+                
                 <tr>
                     <th>Produto</th>
                     <th>Nº Lote</th>
@@ -446,6 +531,7 @@ if ($periodo_atual == "hoje") {
                     <th>Quantidade</th>
                     <th>Validade</th>
                     <th>Status</th>
+                    <th>Feito por</th>
                 </tr>
             </thead>
             <tbody>
@@ -471,7 +557,10 @@ if ($periodo_atual == "hoje") {
                                 <td style='color: #ffffff;'>" . $marca . "</td>
                                 <td>" . intval($row['quantidade']) . " un</td>
                                 <td>" . $data_validade . "</td>
-                                <td><span class='badge " . $classe_badge . "'>" . htmlspecialchars($row['status_lote']) . "</span></td>
+                                <td><span class='badge " . $classe_badge . "'>" . htmlspecialchars($row['status_lote']) . "</span>
+                                <td style='color:#94a3b8;'>
+    " . htmlspecialchars($row['criadopor_nome'] ?? '-') . "
+</td>
                               </tr>";
                     }
                 } else {
@@ -493,6 +582,7 @@ if ($periodo_atual == "hoje") {
             $resultado = $conn->query($sql);
         ?>
             <thead>
+                
                 <tr>
                     <th>Produto</th>
                     <th>Nº Lote</th>

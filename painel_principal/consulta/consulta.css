@@ -434,3 +434,21 @@ RESPONSIVO CELULAR
 
     font-weight:700;
 }
+.tabela-scroll{
+    max-height:600px;
+    overflow-y:auto;
+    overflow-x:auto;
+    border:1px solid #334155;
+    border-radius:8px;
+}
+
+.tabela-scroll table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.tabela-scroll thead th{
+    position:sticky;
+    top:0;
+    z-index:2;
+}

@@ -15,6 +15,7 @@ $result = $conn->query($sql);
 
 <table style="width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid var(--border);">
     <thead>
+        <meta charset="UTF-8">
         <tr style="background: rgba(0, 245, 212, 0.1); text-align: left; color: var(--primary);">
             <th style="padding: 15px;">Produto</th>
             <th style="padding: 15px;">Custo Médio</th>
