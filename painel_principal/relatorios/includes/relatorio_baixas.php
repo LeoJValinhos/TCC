@@ -1,9 +1,26 @@
+
 <?php
+
+include '../config_global.php';
+include '../config_scripts.php';
+
+$simboloMoeda = $config['simbolo_moeda'];
+$casasDecimais = (int)$config['casas_decimais'];
+$formatoData = $config['formato_data'];
+$codigoMoeda = $config['codigo_moeda'] ?? 'BRL';
+
+$step = "0." . str_repeat("0", max(0, $casasDecimais - 1)) . "1";
+
+if ($casasDecimais == 0) {
+    $step = "1";
+}
+
 date_default_timezone_set('America/Sao_Paulo');
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
 // Conexão padrão com o banco
 $conn = new mysqli("localhost", "root", "usbw", "databasetcc");
+
 if ($conn->connect_error) { die("Erro de conexão: " . $conn->connect_error); }
 
 // Captura o período selecionado vindo do buscar_relatorio.php
