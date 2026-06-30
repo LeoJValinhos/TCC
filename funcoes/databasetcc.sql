@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 28-Jun-2026 às 11:40
+-- Tempo de geração: 30-Jun-2026 às 22:50
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -35,6 +35,16 @@ CREATE TABLE `alertas_ocultos` (
   `tipo_alerta` varchar(20) NOT NULL,
   `data_ocultado` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `alertas_ocultos`
+--
+
+INSERT INTO `alertas_ocultos` (`id_oculto`, `idEmpresa`, `idProduto`, `numero_lote`, `tipo_alerta`, `data_ocultado`) VALUES
+(1, 1, 4, '3', 'vencimento', '2026-06-28 13:49:01'),
+(2, 1, 1, '4', 'vencimento', '2026-06-28 13:49:24'),
+(3, 1, 2, NULL, 'estoque', '2026-06-28 14:48:26'),
+(4, 1, 7, NULL, 'estoque', '2026-06-28 14:48:30');
 
 -- --------------------------------------------------------
 
@@ -75,19 +85,34 @@ CREATE TABLE `configuracoes_alertas` (
   `id_config` int(11) NOT NULL,
   `idEmpresa` int(11) NOT NULL,
   `dias_antecedencia_vencimento` int(11) DEFAULT '30'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `configuracoes_alertas`
+-- Estrutura da tabela `configuracoes_gerais`
 --
 
-CREATE TABLE `configuracoes_alertas` (
+CREATE TABLE `configuracoes_gerais` (
   `id_config` int(11) NOT NULL,
   `idEmpresa` int(11) NOT NULL,
-  `dias_antecedencia_vencimento` int(11) DEFAULT '30'
+  `alerta_email` tinyint(1) NOT NULL DEFAULT '0',
+  `alerta_login` tinyint(1) NOT NULL DEFAULT '1',
+  `som_alerta` tinyint(1) NOT NULL DEFAULT '1',
+  `casas_decimais` int(11) NOT NULL DEFAULT '2',
+  `simbolo_moeda` varchar(10) NOT NULL DEFAULT 'R$',
+  `formato_data` varchar(20) NOT NULL DEFAULT 'd/m/Y',
+  `cor_primaria` varchar(20) NOT NULL DEFAULT '#00d9ff',
+  `criado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `atualizado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `configuracoes_gerais`
+--
+
+INSERT INTO `configuracoes_gerais` (`id_config`, `idEmpresa`, `alerta_email`, `alerta_login`, `som_alerta`, `casas_decimais`, `simbolo_moeda`, `formato_data`, `cor_primaria`, `criado_em`, `atualizado_em`) VALUES
+(1, 1, 0, 0, 0, 2, '$', 'Y-m-d', '#02b8c5', '2026-06-28 23:49:11', '2026-06-30 15:47:59');
 
 -- --------------------------------------------------------
 
@@ -220,7 +245,8 @@ INSERT INTO `produtos` (`idProduto`, `NomeProduto`, `MarcaProduto`, `Descricao`,
 (7, 'Arroz Integral Agulhinha 5kg', 'Tio JoÃ£o', 'Arroz integral tipo 1, rico em fibras e minerais. Pacote de 5kg com grÃ£os selecionados.', 1, 'Leonardo', '2026-06-25 04:37:59', 1, '18.50', '29.90', 13, NULL),
 (8, 'CafÃ© Tradicional VÃ¡cuo 500g', 'PilÃ£o', 'CafÃ© torrado e moÃ­do tradicional, com ponto de torra acentuado e sabor forte e marcante.', 1, 'Leonardo', '2026-06-25 04:38:39', 1, '11.20', '18.50', 20, NULL),
 (9, 'Azeite de Oliva Extra Virgem 500ml', 'Gallo', 'Azeite de oliva extra virgem de acidez mÃ¡xima 0,5%. Garrafa de vidro de 500ml.', 1, 'Leonardo', '2026-06-25 04:39:22', 1, '22.00', '36.90', 8, NULL),
-(10, 'Leite Integral UHT 1L', 'ItambÃ©', 'Leite caixinha UHT integral homogeneizado. Caixa com 1 litro.', 1, 'Leonardo', '2026-06-25 04:40:04', 1, '3.07', '5.49', 40, NULL);
+(10, 'Leite Integral UHT 1L', 'ItambÃ©', 'Leite caixinha UHT integral homogeneizado. Caixa com 1 litro.', 1, 'Leonardo', '2026-06-25 04:40:04', 1, '3.07', '5.49', 40, NULL),
+(11, 'feito', 'fazendo', 'fazido', 1, 'Leonardo', '2026-06-30 10:39:26', 1, '3.00', '5.00', 100, NULL);
 
 -- --------------------------------------------------------
 
@@ -249,16 +275,17 @@ CREATE TABLE `produtoslotes` (
 --
 
 INSERT INTO `produtoslotes` (`idlote`, `idproduto`, `quantidade`, `validade`, `criado_em`, `criadopor_id`, `criadopor_nome`, `idEmpresa`, `numero_lote`, `preco_compra`, `preco_venda`, `desconto`, `status_lote`) VALUES
-(1, 3, 200, '2028-07-09', '2026-06-08 20:29:20', 0, NULL, 1, '', '0.00', '0.00', '10.00', 'promocao'),
-(2, 4, 97, '2026-07-21', '2026-06-16 01:10:00', 0, NULL, 1, '3', '3000.00', '3600.00', '20.00', 'promocao'),
+(1, 3, 198, '2028-07-09', '2026-06-08 20:29:20', 0, NULL, 1, '', '0.00', '0.00', '10.00', 'promocao'),
+(2, 4, 96, '2026-07-21', '2026-06-16 01:10:00', 0, 'Leonardo', 1, '3', '3000.00', '3600.00', '15.00', 'promocao'),
 (3, 1, 147, '2026-06-15', '2026-06-16 01:19:49', 0, NULL, 1, '4', '3000.00', '3500.00', '15.00', 'vencido'),
-(4, 7, 48, '2030-02-12', '2026-06-25 04:43:01', 0, NULL, 1, '7_2030-02-12', '18.50', '29.89', '0.00', 'normal'),
-(5, 9, 17, '2027-12-10', '2026-06-25 04:44:38', 0, NULL, 1, '9_2027-12-10', '22.00', '36.90', '0.00', 'normal'),
-(6, 8, 80, '2027-04-15', '2026-06-25 04:45:31', 0, NULL, 1, '8_2027-04-15', '11.20', '18.50', '0.00', 'normal'),
-(7, 10, 118, '2026-11-18', '2026-06-25 04:46:28', 0, NULL, 1, '10_2026-11-18', '3.10', '5.49', '0.00', 'normal'),
+(4, 7, 0, '2030-02-12', '2026-06-25 04:43:01', 0, NULL, 1, '7_2030-02-12', '18.50', '29.89', '0.00', 'normal'),
+(5, 9, 0, '2027-12-10', '2026-06-25 04:44:38', 0, NULL, 1, '9_2027-12-10', '22.00', '36.90', '0.00', 'normal'),
+(6, 8, 73, '2027-04-15', '2026-06-25 04:45:31', 0, NULL, 1, '8_2027-04-15', '11.20', '18.50', '10.00', 'promocao'),
+(7, 10, 110, '2026-11-18', '2026-06-25 04:46:28', 0, NULL, 1, '10_2026-11-18', '3.10', '5.49', '0.00', 'normal'),
 (8, 6, 100, '2028-05-05', '2026-06-25 04:47:08', 0, NULL, 1, '6_2028-05-05', '1.40', '2.65', '0.00', 'normal'),
 (9, 5, 200, '2030-12-12', '2026-06-25 04:47:58', 0, NULL, 1, '5_2030-12-12', '5.40', '7.20', '0.00', 'normal'),
-(10, 4, 987897, '2007-03-20', '2026-06-26 21:12:20', 1, 'Leonardo', 1, 'LOTE-4', '10.00', '20.00', '0.00', 'vencido');
+(10, 4, 987896, '2007-03-20', '2026-06-26 21:12:20', 1, 'Sistema', 1, 'LOTE-4', '10.00', '20.00', '10.00', 'promocao'),
+(11, 11, 90, '2029-02-03', '2026-06-30 10:40:10', 1, 'Leonardo', 1, 'LOTE-11', '3.00', '5.00', '0.00', 'normal');
 
 -- --------------------------------------------------------
 
@@ -291,7 +318,16 @@ INSERT INTO `saida` (`id_saida`, `idlote`, `id_lote`, `criadopor_id`, `criadopor
 (7, 2, 2, 0, '', 12, 'Vencimento', '2026-06-25 04:53:50'),
 (8, 5, 5, 0, '', 7, 'Ajuste', '2026-06-25 04:54:01'),
 (9, 4, 4, 0, '', 1, 'Ajuste', '2026-06-25 06:04:59'),
-(43, 2, 2, 3, 'aa', 1, 'Venda', '2026-06-27 15:58:30');
+(43, 2, 2, 3, 'aa', 1, 'Venda', '2026-06-27 15:58:30'),
+(44, 4, 4, 1, 'Leonardo', 48, 'Venda', '2026-06-28 11:18:12'),
+(45, 5, 5, 1, 'Leonardo', 17, 'Venda', '2026-06-28 11:48:54'),
+(46, 7, 7, 1, 'Leonardo', 8, 'Venda', '2026-06-29 03:21:23'),
+(47, 6, 6, 1, 'Leonardo', 6, 'Venda', '2026-06-29 23:59:20'),
+(48, 2, 2, 1, 'Leonardo', 1, 'Venda', '2026-06-30 10:28:35'),
+(49, 6, 6, 1, 'Leonardo', 1, 'Venda', '2026-06-30 10:34:12'),
+(50, 1, 1, 1, 'Leonardo', 1, 'Venda', '2026-06-30 10:35:31'),
+(51, 10, 10, 1, 'Leonardo', 1, 'Vencimento', '2026-06-30 10:42:21'),
+(52, 1, 1, 1, 'Leonardo', 1, 'Ajuste', '2026-06-30 12:07:06');
 
 --
 -- Índices para tabelas despejadas
@@ -318,6 +354,13 @@ ALTER TABLE `cadastros`
 --
 ALTER TABLE `configuracoes_alertas`
   ADD PRIMARY KEY (`id_config`);
+
+--
+-- Índices para tabela `configuracoes_gerais`
+--
+ALTER TABLE `configuracoes_gerais`
+  ADD PRIMARY KEY (`id_config`),
+  ADD UNIQUE KEY `idEmpresa` (`idEmpresa`);
 
 --
 -- Índices para tabela `empresa`
@@ -376,7 +419,7 @@ ALTER TABLE `saida`
 -- AUTO_INCREMENT de tabela `alertas_ocultos`
 --
 ALTER TABLE `alertas_ocultos`
-  MODIFY `id_oculto` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_oculto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `cadastros`
@@ -391,10 +434,10 @@ ALTER TABLE `configuracoes_alertas`
   MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `configuracoes_alertas`
+-- AUTO_INCREMENT de tabela `configuracoes_gerais`
 --
-ALTER TABLE `configuracoes_alertas`
-  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `configuracoes_gerais`
+  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
@@ -406,7 +449,7 @@ ALTER TABLE `empresa`
 -- AUTO_INCREMENT de tabela `loja_virtual`
 --
 ALTER TABLE `loja_virtual`
-  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `idItem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT de tabela `participantes_loja`
@@ -418,19 +461,19 @@ ALTER TABLE `participantes_loja`
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `idProduto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idProduto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `produtoslotes`
 --
 ALTER TABLE `produtoslotes`
-  MODIFY `idlote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idlote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `saida`
 --
 ALTER TABLE `saida`
-  MODIFY `id_saida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id_saida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- Restrições para despejos de tabelas
@@ -441,6 +484,12 @@ ALTER TABLE `saida`
 --
 ALTER TABLE `cadastros`
   ADD CONSTRAINT `fk_usuario_empresa` FOREIGN KEY (`idEmpresa`) REFERENCES `empresa` (`idEmpresa`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `configuracoes_gerais`
+--
+ALTER TABLE `configuracoes_gerais`
+  ADD CONSTRAINT `configuracoes_gerais_ibfk_1` FOREIGN KEY (`idEmpresa`) REFERENCES `empresa` (`idEmpresa`) ON DELETE CASCADE;
 
 --
 -- Limitadores para a tabela `empresa`
