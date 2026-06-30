@@ -1,5 +1,23 @@
 <?php
+include '../config_global.php';
+function moeda_export($valor, $config) {
+    return $config['simbolo_moeda'] . ' ' .
+        number_format(
+            (float)$valor,
+            (int)$config['casas_decimais'],
+            ',',
+            '.'
+        );
+}
 
+function data_export($data, $config, $comHora = false) {
+    if (!$data) return '-';
+
+    $formato = $config['formato_data'];
+    return $comHora
+        ? date($formato . ' H:i', strtotime($data))
+        : date($formato, strtotime($data));
+}
 date_default_timezone_set('America/Sao_Paulo');
 
 if (!isset($_SESSION)) { session_start(); }
