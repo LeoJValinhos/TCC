@@ -58,7 +58,7 @@ session_start();
 $idEmpresa = isset($_SESSION['idEmpresa']) ? $_SESSION['idEmpresa'] : null;
 
 // Corrigido 'p.idProduto' para 'p.IdProduto' para manter o padrão do seu banco
-$sql_vendas = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida, s.motivo_saida, s.criadopor_nome
+$sql_vendas = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida, s.criadopor_nome
                FROM saida s
                INNER JOIN produtoslotes l ON s.idlote = l.idlote
                INNER JOIN produtos p ON l.idproduto = p.IdProduto
@@ -149,7 +149,6 @@ if (!$resultado) {
                 <th>Custo Unitário</th>
                 <th>Valor Total</th>
                 <th>Data da Venda</th>
-                <th>Motivo</th>
                 <th>Feito por</th>
             </tr>
         </thead>
@@ -222,7 +221,7 @@ echo "</td>";
 
 echo "<td>" . $data_venda . "</td>";
 
-echo "<td><span class='badge-venda'>" . htmlspecialchars($row['motivo_saida']) . "</span></td>";
+
 echo "<td>" . htmlspecialchars($row['criadopor_nome']) . "</td>";
 echo "</tr>";
                 }
