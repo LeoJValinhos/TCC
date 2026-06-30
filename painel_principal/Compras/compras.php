@@ -117,10 +117,20 @@ if ($casasDecimais == 0) {
                 <p id="modalMarca"></p>
                 <p id="modalDescricao"></p>
                 <br>
-                <div class="modal-precos">
-                    <p><strong>Preço Total:</strong> <span>R$ 0,00</span> <small>(Futuro)</small></p>
-                    <p><strong>Preço Unitário:</strong> <span>R$ 0,00</span> <small>(Futuro)</small></p>
-                </div>
+                
+                    <div class="modal-precos">
+    <p>
+        <strong>Preço Total:</strong>
+        <span id="modalPrecoTotal">-</span>
+        <small>(Futuro)</small>
+    </p>
+
+    <p>
+        <strong>Preço Unitário:</strong>
+        <span id="modalPrecoUnitario">-</span>
+        <small>(Futuro)</small>
+    </p>
+</div>
                 <br>
                 <h3>Participantes (<span id="modalQtdPart">0</span>/2):</h3>
                 <ul class="participantes-lista" id="listaParticipantes">
