@@ -114,11 +114,11 @@ if ($tipo == "descontos") {
 // 2. RELATÓRIO DE VENDAS
 elseif ($tipo == "vendas") {
 
-    fputcsv($output, ['Produto', 'Lote', 'Qtd', 'Preço Unit.', 'Desconto (%)', 'Valor Final', 'Data'], ';');
+    fputcsv($output, ['Produto', 'Lote', 'Qtd', 'Preço Unit.', 'Desconto (%)', 'Valor Final', 'Data', 'Feito por'], ';');
 
     // O $sql_filtro já está sendo injetado aqui. 
     // Certifique-se apenas de que a variável $sql_filtro esteja definida no topo do arquivo.
-    $sql = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida
+    $sql = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida, s.criadopor_nome
             FROM saida s
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
@@ -133,14 +133,15 @@ elseif ($tipo == "vendas") {
         $total = ($row['preco_venda'] * (1 - ($row['desconto'] / 100))) * $row['quantidade_saida'];
 
         fputcsv($output, [
-            $row['NomeProduto'], 
-            $row['numero_lote'], 
-            $row['quantidade_saida'], 
-            'R$ '.number_format($row['preco_venda'], 2, ',', '.'), 
-            $row['desconto'].'%', 
-            'R$ '.number_format($total, 2, ',', '.'), 
-            $row['data_saida']
-        ], ';');
+    $row['NomeProduto'],
+    $row['numero_lote'],
+    $row['quantidade_saida'],
+    moeda_export($row['preco_venda'], $config),
+    $row['desconto'].'%',
+    moeda_export($total, $config),
+    data_export($row['data_saida'], $config, true),
+    $row['criadopor_nome'] ?? '-' // <<< AQUI entra o "feito por"
+], ';');
     }
 }
 
@@ -219,82 +220,116 @@ elseif ($tipo == "baixas" || $tipo == "perdas") {
     }
 }
 
-// 6. RELATÓRIO DE LUCRO (ALINHADO COM A INTERFACE - EXCEL LIMPO)
 elseif ($tipo == "lucro") {
-    // Cabeçalhos idênticos à tabela da interface
-    fputcsv($output, ['Produto', 'Qtd Vendida', 'Data Venda', 'Preço Custo (Unidade)', 'Desconto', 'Valor Faturado', 'Lucro Estimado'], ';');
 
-    // Query corrigida utilizando $sql_filtro
-    $sql = "SELECT p.NomeProduto, s.quantidade_saida, s.data_saida, l.preco_compra, l.preco_venda, l.desconto
+    fputcsv($output, [
+        'Produto',
+        'Qtd Vendida',
+        'Data Venda',
+        'Preço Custo (Unidade)',
+        'Desconto',
+        'Valor Faturado',
+        'Lucro Estimado'
+    ], ';');
+
+    $sql = "SELECT p.NomeProduto, s.quantidade_saida, s.data_saida,
+                   l.preco_compra, l.preco_venda, l.desconto
             FROM saida s
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
-            WHERE l.idEmpresa = '$idEmpresa' 
-            AND LOWER(s.motivo_saida) = 'venda' 
-            $sql_filtro 
+            WHERE l.idEmpresa = '$idEmpresa'
+            AND LOWER(s.motivo_saida) = 'venda'
+          
             ORDER BY s.id_saida DESC";
-            
+
     $result = $conn->query($sql);
 
     while ($row = $result->fetch_assoc()) {
-        $data_venda = ($row['data_saida']) ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
+
         $qtd = intval($row['quantidade_saida']);
+
         $custo_unitario = floatval($row['preco_compra']);
         $preco_venda = floatval($row['preco_venda']);
-        $porcentagem_desc = floatval($row['desconto']);
+        $desc = floatval($row['desconto']);
 
         $custo_total = $qtd * $custo_unitario;
         $venda_bruta = $qtd * $preco_venda;
-        $total_desconto = $venda_bruta * ($porcentagem_desc / 100);
-        
+        $total_desconto = $venda_bruta * ($desc / 100);
+
         $faturamento_real = $venda_bruta - $total_desconto;
         $lucro = $faturamento_real - $custo_total;
 
-        $texto_desconto = ($porcentagem_desc > 0) ? number_format($porcentagem_desc, 0) . '% OFF' : '-';
+        // DATA formatada pela config
+        $data_venda = ($row['data_saida'])
+            ? date($formatoData . ' H:i', strtotime($row['data_saida']))
+            : '-';
 
         fputcsv($output, [
             $row['NomeProduto'],
             $qtd . ' un',
             $data_venda,
-            'R$ ' . number_format($custo_unitario, 2, ',', '.'),
-            $texto_desconto,
-            'R$ ' . number_format($faturamento_real, 2, ',', '.'),
-            'R$ ' . number_format($lucro, 2, ',', '.')
+
+            formatarMoeda($custo_unitario, $simboloMoeda, $casasDecimais),
+
+            ($desc > 0 ? number_format($desc, 0) . '% OFF' : '-'),
+
+            formatarMoeda($faturamento_real, $simboloMoeda, $casasDecimais),
+
+            formatarMoeda($lucro, $simboloMoeda, $casasDecimais)
         ], ';');
     }
 }
-
-// 4. RELATÓRIO DE LOTES (COM CAMPO MARCA)
 elseif ($tipo == "lotes") {
-    // Cabeçalho do Excel incluindo a coluna Marca
-    fputcsv($output, ['Produto', 'Nº Lote', 'Marca', 'Quantidade', 'Validade', 'Status'], ';');
 
-    // Definição do filtro para a tabela de lotes (l.criado_em)
+    fputcsv($output, [
+        'Produto',
+        'Nº Lote',
+        'Marca',
+        'Quantidade',
+        'Validade',
+        'Status',
+        'Feito por'
+    ], ';');
+
     $filtro_lote = "";
-    if ($periodo == "hoje") $filtro_lote = " AND DATE(l.criado_em) = CURDATE()";
-    elseif ($periodo == "semana") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
-    elseif ($periodo == "mes") $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+    if ($periodo == "hoje") {
+        $filtro_lote = " AND DATE(l.criado_em) = CURDATE()";
+    } elseif ($periodo == "semana") {
+        $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+    } elseif ($periodo == "mes") {
+        $filtro_lote = " AND DATE(l.criado_em) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+    }
 
-    $sql = "SELECT p.NomeProduto, p.MarcaProduto, l.numero_lote, l.quantidade, l.validade, l.status_lote
+    $sql = "SELECT 
+                p.NomeProduto,
+                p.MarcaProduto,
+                l.numero_lote,
+                l.quantidade,
+                l.validade,
+                l.status_lote,
+                l.criadopor_nome
             FROM produtoslotes l
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
             WHERE l.idEmpresa = '$idEmpresa' $filtro_lote
             ORDER BY l.idlote DESC";
-            
+
     $result = $conn->query($sql);
 
     while ($row = $result->fetch_assoc()) {
-        $data_validade = ($row['validade']) ? date('d/m/Y', strtotime($row['validade'])) : '-';
+
         $lote = !empty($row['numero_lote']) ? '#'.$row['numero_lote'] : '-';
         $marca = !empty($row['MarcaProduto']) ? $row['MarcaProduto'] : '-';
+        $quantidade = intval($row['quantidade']) . ' un';
+        $validade = data_export($row['validade'], $config, false);
 
         fputcsv($output, [
             $row['NomeProduto'],
             $lote,
             $marca,
-            intval($row['quantidade']) . ' un',
-            $data_validade,
-            strtoupper($row['status_lote'])
+            $quantidade,
+            $validade,
+            strtoupper($row['status_lote']),
+            $row['criadopor_nome'] ?? '-'
         ], ';');
     }
 }
@@ -339,10 +374,23 @@ elseif ($tipo == "vencimento") {
 // 5. DASHBOARD PADRÃO (Caso não seja nenhum dos acima)
 else {
 
-    fputcsv($output, ['Tipo', 'Produto', 'Lote', 'Qtd', 'Data', 'Motivo'], ';');
+    fputcsv($output, [
+        'Tipo',
+        'Produto',
+        'Lote',
+        'Qtd',
+        'Data',
+        'Motivo',
+        'Feito por'
+    ], ';');
 
-    // Adicionamos $sql_filtro ao final da cláusula WHERE
-    $sql = "SELECT p.NomeProduto, l.numero_lote, s.quantidade_saida, s.data_saida, s.motivo_saida
+    $sql = "SELECT 
+                p.NomeProduto,
+                l.numero_lote,
+                s.quantidade_saida,
+                s.data_saida,
+                s.motivo_saida,
+                s.criadopor_nome
             FROM saida s
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
@@ -352,13 +400,15 @@ else {
     $result = $conn->query($sql);
 
     while ($row = $result->fetch_assoc()) {
+
         fputcsv($output, [
-            $row['motivo_saida'], 
-            $row['NomeProduto'], 
-            $row['numero_lote'], 
-            $row['quantidade_saida'], 
-            $row['data_saida'], 
-            $row['motivo_saida']
+            $row['motivo_saida'],
+            $row['NomeProduto'],
+            $row['numero_lote'],
+            $row['quantidade_saida'],
+            data_export($row['data_saida'], $config, true),
+            $row['motivo_saida'],
+            $row['criadopor_nome'] ?? '-'
         ], ';');
     }
 }
