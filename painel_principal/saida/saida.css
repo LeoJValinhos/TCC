@@ -1,3 +1,4 @@
+
 /* ==========================================================================
    RAIZ E CORES GERAIS (UNIFICADO)
    ========================================================================== */
@@ -28,11 +29,8 @@ html, body {
 }
 
 body {
-    /* Corrigido para manter o fundo azul escuro padrão idêntico às outras abas */
-    background: #02152E !important; 
+    background: var(--bg);
     color: var(--text);
-    display: flex;
-    flex-direction: column;
 }
 
 /* ==========================================================================
@@ -41,7 +39,7 @@ body {
 .topbar {
     width: 100%;
     height: 70px;
-    background: #02152E;
+    background: var(--bg);
     display: flex;
     align-items: center;
     padding: 0 30px;
@@ -76,7 +74,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     border-right: 1px solid rgba(0,183,195,0.2);
-    height: 100% !important;
+    height: calc(100vh - 70px) !important;
     flex-shrink: 0 !important;
 }
 
@@ -108,7 +106,7 @@ body {
 }
 
 .sidebar nav a:hover {
-    background: rgba(0,245,212,0.10);
+    background: var(--sidebar);
     color: var(--primary);
     transform: translateX(5px);
 }
@@ -170,7 +168,8 @@ body {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box;
-    background: #05162e;
+    background: var(--card);
+color: var(--text);
     padding: 30px;
     border-radius: 12px;
     border: 1px solid rgba(0, 242, 255, 0.2);
@@ -209,7 +208,8 @@ body {
 .input-search-invex {
     width: 100% !important;
     box-sizing: border-box;
-    background-color: #02152E;
+    background: var(--card);
+    color: var(--text); 
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     padding: 15px 45px 15px 18px;
@@ -243,7 +243,7 @@ body {
     width: 100% !important;
     max-height: 450px;
     overflow-y: auto;
-    background-color: #030e1e;
+    background-color: var(--card);;
     border: 1px solid rgba(0, 242, 255, 0.34);
     border-radius: 8px;
     margin-top: 5px;
