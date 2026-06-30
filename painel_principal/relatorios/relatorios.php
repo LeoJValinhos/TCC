@@ -1,11 +1,23 @@
-<?php
 
+<?php
+include '../config_global.php';
+include '../config_scripts.php';
+
+$simboloMoeda = $config['simbolo_moeda'];
+$casasDecimais = (int)$config['casas_decimais'];
+$formatoData = $config['formato_data'];
+$codigoMoeda = $config['codigo_moeda'] ?? 'BRL';
+
+$step = "0." . str_repeat("0", max(0, $casasDecimais - 1)) . "1";
+
+if ($casasDecimais == 0) {
+    $step = "1";
+}
 // Configurações de fuso horário e ocultação de avisos
 
 date_default_timezone_set('America/Sao_Paulo');
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-
 
 
 // Conexão padrão do INVEX
@@ -58,7 +70,7 @@ if ($periodo_atual == "hoje") {
 
 ?>
 <?php include_once '../topo_notificacoes.php'; ?>
-
+<?php include_once '../carregar_config_gerais.php'; ?>
 
 <style>
     /* --- CONFIGURAÇÃO DO CONTAINER DA TABELA --- */
