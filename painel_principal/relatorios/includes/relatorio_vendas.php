@@ -3,6 +3,23 @@
 include '../config_global.php';
 include '../config_scripts.php';
 
+function formatarMoeda($valor, $simbolo, $casas)
+{
+    return $simbolo . ' ' . number_format((float)$valor, $casas, ',', '.');
+}
+
+function formatarData($data, $formato)
+{
+    if (!$data) return '-';
+    return date($formato . ' H:i', strtotime($data));
+}
+
+function formatarDataSimples($data, $formato)
+{
+    if (!$data) return '-';
+    return date($formato, strtotime($data));
+}
+
 $simboloMoeda = $config['simbolo_moeda'];
 $casasDecimais = (int)$config['casas_decimais'];
 $formatoData = $config['formato_data'];
@@ -35,11 +52,13 @@ if ($periodo_atual == "hoje") {
     $filtro_venda = " AND DATE(s.data_saida) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
 }
 
+session_start();
+
 // Busca as saídas de venda trazendo também os preços e descontos do lote envolvido
 $idEmpresa = isset($_SESSION['idEmpresa']) ? $_SESSION['idEmpresa'] : null;
 
 // Corrigido 'p.idProduto' para 'p.IdProduto' para manter o padrão do seu banco
-$sql_vendas = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida, s.motivo_saida
+$sql_vendas = "SELECT p.NomeProduto, l.numero_lote, l.preco_venda, l.desconto, s.quantidade_saida, s.data_saida, s.motivo_saida, s.criadopor_nome
                FROM saida s
                INNER JOIN produtoslotes l ON s.idlote = l.idlote
                INNER JOIN produtos p ON l.idproduto = p.IdProduto
@@ -131,6 +150,7 @@ if (!$resultado) {
                 <th>Valor Total</th>
                 <th>Data da Venda</th>
                 <th>Motivo</th>
+                <th>Feito por</th>
             </tr>
         </thead>
         <tbody>
@@ -153,35 +173,61 @@ if (!$resultado) {
                     }
                     
                     echo "<tr>";
-                    echo "<td style='font-weight: 600; color: #fff;'>" . htmlspecialchars($row['NomeProduto']) . "</td>";
-                    echo "<td style='color: #94a3b8;'>#" . htmlspecialchars($row['numero_lote']) . "</td>";
-                    echo "<td style='color: #e2e8f0;'>" . $qtd . " un</td>";
-                    
-                    echo "<td>";
-                    if ($desconto_porcentagem > 0) {
-                        echo "<span class='preco-original'>R$ " . number_format($preco_unitario, 2, ',', '.') . "</span>";
-                        echo "<span class='preco-final' style='color: #94a3b8;'>R$ " . number_format($preco_unitario_final, 2, ',', '.') . "</span>";
-                    } else {
-                        echo "<span style='color: #94a3b8;'>R$ " . number_format($preco_unitario, 2, ',', '.') . "</span>";
-                    }
-                    echo "</td>";
-                    
-                    echo "<td>";
-                    if ($desconto_porcentagem > 0) {
-                        echo "<span class='preco-original'>R$ " . number_format($valor_total_original, 2, ',', '.') . "</span>";
-                        echo "<span class='preco-final'>R$ " . number_format($valor_total_final, 2, ',', '.') . "</span>";
-                        echo "<span class='tag-desconto'>-" . $desconto_porcentagem . "%</span>";
-                    } else {
-                        echo "<span class='preco-final' style='color: #fff;'>R$ " . number_format($valor_total_final, 2, ',', '.') . "</span>";
-                    }
-                    echo "</td>";
-                    
-                    echo "<td>" . $data_venda . "</td>";
-                    echo "<td><span class='badge-venda'>" . htmlspecialchars($row['motivo_saida']) . "</span></td>";
-                    echo "</tr>";
+
+echo "<td style='font-weight: 600; color: #fff;'>" . htmlspecialchars($row['NomeProduto']) . "</td>";
+
+echo "<td style='color: #94a3b8;'>#" . htmlspecialchars($row['numero_lote']) . "</td>";
+
+echo "<td style='color: #e2e8f0;'>" . $qtd . " un</td>";
+
+echo "<td>";
+
+if ($desconto_porcentagem > 0) {
+
+    echo "<span class='preco-original'>" . formatarMoeda($preco_unitario, $simboloMoeda, $casasDecimais) . "</span>";
+
+    echo "<span class='preco-final' style='color: #94a3b8; margin-left:6px;'>"
+        . formatarMoeda($preco_unitario_final, $simboloMoeda, $casasDecimais) .
+    "</span>";
+
+} else {
+
+    echo "<span style='color: #94a3b8;'>"
+        . formatarMoeda($preco_unitario, $simboloMoeda, $casasDecimais) .
+    "</span>";
+}
+
+echo "</td>";
+
+echo "<td>";
+
+if ($desconto_porcentagem > 0) {
+
+    echo "<span class='preco-original'>" . formatarMoeda($valor_total_original, $simboloMoeda, $casasDecimais) . "</span>";
+
+    echo "<span class='preco-final' style='margin-left:6px;'>"
+        . formatarMoeda($valor_total_final, $simboloMoeda, $casasDecimais) .
+    "</span>";
+
+    echo "<span class='tag-desconto'>-" . number_format($desconto_porcentagem, 0) . "%</span>";
+
+} else {
+
+    echo "<span class='preco-final' style='color: #fff;'>"
+        . formatarMoeda($valor_total_final, $simboloMoeda, $casasDecimais) .
+    "</span>";
+}
+
+echo "</td>";
+
+echo "<td>" . $data_venda . "</td>";
+
+echo "<td><span class='badge-venda'>" . htmlspecialchars($row['motivo_saida']) . "</span></td>";
+echo "<td>" . htmlspecialchars($row['criadopor_nome']) . "</td>";
+echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='7' style='text-align:center; color:#94a3b8; padding:25px;'>Nenhuma venda registrada neste período.</td></tr>";
+                echo "<tr><td colspan='8' style='text-align:center; color:#94a3b8; padding:25px;'>Nenhuma venda registrada neste período.</td></tr>";
             }
             ?>
         </tbody>
