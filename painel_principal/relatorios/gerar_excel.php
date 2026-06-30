@@ -232,15 +232,19 @@ elseif ($tipo == "lucro") {
         'Lucro Estimado'
     ], ';');
 
-    $sql = "SELECT p.NomeProduto, s.quantidade_saida, s.data_saida,
-                   l.preco_compra, l.preco_venda, l.desconto
+    $sql = "SELECT p.NomeProduto,
+                   s.quantidade_saida,
+                   s.data_saida,
+                   l.preco_compra,
+                   l.preco_venda,
+                   l.desconto
             FROM saida s
             INNER JOIN produtoslotes l ON s.idlote = l.idlote
             INNER JOIN produtos p ON l.idproduto = p.IdProduto
             WHERE l.idEmpresa = '$idEmpresa'
             AND LOWER(s.motivo_saida) = 'venda'
-          
-            ORDER BY s.id_saida DESC";
+            $sql_filtro
+            ORDER BY s.data_saida DESC";
 
     $result = $conn->query($sql);
 
@@ -248,34 +252,21 @@ elseif ($tipo == "lucro") {
 
         $qtd = intval($row['quantidade_saida']);
 
-        $custo_unitario = floatval($row['preco_compra']);
-        $preco_venda = floatval($row['preco_venda']);
-        $desc = floatval($row['desconto']);
+        $custo_total = $qtd * $row['preco_compra'];
+        $venda_bruta = $qtd * $row['preco_venda'];
+        $desconto = $venda_bruta * ($row['desconto'] / 100);
 
-        $custo_total = $qtd * $custo_unitario;
-        $venda_bruta = $qtd * $preco_venda;
-        $total_desconto = $venda_bruta * ($desc / 100);
-
-        $faturamento_real = $venda_bruta - $total_desconto;
+        $faturamento_real = $venda_bruta - $desconto;
         $lucro = $faturamento_real - $custo_total;
-
-        // DATA formatada pela config
-        $data_venda = ($row['data_saida'])
-            ? date($formatoData . ' H:i', strtotime($row['data_saida']))
-            : '-';
 
         fputcsv($output, [
             $row['NomeProduto'],
             $qtd . ' un',
-            $data_venda,
-
-            formatarMoeda($custo_unitario, $simboloMoeda, $casasDecimais),
-
-            ($desc > 0 ? number_format($desc, 0) . '% OFF' : '-'),
-
-            formatarMoeda($faturamento_real, $simboloMoeda, $casasDecimais),
-
-            formatarMoeda($lucro, $simboloMoeda, $casasDecimais)
+            data_export($row['data_saida'], $config, true),
+            moeda_export($row['preco_compra'], $config),
+            ($row['desconto'] > 0 ? $row['desconto'] . '% OFF' : '-'),
+            moeda_export($faturamento_real, $config),
+            moeda_export($lucro, $config)
         ], ';');
     }
 }
