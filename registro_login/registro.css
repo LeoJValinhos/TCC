@@ -16,11 +16,12 @@ BODY
 body{
     overflow-x:hidden;
 
+    /* Gradiente atualizado para os tons escuros da nova imagem */
     background:
     radial-gradient(circle at top,
-    #071a3d 0%,
-    #031226 45%,
-    #000814 100%);
+    #041122 0%,
+    #020b18 50%,
+    #01050c 100%);
 }
 
 /* =====================================================
@@ -44,15 +45,15 @@ TOPO
     background:
     linear-gradient(
     90deg,
-    #07152f,
-    #08244d,
-    #07152f);
+    #020b18,
+    #041630,
+    #020b18);
 
     border-bottom:
-    1px solid rgba(0,255,255,.10);
+    1px solid rgba(0, 242, 195, 0.10);
 
     box-shadow:
-    0 0 10px rgba(0,255,255,.08);
+    0 0 10px rgba(0, 242, 195, 0.05);
 }
 
 .logo-topo{
@@ -67,13 +68,13 @@ TOPO
 }
 
 .topo h2{
-
-    color:#00dfff;
+    /* Cor ajustada para o verde-menta da INVEX */
+    color:#00f2c3;
 
     font-size:38px;
 
     text-shadow:
-    0 0 8px rgba(0,223,255,.35);
+    0 0 8px rgba(0, 242, 195, 0.35);
 }
 
 /* =====================================================
@@ -86,13 +87,13 @@ CONTAINER
     min-height:100vh;
 
     display:flex;
-    justify-content:center;
+    justify-content:flex-start; 
     align-items:center;
 
     gap:140px;
 
     padding-top:130px;
-    padding-left:40px;
+    padding-left:15px; 
     padding-right:40px;
 }
 
@@ -107,22 +108,22 @@ CARD
     padding:35px;
 
     background:
-    rgba(8,18,40,.85);
+    rgba(2, 11, 24, 0.85);
 
     backdrop-filter:blur(10px);
 
     border-radius:30px;
 
     border:
-    1px solid rgba(0,255,255,.06);
+    1px solid rgba(0, 242, 195, 0.06);
 
     box-shadow:
-    0 0 20px rgba(0,180,255,.08);
+    0 0 20px rgba(0, 242, 195, 0.05);
 }
 
 .card-login h1{
-
-    color:#00e5ff;
+    /* Título principal com a cor verde-menta */
+    color:#00f2c3;
 
     text-align:center;
 
@@ -161,8 +162,8 @@ CAMPOS
 }
 
 .textfield label{
-
-    color:#00e5ff;
+    /* Labels combinando com o tema */
+    color:#00f2c3;
 
     font-size:17px;
 
@@ -182,7 +183,7 @@ CAMPOS
 
     border-radius:12px;
 
-    background:#1c2b4a;
+    background:#0b192e;
 
     color:white;
 
@@ -192,14 +193,14 @@ CAMPOS
 }
 
 .textfield input::placeholder{
-    color:#9fb0cc;
+    color:#7388a6;
 }
 
 .textfield input:focus,
 .textfield select:focus{
 
     box-shadow:
-    0 0 10px rgba(0,229,255,.25);
+    0 0 10px rgba(0, 242, 195, 0.25);
 }
 
 /* =====================================================
@@ -226,18 +227,19 @@ BOTÃO
 
     letter-spacing:4px;
 
-    color:#041521;
+    color:#01050c;
 
+    /* Gradiente ajustado baseado no botão Registrar-se da imagem */
     background:
     linear-gradient(
     90deg,
-    #00d66b,
-    #00b6c8);
+    #00f2c3,
+    #00d2a8);
 
     transition:.3s;
 
     box-shadow:
-    0 0 15px rgba(0,255,170,.20);
+    0 0 15px rgba(0, 242, 195, 0.20);
 }
 
 .btn-login:hover{
@@ -245,7 +247,7 @@ BOTÃO
     transform:translateY(-2px);
 
     box-shadow:
-    0 0 20px rgba(0,255,170,.35);
+    0 0 20px rgba(0, 242, 195, 0.40);
 }
 
 /* =====================================================
@@ -258,14 +260,14 @@ p{
 
     margin-top:18px;
 
-    color:#21d975;
+    color:#00f2c3;
 
     font-size:16px;
 }
 
 .link-registro{
 
-    color:#21d975;
+    color:#00f2c3;
 
     font-weight:bold;
 
@@ -285,14 +287,15 @@ MASCOTE
     display:flex;
     justify-content:center;
     align-items:center;
+    flex-grow:1; 
 }
 
 .lado-direito img{
 
-    width:420px;
+    width:520px; 
 
     filter:
-    drop-shadow(0 0 15px rgba(0,229,255,.35));
+    drop-shadow(0 0 15px rgba(0, 242, 195, 0.35));
 
     animation:flutuar 3s ease-in-out infinite;
 }
@@ -332,7 +335,7 @@ RESPONSIVO
     }
 
     .lado-direito img{
-        width:330px;
+        width:380px; 
     }
 }
 
@@ -345,6 +348,7 @@ RESPONSIVO
     .card-login{
         width:90%;
         max-width:700px;
+        margin: 0 auto; 
     }
 }
 
