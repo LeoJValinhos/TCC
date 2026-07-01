@@ -14,14 +14,16 @@ BODY
 ===================================================== */
 
 body{
-    overflow-x:hidden;
-
-    /* Gradiente atualizado para os tons escuros da nova imagem */
+    overflow: hidden;
+    width:100%;
+    height:100%;
+    overflow:hidden;
     background:
-    radial-gradient(circle at top,
-    #041122 0%,
-    #020b18 50%,
-    #01050c 100%);
+    radial-gradient(circle at top left,
+    #0b2530 0%,
+    #061326 35%,
+    #031022 65%,
+    #020817 100%);
 }
 
 /* =====================================================
@@ -29,52 +31,48 @@ TOPO
 ===================================================== */
 
 .topo{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:90px;
+    position: fixed;
+    top: 0;
+    left: 0;
 
-    display:flex;
-    align-items:center;
+    width: 100%;
+    height: 90px;
 
-    padding:0 45px;
+    display: flex;
+    align-items: center;
 
-    z-index:1000;
+    padding: 0 45px;
 
-    background:
-    linear-gradient(
-    90deg,
-    #020b18,
-    #041630,
-    #020b18);
+    background: rgba(2,8,23,.96);
+    backdrop-filter: blur(12px);
 
-    border-bottom:
-    1px solid rgba(0, 242, 195, 0.10);
+    border-bottom: 1px solid rgba(33,231,195,.08);
 
-    box-shadow:
-    0 0 10px rgba(0, 242, 195, 0.05);
+    z-index: 9999;
 }
 
 .logo-topo{
+
     display:flex;
     align-items:center;
     gap:18px;
 }
 
 .logo-topo img{
+
     width:60px;
     height:60px;
 }
 
 .topo h2{
-    /* Cor ajustada para o verde-menta da INVEX */
-    color:#00f2c3;
+
+    color:#21E7C3;
 
     font-size:38px;
 
-    text-shadow:
-    0 0 8px rgba(0, 242, 195, 0.35);
+    font-weight:800;
+
+    text-shadow:0 0 8px rgba(33,231,195,.18);
 }
 
 /* =====================================================
@@ -82,19 +80,20 @@ CONTAINER
 ===================================================== */
 
 .main-login{
-
     width:100%;
-    min-height:100vh;
+    height:calc(100vh - 90px); /* desconta a altura do topo */
+
+    margin-top:90px;
 
     display:flex;
-    justify-content:flex-start; 
+    justify-content:space-between;
     align-items:center;
 
-    gap:140px;
+    gap:80px;
 
-    padding-top:130px;
-    padding-left:15px; 
-    padding-right:40px;
+    padding:20px 40px;
+
+    overflow:hidden;
 }
 
 /* =====================================================
@@ -104,26 +103,43 @@ CARD
 .card-login{
 
     width:620px;
+    height:100%;
+
+    background:rgba(6,18,35,.88);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:28px;
+
+    border:1px solid rgba(33,231,195,.08);
+
+    box-shadow:0 10px 35px rgba(0,0,0,.35);
 
     padding:35px;
 
-    background:
-    rgba(2, 11, 24, 0.85);
+    overflow-y:auto;
+}
+.card-login::-webkit-scrollbar{
+    width:8px;
+}
 
-    backdrop-filter:blur(10px);
+.card-login::-webkit-scrollbar-track{
+    background:#0E1A2E;
+    border-radius:10px;
+}
 
-    border-radius:30px;
+.card-login::-webkit-scrollbar-thumb{
+    background:#21E7C3;
+    border-radius:10px;
+}
 
-    border:
-    1px solid rgba(0, 242, 195, 0.06);
-
-    box-shadow:
-    0 0 20px rgba(0, 242, 195, 0.05);
+.card-login::-webkit-scrollbar-thumb:hover{
+    background:#17D9B7;
 }
 
 .card-login h1{
-    /* Título principal com a cor verde-menta */
-    color:#00f2c3;
+
+    color:#21E7C3;
 
     text-align:center;
 
@@ -139,11 +155,13 @@ FORM ROW
 ===================================================== */
 
 .form-row{
+
     display:flex;
     gap:15px;
 }
 
 .form-row .textfield{
+
     flex:1;
 }
 
@@ -162,8 +180,8 @@ CAMPOS
 }
 
 .textfield label{
-    /* Labels combinando com o tema */
-    color:#00f2c3;
+
+    color:#D8E3F0;
 
     font-size:17px;
 
@@ -175,7 +193,7 @@ CAMPOS
 
     width:100%;
 
-    border:none;
+    border:1px solid rgba(255,255,255,.05);
 
     outline:none;
 
@@ -183,24 +201,27 @@ CAMPOS
 
     border-radius:12px;
 
-    background:#0b192e;
+    background:#0E1A2E;
 
     color:white;
 
     font-size:17px;
 
-    transition:0.3s;
+    transition:.3s;
 }
 
 .textfield input::placeholder{
-    color:#7388a6;
+
+    color:#8D9CB2;
 }
 
 .textfield input:focus,
 .textfield select:focus{
 
+    border-color:#21E7C3;
+
     box-shadow:
-    0 0 10px rgba(0, 242, 195, 0.25);
+    0 0 0 3px rgba(33,231,195,.12);
 }
 
 /* =====================================================
@@ -223,31 +244,34 @@ BOTÃO
 
     font-size:22px;
 
-    font-weight:800;
+    font-weight:700;
 
-    letter-spacing:4px;
+    letter-spacing:2px;
 
-    color:#01050c;
+    color:#031022;
 
-    /* Gradiente ajustado baseado no botão Registrar-se da imagem */
-    background:
-    linear-gradient(
+    background:linear-gradient(
     90deg,
-    #00f2c3,
-    #00d2a8);
+    #21E7C3,
+    #19D9B5);
 
     transition:.3s;
 
     box-shadow:
-    0 0 15px rgba(0, 242, 195, 0.20);
+    0 8px 20px rgba(33,231,195,.20);
 }
 
 .btn-login:hover{
 
+    background:linear-gradient(
+    90deg,
+    #2BF2D0,
+    #20E4C1);
+
     transform:translateY(-2px);
 
     box-shadow:
-    0 0 20px rgba(0, 242, 195, 0.40);
+    0 10px 24px rgba(33,231,195,.28);
 }
 
 /* =====================================================
@@ -260,14 +284,14 @@ p{
 
     margin-top:18px;
 
-    color:#00f2c3;
+    color:#A7B3C5;
 
     font-size:16px;
 }
 
 .link-registro{
 
-    color:#00f2c3;
+    color:#21E7C3;
 
     font-weight:bold;
 
@@ -275,6 +299,9 @@ p{
 }
 
 .link-registro:hover{
+
+    color:#35F3D2;
+
     text-decoration:underline;
 }
 
@@ -283,19 +310,20 @@ MASCOTE
 ===================================================== */
 
 .lado-direito{
+    flex:1;
+    height:100%;
 
     display:flex;
     justify-content:center;
     align-items:center;
-    flex-grow:1; 
 }
 
 .lado-direito img{
 
-    width:520px; 
+    width:520px;
 
     filter:
-    drop-shadow(0 0 15px rgba(0, 242, 195, 0.35));
+    drop-shadow(0 0 12px rgba(33,231,195,.20));
 
     animation:flutuar 3s ease-in-out infinite;
 }
@@ -321,6 +349,7 @@ EMPRESA
 
 #empresa_existente,
 #nova_empresa{
+
     width:100%;
 }
 
@@ -331,55 +360,66 @@ RESPONSIVO
 @media(max-width:1200px){
 
     .main-login{
+
         gap:50px;
     }
 
     .lado-direito img{
-        width:380px; 
+
+        width:380px;
     }
 }
 
 @media(max-width:980px){
 
     .lado-direito{
+
         display:none;
     }
 
     .card-login{
+
         width:90%;
         max-width:700px;
-        margin: 0 auto; 
+        margin:0 auto;
     }
 }
 
 @media(max-width:700px){
 
     .form-row{
+
         flex-direction:column;
     }
 
     .card-login{
+
         padding:25px;
     }
 
     .card-login h1{
+
         font-size:42px;
     }
 
     .textfield label{
+
         font-size:15px;
     }
 
     .textfield input,
     .textfield select{
+
         font-size:15px;
     }
 
     .btn-login{
+
         font-size:18px;
     }
 
     .topo h2{
+
         font-size:28px;
     }
 }
