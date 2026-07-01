@@ -122,13 +122,13 @@ if ($casasDecimais == 0) {
     <p>
         <strong>Preço Total:</strong>
         <span id="modalPrecoTotal">-</span>
-        <small>(Futuro)</small>
+        <small>()</small>
     </p>
 
     <p>
         <strong>Preço Unitário:</strong>
         <span id="modalPrecoUnitario">-</span>
-        <small>(Futuro)</small>
+        <small>()</small>
     </p>
 </div>
                 <br>
