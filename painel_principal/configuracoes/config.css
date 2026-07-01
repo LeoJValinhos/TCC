@@ -69,7 +69,6 @@ TOPO (FIXO NO TOPO)
 LAYOUT CONTAINER
 ===================================================== */
 .layout{
-    display:flex;
     width: 100%;
     padding-top: 70px; /* Abre espaço para a barra do topo fixada */
 }
@@ -150,18 +149,17 @@ LOGOUT
 /* =====================================================
 MAIN (CONTEÚDO LADO A LADO E COM ROLAGEM INDEPENDENTE)
 ===================================================== */
-.main{
-    flex:1;
-    padding:35px;
-    margin-left: 220px; /* Evita que o conteúdo entre embaixo da sidebar */
-    min-width: 0;
+.main {
+    padding: 35px;
+    margin-left: 220px; 
+    overflow-x: hidden
 }
 
-.container{
-    width:100%;
-    margin:0 auto;
+.container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
 }
-
 /* =====================================================
 TÍTULOS
 ===================================================== */
@@ -363,7 +361,6 @@ RESPONSIVO CELULAR
 ===================================================== */
 @media(max-width:768px){
     .layout{
-        flex-direction:column;
         padding-top: 70px;
     }
 
@@ -426,7 +423,7 @@ RESPONSIVO CELULAR
             border-radius: 12px;
             padding: 30px;
             width: 100%;
-            max-width: 1200px; /* Ocupa melhor a tela horizontalmente */
+            max-width: 100%;
             box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
 
@@ -704,7 +701,6 @@ RESPONSIVO CELULAR
             transition: all 0.2s;
             box-shadow: 0 4px 12px rgba(0, 183, 195, 0.2);
         }
-
         .btn-salvar:hover {
             background: #008fa2;
         }

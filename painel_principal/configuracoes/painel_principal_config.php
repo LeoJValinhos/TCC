@@ -1206,7 +1206,6 @@ min-height:auto;
         </div>
     </div>
 </div>
-</div>
 
                 <?php if ($_SESSION['tipoCadastro'] == 'EMPRESA/ADM') { ?>
                     <div id="aba-adm" class="conteudo-aba">
@@ -1255,6 +1254,7 @@ min-height:auto;
                         </div>
                     </div>
                 <?php } ?>
+</div>
 
             </div> </main>
     </div> <script src="config.js"></script>
