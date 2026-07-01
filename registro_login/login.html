@@ -1,59 +1,134 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>INVEX | Login</title>
+
     <link rel="stylesheet" href="login.css">
-    <link rel="icon" type="image/png" href="../Imagens/Carrinho.png"width="70" height="70">
-    <title>Home</title>
+
+    <link rel="icon"
+          type="image/png"
+          href="../Imagens/Carrinho.png">
+
 </head>
 
 <body>
 
+    <!-- =======================
+            TOPO
+    ======================== -->
+
     <header class="topo">
 
-        <img src="../Imagens/carrinho2.png" width="70" height="70" alt="Logo Carrinho" />
-        <h2>INVEX</h2>
+        <div class="logo">
+
+            <img src="../Imagens/carrinho2.png"
+                 alt="Logo INVEX">
+
+            <h2>INVEX</h2>
+
+        </div>
 
     </header>
 
-         <div class="main-login"> 
+    <!-- =======================
+          CONTEÚDO PRINCIPAL
+    ======================== -->
 
-        <div class="login-esquerda"> 
+    <main class="main-login">
 
-            <h1></h1> 
+        <!-- ===================
+              LADO ESQUERDO
+        ==================== -->
 
-            <div class="login-direita">   
+        <section class="lado-esquerdo">
 
-                <div class="card-login"> 
+            <div class="card-login">
 
-                    <h1>LOGIN</h1>
-<!-- inicio login-->
-     <form action="login.php" method="POST">
-        <label>
-            <div class="textfield">
-            <!-- e-mail-->
-        <p>E-mail:</p>
-        <input type="email" name="email" placeholder="Digite seu e-mail" required><br>
+                <h1>Bem-vindo!</h1>
 
-<!--senha-->
-<p>Senha</p>
-<input type="password" placeholder="Digite sua senha" minlength="8" name="senha" required><br>
-                
-<!-- Login -->   
- </div>     
-</label>
+                <p class="subtitulo">
+                    Faça login para acessar sua conta.
+                </p>
 
-        <input type="submit" value="login" class="btn-login">
+                <form action="login.php" method="POST">
 
-        <p>Não tem uma conta? 
-                      <a href="registro.html" class="link-registro">Registre-se</a>
-                     </p>
-    </form>
+                    <div class="textfield">
+
+                        <label for="email">
+                            E-mail
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Digite seu e-mail"
+                            required>
+
+                    </div>
+
+                    <div class="textfield">
+
+                        <label for="senha">
+                            Senha
+                        </label>
+
+                        <input
+                            type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Digite sua senha"
+                            minlength="8"
+                            required>
+
+                    </div>
+
+                    <input
+                        type="submit"
+                        value="Entrar"
+                        class="btn-login">
+
+                </form>
+
+                <div class="registro">
+
+                    <span>
+                        Não possui uma conta?
+                    </span>
+
+                    <a
+                        href="registro.html"
+                        class="link-registro">
+
+                        Registre-se
+
+                    </a>
 
                 </div>
-            </div> 
-        </div>
-    </div>
+
+            </div>
+
+        </section>
+
+        <!-- ===================
+              LADO DIREITO
+        ==================== -->
+
+        <section class="lado-direito">
+
+            <img
+                src="../Imagens/carrinho2.png"
+                alt="Sistema de Estoque">
+
+        </section>
+
+    </main>
+
 </body>
+
 </html>

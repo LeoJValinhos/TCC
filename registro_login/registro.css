@@ -18,10 +18,11 @@ body{
     height: 100vh;    /* ADICIONADO: Força o body a ter o tamanho da tela */
 
     background:
-    radial-gradient(circle at top,
-    #071a3d 0%,
-    #031226 45%,
-    #000814 100%);
+    radial-gradient(circle at top left,
+    #0b2530 0%,
+    #061326 35%,
+    #031022 65%,
+    #020817 100%);
 }
 
 /* =====================================================
@@ -29,52 +30,48 @@ TOPO
 ===================================================== */
 
 .topo{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:90px;
+    position: fixed;
+    top: 0;
+    left: 0;
 
-    display:flex;
-    align-items:center;
+    width: 100%;
+    height: 90px;
 
-    padding:0 45px;
+    display: flex;
+    align-items: center;
 
-    z-index:1000;
+    padding: 0 45px;
 
-    background:
-    linear-gradient(
-    90deg,
-    #07152f,
-    #08244d,
-    #07152f);
+    background: rgba(2,8,23,.96);
+    backdrop-filter: blur(12px);
 
-    border-bottom:
-    1px solid rgba(0,255,255,.10);
+    border-bottom: 1px solid rgba(33,231,195,.08);
 
-    box-shadow:
-    0 0 10px rgba(0,255,255,.08);
+    z-index: 9999;
 }
 
 .logo-topo{
+
     display:flex;
     align-items:center;
     gap:18px;
 }
 
 .logo-topo img{
+
     width:60px;
     height:60px;
 }
 
 .topo h2{
 
-    color:#00dfff;
+    color:#21E7C3;
 
     font-size:38px;
 
-    text-shadow:
-    0 0 8px rgba(0,223,255,.35);
+    font-weight:800;
+
+    text-shadow:0 0 8px rgba(33,231,195,.18);
 }
 
 /* =====================================================
@@ -89,18 +86,24 @@ CARD
 
     padding:35px;
 
-    background:
-    rgba(8,18,40,.85);
+    overflow-y:auto;
+}
+.card-login::-webkit-scrollbar{
+    width:8px;
+}
 
-    backdrop-filter:blur(10px);
+.card-login::-webkit-scrollbar-track{
+    background:#0E1A2E;
+    border-radius:10px;
+}
 
-    border-radius:30px;
+.card-login::-webkit-scrollbar-thumb{
+    background:#21E7C3;
+    border-radius:10px;
+}
 
-    border:
-    1px solid rgba(0,255,255,.06);
-
-    box-shadow:
-    0 0 20px rgba(0,180,255,.08);
+.card-login::-webkit-scrollbar-thumb:hover{
+    background:#17D9B7;
 }
 
 /* Customização opcional da barra de rolagem interna do formulário para combinar com o tema */
@@ -117,7 +120,7 @@ CARD
 
 .card-login h1{
 
-    color:#00e5ff;
+    color:#21E7C3;
 
     text-align:center;
 
@@ -133,11 +136,13 @@ FORM ROW
 ===================================================== */
 
 .form-row{
+
     display:flex;
     gap:15px;
 }
 
 .form-row .textfield{
+
     flex:1;
 }
 
@@ -157,7 +162,7 @@ CAMPOS
 
 .textfield label{
 
-    color:#00e5ff;
+    color:#D8E3F0;
 
     font-size:17px;
 
@@ -169,7 +174,7 @@ CAMPOS
 
     width:100%;
 
-    border:none;
+    border:1px solid rgba(255,255,255,.05);
 
     outline:none;
 
@@ -177,24 +182,27 @@ CAMPOS
 
     border-radius:12px;
 
-    background:#1c2b4a;
+    background:#0E1A2E;
 
     color:white;
 
     font-size:17px;
 
-    transition:0.3s;
+    transition:.3s;
 }
 
 .textfield input::placeholder{
-    color:#9fb0cc;
+
+    color:#8D9CB2;
 }
 
 .textfield input:focus,
 .textfield select:focus{
 
+    border-color:#21E7C3;
+
     box-shadow:
-    0 0 10px rgba(0,229,255,.25);
+    0 0 0 3px rgba(33,231,195,.12);
 }
 
 /* =====================================================
@@ -217,30 +225,34 @@ BOTÃO
 
     font-size:22px;
 
-    font-weight:800;
+    font-weight:700;
 
-    letter-spacing:4px;
+    letter-spacing:2px;
 
-    color:#041521;
+    color:#031022;
 
-    background:
-    linear-gradient(
+    background:linear-gradient(
     90deg,
-    #00d66b,
-    #00b6c8);
+    #21E7C3,
+    #19D9B5);
 
     transition:.3s;
 
     box-shadow:
-    0 0 15px rgba(0,255,170,.20);
+    0 8px 20px rgba(33,231,195,.20);
 }
 
 .btn-login:hover{
 
+    background:linear-gradient(
+    90deg,
+    #2BF2D0,
+    #20E4C1);
+
     transform:translateY(-2px);
 
     box-shadow:
-    0 0 20px rgba(0,255,170,.35);
+    0 10px 24px rgba(33,231,195,.28);
 }
 
 /* =====================================================
@@ -253,14 +265,14 @@ p{
 
     margin-top:18px;
 
-    color:#21d975;
+    color:#A7B3C5;
 
     font-size:16px;
 }
 
 .link-registro{
 
-    color:#21d975;
+    color:#21E7C3;
 
     font-weight:bold;
 
@@ -268,6 +280,9 @@ p{
 }
 
 .link-registro:hover{
+
+    color:#35F3D2;
+
     text-decoration:underline;
 }
 
@@ -276,6 +291,8 @@ MASCOTE
 ===================================================== */
 
 .lado-direito{
+    flex:1;
+    height:100%;
 
     display:flex;
     justify-content:center;
@@ -284,10 +301,10 @@ MASCOTE
 
 .lado-direito img{
 
-    width:420px;
+    width:520px;
 
     filter:
-    drop-shadow(0 0 15px rgba(0,229,255,.35));
+    drop-shadow(0 0 12px rgba(33,231,195,.20));
 
     animation:flutuar 3s ease-in-out infinite;
 }
@@ -313,6 +330,7 @@ EMPRESA
 
 #empresa_existente,
 #nova_empresa{
+
     width:100%;
 }
 
@@ -323,54 +341,66 @@ RESPONSIVO
 @media(max-width:1200px){
 
     .main-login{
+
         gap:50px;
     }
 
     .lado-direito img{
-        width:330px;
+
+        width:380px;
     }
 }
 
 @media(max-width:980px){
 
     .lado-direito{
+
         display:none;
     }
 
     .card-login{
+
         width:90%;
         max-width:700px;
+        margin:0 auto;
     }
 }
 
 @media(max-width:700px){
 
     .form-row{
+
         flex-direction:column;
     }
 
     .card-login{
+
         padding:25px;
     }
 
     .card-login h1{
+
         font-size:42px;
     }
 
     .textfield label{
+
         font-size:15px;
     }
 
     .textfield input,
     .textfield select{
+
         font-size:15px;
     }
 
     .btn-login{
+
         font-size:18px;
     }
 
     .topo h2{
+
         font-size:28px;
     }
 }
