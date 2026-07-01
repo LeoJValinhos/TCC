@@ -1,6 +1,17 @@
 let modalIdAtual = null;
 let produtoAtualModal = null; // Variável para guardar os dados do banco e usar na conta
 
+function formatarMoeda(valor) {
+    return (
+        configGeral.simboloMoeda +
+        " " +
+        Number(valor).toLocaleString("pt-BR", {
+            minimumFractionDigits: configGeral.casasDecimais,
+            maximumFractionDigits: configGeral.casasDecimais
+        })
+    );
+}
+
 function abrirModal(idItem) {
     modalIdAtual = idItem;
     document.getElementById("modalCompra").style.display = "flex";
@@ -14,11 +25,7 @@ function fecharModal() {
     location.reload(); 
 }
 
-// Função nativa do JS para formatar qualquer número do banco em R$
-function formatarMoeda(valor) {
-    let numero = parseFloat(valor) || 0;
-    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
+
 
 function carregarDadosModal() {
     fetch("detalhes_compra.php?id=" + modalIdAtual)

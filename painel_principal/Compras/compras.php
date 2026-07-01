@@ -152,9 +152,15 @@ if ($casasDecimais == 0) {
     </div>
 
     <script>
-        // Passando a moeda configurada no PHP para o JS usar
-        const simboloMoedaGeral = "<?= $simboloMoeda ?>";
-    </script>
+const configGeral = {
+    simboloMoeda: "<?= addslashes($simboloMoeda) ?>",
+    casasDecimais: <?= $casasDecimais ?>,
+    formatoData: "<?= $formatoData ?>",
+    codigoMoeda: "<?= $codigoMoeda ?>"
+};
+
+console.log(configGeral);
+</script>
     <script src="compras.js"></script>
 
 </body>
