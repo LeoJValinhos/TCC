@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 30-Jun-2026 às 22:50
+-- Tempo de geração: 01-Jul-2026 às 14:09
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -73,7 +73,8 @@ INSERT INTO `cadastros` (`idCadastro`, `nome`, `sobrenome`, `senha`, `email`, `d
 (1, 'Leonardo', 'Valinhos', 'vini4675', 'root@root', '2007-03-20', '11111111111', '22222222222', 1, 'EMPRESA/ADM'),
 (2, 'vinicius', 'sales', '012345678', 'vini@vini', '2008-07-20', '01234567812', '88888888888', 2, 'EMPRESA/ADM'),
 (3, 'aa', 'sss', '12345678', 'leo@leleco', '2007-03-20', '22132132131', '13213212332', 1, 'EMPRESA/ADM'),
-(4, 'Jorge', 'Harrison', '012345678', 'Jorge@gmail.com', '2007-03-16', '48798978779', '77987798789', 3, 'EMPRESA/ADM');
+(4, 'Jorge', 'Harrison', '012345678', 'Jorge@gmail.com', '2007-03-16', '48798978779', '77987798789', 3, 'EMPRESA/ADM'),
+(5, 'Kaue', 'Silva', '12345678', 'kaue@gmail.com', '2006-03-20', '45847894153', '46878416556', 4, 'EMPRESA/ADM');
 
 -- --------------------------------------------------------
 
@@ -112,7 +113,8 @@ CREATE TABLE `configuracoes_gerais` (
 --
 
 INSERT INTO `configuracoes_gerais` (`id_config`, `idEmpresa`, `alerta_email`, `alerta_login`, `som_alerta`, `casas_decimais`, `simbolo_moeda`, `formato_data`, `cor_primaria`, `criado_em`, `atualizado_em`) VALUES
-(1, 1, 0, 0, 0, 2, '$', 'Y-m-d', '#02b8c5', '2026-06-28 23:49:11', '2026-06-30 15:47:59');
+(1, 1, 0, 0, 0, 2, '$', 'Y-m-d', '#02b8c5', '2026-06-28 23:49:11', '2026-06-30 15:47:59'),
+(2, 4, 0, 1, 1, 2, 'R$', 'd/m/Y', '#00d9ff', '2026-07-01 13:31:02', '2026-07-01 13:31:02');
 
 -- --------------------------------------------------------
 
@@ -125,6 +127,7 @@ CREATE TABLE `empresa` (
   `nomeEmpresa` varchar(300) NOT NULL,
   `CNPJ` char(14) NOT NULL,
   `codigoEmpresa` varchar(7) NOT NULL,
+  `codigoADM` varchar(7) NOT NULL,
   `idAdm` int(11) DEFAULT NULL,
   `nomeAdm` varchar(30) DEFAULT NULL,
   `criado_em` datetime DEFAULT CURRENT_TIMESTAMP
@@ -134,10 +137,11 @@ CREATE TABLE `empresa` (
 -- Extraindo dados da tabela `empresa`
 --
 
-INSERT INTO `empresa` (`idEmpresa`, `nomeEmpresa`, `CNPJ`, `codigoEmpresa`, `idAdm`, `nomeAdm`, `criado_em`) VALUES
-(1, 'Leleco Interpraise', '33333333333333', '8554687', 3, 'aa', '2026-06-08 20:25:10'),
-(2, 'vini corp', '01829742386474', '1622009', 2, 'vinicius', '2026-06-11 21:44:31'),
-(3, 'JHLF', '78787897898789', '2424760', 4, 'Jorge', '2026-06-27 17:29:27');
+INSERT INTO `empresa` (`idEmpresa`, `nomeEmpresa`, `CNPJ`, `codigoEmpresa`, `codigoADM`, `idAdm`, `nomeAdm`, `criado_em`) VALUES
+(1, 'Leleco Interpraise', '33333333333333', '8554687', '', 3, 'aa', '2026-06-08 20:25:10'),
+(2, 'vini corp', '01829742386474', '1622009', '', 2, 'vinicius', '2026-06-11 21:44:31'),
+(3, 'JHLF', '78787897898789', '2424760', '', 4, 'Jorge', '2026-06-27 17:29:27'),
+(4, 'Kaue Intercop', '45465465565676', '3624136', '2037958', 5, 'Kaue', '2026-07-01 10:30:39');
 
 -- --------------------------------------------------------
 
@@ -154,38 +158,43 @@ CREATE TABLE `loja_virtual` (
   `imagemProduto` varchar(255) NOT NULL,
   `meta` int(11) DEFAULT '2',
   `quantidadeParticipantes` int(11) DEFAULT '0',
-  `status` enum('Aberta','Aguardando outro participante','Concluida','Cancelada') DEFAULT 'Aberta'
+  `status` enum('Aberta','Aguardando outro participante','Concluida','Cancelada') DEFAULT 'Aberta',
+  `fornecedor` varchar(150) NOT NULL,
+  `valor_unitario` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `valor_total` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `descontopor_quantidade_produto` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `quantidade_deproduto_minimo_desconto` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 --
 -- Extraindo dados da tabela `loja_virtual`
 --
 
-INSERT INTO `loja_virtual` (`idItem`, `nomeProduto`, `marcaProduto`, `descricaoProduto`, `quantidade`, `imagemProduto`, `meta`, `quantidadeParticipantes`, `status`) VALUES
-(55, 'Sabão em Pó', 'Brilhante', 'Sabão em pó para limpeza profunda', '200', '../../imagens/sabao_brilho.png', 2, 2, 'Concluida'),
-(56, 'Amaciante de Roupas', 'Soft', 'Amaciante concentrado 1L', '150', '../../imagens/amaciante_soft.png', 2, 2, 'Concluida'),
-(57, 'Detergente Líquido', 'Limpex', 'Detergente neutro para louças 500ml', '300', '../../imagens/detergente_limpex.png', 3, 0, 'Aberta'),
-(58, 'Desinfetante Pinho', 'Força', 'Desinfetante uso geral 1L', '120', '../../imagens/desinfetante_forca.png', 2, 0, 'Aberta'),
-(59, 'Água Sanitária', 'Pura', 'Água sanitária para desinfecção 1L', '180', '../../imagens/agua_sanitaria_pura.png', 2, 0, 'Aberta'),
-(60, 'Esponja de Aço', 'Brilhus', 'Pacote com 4 unidades', '250', '../../imagens/esponja_brilhante.png', 4, 0, 'Aberta'),
-(61, 'Limpador Multiuso', 'Uau', 'Limpador spray multiuso 500ml', '140', '../../imagens/limpador_acao.png', 2, 0, 'Aberta'),
-(62, 'Saco de Lixo 50L', 'DoverRoll', 'Pacote com 10 unidades', '160', '../../imagens/saco_lixo_resiste.png', 2, 0, 'Aberta'),
-(63, 'Arroz Integral', 'Grão de ouro', 'Pacote de arroz integral 1kg', '90', '../../imagens/arroz_grao_ouro.png', 2, 0, 'Aberta'),
-(64, 'Feijão Carioca', 'Dona Dê', 'Feijão carioca tipo 1 1kg', '110', '../../imagens/feijao_dona_benta.png', 2, 0, 'Aberta'),
-(65, 'Macarrão Espaguete', 'Amália', 'Macarrão sêmola espaguete 500g', '210', '../../imagens/macarrao_massa_boa.png', 3, 0, 'Aberta'),
-(66, 'Óleo de Soja', 'Soya', 'Óleo de soja garrafa 900ml', '170', '../../imagens/oleo_leve.png', 2, 0, 'Aberta'),
-(67, 'Açúcar Refinado', 'União', 'Açúcar refinado pacote 1kg', '130', '../../imagens/acucar_doce_vida.png', 2, 0, 'Aberta'),
-(68, 'Sal Refinado', 'Cisne', 'Sal refinado de cozinha 1kg', '80', '../../imagens/sal_iodado.png', 4, 0, 'Aberta'),
-(69, 'Café Torrado e Moído', 'Pilão', 'Café a vácuo tradicional 500g', '140', '../../imagens/cafe_aroma.png', 2, 0, 'Aberta'),
-(70, 'Farinha de Trigo', 'Dona Benta', 'Farinha de trigo tipo 1 1kg', '100', '../../imagens/farinha_premium.png', 2, 0, 'Aberta'),
-(71, 'Achocolatado em Pó', 'Nescau', 'Lata de achocolatado 400g', '125', '../../imagens/achocolatado_chocomax.png', 2, 0, 'Aberta'),
-(72, 'Cereal Matinal', 'Sucrilhos', 'Cereal de milho tradicional 300g', '85', '../../imagens/cereal_nutricroc.png', 2, 0, 'Aberta'),
-(73, 'Biscoito Recheado', 'Passatempo', 'Biscoito sabor chocolate 130g', '400', '../../imagens/biscoito_doce_mania.png', 5, 0, 'Aberta'),
-(74, 'Biscoito Salgado', 'Marilan', 'Biscoito água e sal 350g', '190', '../../imagens/biscoito_crack.png', 3, 0, 'Aberta'),
-(75, 'Geleia de Morango', 'Predilecta', 'Pote de geleia de morango 230g', '60', '../../imagens/geleia_fruta_pura.png', 2, 0, 'Aberta'),
-(76, 'Torrada Tradicional', 'Schar', 'Pacote de torradas leves 150g', '95', '../../imagens/torrada_crocante.png', 2, 0, 'Aberta'),
-(77, 'Leite em Pó', 'Itambé', 'Leite em pó integral sachê 400g', '115', '../../imagens/leite_nutrivida.png', 2, 0, 'Aberta'),
-(78, 'Aveia em Flocos', 'Yoki', 'Caixa de aveia em flocos finos 170g', '75', '../../imagens/aveia_natural.png', 3, 0, 'Aberta');
+INSERT INTO `loja_virtual` (`idItem`, `nomeProduto`, `marcaProduto`, `descricaoProduto`, `quantidade`, `imagemProduto`, `meta`, `quantidadeParticipantes`, `status`, `fornecedor`, `valor_unitario`, `valor_total`, `descontopor_quantidade_produto`, `quantidade_deproduto_minimo_desconto`) VALUES
+(55, 'Sabão em Pó', 'Brilhante', 'Sabão em pó para limpeza profunda', '200', '../../imagens/sabao_brilho.png', 2, 2, 'Concluida', 'Distribuidora Alfa Ltda', '12.50', '1250.00', '0.00', 0),
+(56, 'Amaciante de Roupas', 'Soft', 'Amaciante concentrado 1L', '150', '../../imagens/amaciante_soft.png', 2, 2, 'Concluida', 'Atacadista Central', '4.99', '499.00', '0.50', 50),
+(57, 'Detergente Líquido', 'Limpex', 'Detergente neutro para louças 500ml', '300', '../../imagens/detergente_limpex.png', 3, 0, 'Aberta', 'Tech Importados S.A.', '89.90', '4495.00', '5.00', 20),
+(58, 'Desinfetante Pinho', 'Força', 'Desinfetante uso geral 1L', '120', '../../imagens/desinfetante_forca.png', 2, 0, 'Aberta', 'Global Alimentos', '3.50', '700.00', '0.00', 0),
+(59, 'Água Sanitária', 'Pura', 'Água sanitária para desinfecção 1L', '180', '../../imagens/agua_sanitaria_pura.png', 2, 0, 'Aberta', 'RM Logística e Transportes', '150.00', '3000.00', '15.00', 10),
+(60, 'Esponja de Aço', 'Brilhus', 'Pacote com 4 unidades', '250', '../../imagens/esponja_brilhante.png', 4, 0, 'Aberta', 'Comercial Silva', '8.25', '825.00', '0.25', 100),
+(61, 'Limpador Multiuso', 'Uau', 'Limpador spray multiuso 500ml', '140', '../../imagens/limpador_acao.png', 2, 0, 'Aberta', 'Brasil Bebidas Distribuição', '6.00', '1200.00', '0.00', 0),
+(62, 'Saco de Lixo 50L', 'DoverRoll', 'Pacote com 10 unidades', '160', '../../imagens/saco_lixo_resiste.png', 2, 0, 'Aberta', 'Nova Era Cosméticos', '22.40', '1120.00', '2.40', 30),
+(63, 'Arroz Integral', 'Grão de ouro', 'Pacote de arroz integral 1kg', '90', '../../imagens/arroz_grao_ouro.png', 2, 0, 'Aberta', 'Indústria Sol Nascente', '45.00', '2250.00', '0.00', 0),
+(64, 'Feijão Carioca', 'Dona Dê', 'Feijão carioca tipo 1 1kg', '110', '../../imagens/feijao_dona_benta.png', 2, 0, 'Aberta', 'Prime Suprimentos', '18.00', '900.00', '1.50', 40),
+(65, 'Macarrão Espaguete', 'Amália', 'Macarrão sêmola espaguete 500g', '210', '../../imagens/macarrao_massa_boa.png', 3, 0, 'Aberta', 'JP Hortifruti Organizações', '2.30', '460.00', '0.00', 0),
+(66, 'Óleo de Soja', 'Soya', 'Óleo de soja garrafa 900ml', '170', '../../imagens/oleo_leve.png', 2, 0, 'Aberta', 'Master Limpeza Profissional', '14.90', '1490.00', '1.90', 50),
+(67, 'Açúcar Refinado', 'União', 'Açúcar refinado pacote 1kg', '130', '../../imagens/acucar_doce_vida.png', 2, 0, 'Aberta', 'Eletro Mundo Distribuidora', '299.90', '5998.00', '20.00', 5),
+(68, 'Sal Refinado', 'Cisne', 'Sal refinado de cozinha 1kg', '80', '../../imagens/sal_iodado.png', 4, 0, 'Aberta', 'Distribuidora Vale do Rio', '5.50', '550.00', '0.00', 0),
+(69, 'Café Torrado e Moído', 'Pilão', 'Café a vácuo tradicional 500g', '140', '../../imagens/cafe_aroma.png', 2, 0, 'Aberta', 'Sul Medicamentos S.A.', '34.00', '3400.00', '4.00', 100),
+(70, 'Farinha de Trigo', 'Dona Benta', 'Farinha de trigo tipo 1 1kg', '100', '../../imagens/farinha_premium.png', 2, 0, 'Aberta', 'Ferramentas Forte Ltda', '65.00', '1300.00', '5.00', 15),
+(71, 'Achocolatado em Pó', 'Nescau', 'Lata de achocolatado 400g', '125', '../../imagens/achocolatado_chocomax.png', 2, 0, 'Aberta', 'Papelaria VIP Atacado', '1.20', '600.00', '0.10', 200),
+(72, 'Cereal Matinal', 'Sucrilhos', 'Cereal de milho tradicional 300g', '85', '../../imagens/cereal_nutricroc.png', 2, 0, 'Aberta', 'Construtora e Materiais Base', '110.00', '5500.00', '0.00', 0),
+(73, 'Biscoito Recheado', 'Passatempo', 'Biscoito sabor chocolate 130g', '400', '../../imagens/biscoito_doce_mania.png', 5, 0, 'Aberta', 'Uni Calçados Distribuição', '75.00', '3750.00', '7.50', 25),
+(74, 'Biscoito Salgado', 'Marilan', 'Biscoito água e sal 350g', '190', '../../imagens/biscoito_crack.png', 3, 0, 'Aberta', 'Auto Peças Líder', '120.00', '2400.00', '10.00', 12),
+(75, 'Geleia de Morango', 'Predilecta', 'Pote de geleia de morango 230g', '60', '../../imagens/geleia_fruta_pura.png', 2, 0, 'Aberta', 'Supermercado Real Atacadista', '7.80', '780.00', '0.00', 0),
+(76, 'Torrada Tradicional', 'Schar', 'Pacote de torradas leves 150g', '95', '../../imagens/torrada_crocante.png', 2, 0, 'Aberta', 'Fast Fashion Confecções', '39.90', '1995.00', '4.00', 30),
+(77, 'Leite em Pó', 'Itambé', 'Leite em pó integral sachê 400g', '115', '../../imagens/leite_nutrivida.png', 2, 0, 'Aberta', 'Macro Atacado Corp', '16.50', '1650.00', '1.50', 60),
+(78, 'Aveia em Flocos', 'Yoki', 'Caixa de aveia em flocos finos 170g', '75', '../../imagens/aveia_natural.png', 3, 0, 'Aberta', 'Armazém Geral Nordeste', '9.90', '990.00', '0.00', 0);
 
 -- --------------------------------------------------------
 
@@ -425,7 +434,7 @@ ALTER TABLE `alertas_ocultos`
 -- AUTO_INCREMENT de tabela `cadastros`
 --
 ALTER TABLE `cadastros`
-  MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `configuracoes_alertas`
@@ -437,13 +446,13 @@ ALTER TABLE `configuracoes_alertas`
 -- AUTO_INCREMENT de tabela `configuracoes_gerais`
 --
 ALTER TABLE `configuracoes_gerais`
-  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
 --
 ALTER TABLE `empresa`
-  MODIFY `idEmpresa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idEmpresa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `loja_virtual`
@@ -455,7 +464,7 @@ ALTER TABLE `loja_virtual`
 -- AUTO_INCREMENT de tabela `participantes_loja`
 --
 ALTER TABLE `participantes_loja`
-  MODIFY `idParticipacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idParticipacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `produtos`
