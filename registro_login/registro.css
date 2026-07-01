@@ -14,7 +14,8 @@ BODY
 ===================================================== */
 
 body{
-    overflow-x:hidden;
+    overflow: hidden; /* ALTERADO: Bloqueia a rolagem de toda a página */
+    height: 100vh;    /* ADICIONADO: Força o body a ter o tamanho da tela */
 
     background:
     radial-gradient(circle at top,
@@ -77,32 +78,14 @@ TOPO
 }
 
 /* =====================================================
-CONTAINER
-===================================================== */
-
-.main-login{
-
-    width:100%;
-    min-height:100vh;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    gap:140px;
-
-    padding-top:130px;
-    padding-left:40px;
-    padding-right:40px;
-}
-
-/* =====================================================
 CARD
 ===================================================== */
 
 .card-login{
 
     width:620px;
+    max-height: calc(100vh - 150px); /* ADICIONADO: Limita a altura do formulário baseando-se na tela */
+    overflow-y: auto;                /* ADICIONADO: Ativa a rolagem apenas dentro do formulário */
 
     padding:35px;
 
@@ -118,6 +101,18 @@ CARD
 
     box-shadow:
     0 0 20px rgba(0,180,255,.08);
+}
+
+/* Customização opcional da barra de rolagem interna do formulário para combinar com o tema */
+.card-login::-webkit-scrollbar {
+    width: 6px;
+}
+.card-login::-webkit-scrollbar-track {
+    background: transparent;
+}
+.card-login::-webkit-scrollbar-thumb {
+    background: #00e5ff;
+    border-radius: 10px;
 }
 
 .card-login h1{
@@ -378,4 +373,24 @@ RESPONSIVO
     .topo h2{
         font-size:28px;
     }
+}
+/* =====================================================
+CONTAINER
+===================================================== */
+
+.main-login{
+
+    width:100%;
+    height: 100vh; /* ALTERADO: Muda min-height para height fixo */
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    gap:140px;
+
+    padding-top:110px; /* ALTERADO: Pequeno ajuste para dar mais espaço ao card */
+    padding-bottom: 20px; /* ADICIONADO: Espaço de segurança inferior */
+    padding-left:40px;
+    padding-right:40px;
 }
