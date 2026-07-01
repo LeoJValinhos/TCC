@@ -1,148 +1,589 @@
-/* Remove a margem padrão do navegador e define a fonte do site */
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+/* =====================================================
+RESET
+===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
-.main-login {     /* Container principal da tela de login */
-    width: 100vw; /* largura total da tela */
-    height: 100vh; /* altura total da tela */
-    display: flex; /* ativa o flexbox */
-    background: #0b0f1a; /* cor de fundo preto azulado */
-    justify-content: center; /* centraliza horizontalmente */
-    align-items: center; /* centraliza verticalmente */
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
 }
 
+/* =====================================================
+CORES
+===================================================== */
 
+:root{
 
-.login-esquerda{  /* LADO ESQUERDO DA TELA */
-    width: 50vw; /* largura maior que a tela  */
-    height: 100vh; /* altura total da tela */
-    display: flex; /* usa flexbox */
-    justify-content: center; /* centraliza horizontalmente */
-    align-items: center; /* centraliza verticalmente */
+    --bg-1:#0b2530;
+    --bg-2:#061326;
+    --bg-3:#031022;
+    --bg-4:#020817;
+
+    --card:#081d36;
+
+    --input:#0d2747;
+
+    --primary:#22E5C3;
+    --primary-hover:#38F0D0;
+
+    --text:#FFFFFF;
+    --text2:#C6D2DF;
+
 }
 
-/* Estilo do título dentro da parte esquerda */
-.login-esquerda > h1{
-    color: #00e0ff; /* azul neon */
-    font-size: 32px; /* tamanho do texto */
-    text-align: center; /* centraliza o texto */
+/* =====================================================
+BODY
+===================================================== */
+
+body{
+
+    background:
+    radial-gradient(circle at top left,
+    var(--bg-1) 0%,
+    var(--bg-2) 35%,
+    var(--bg-3) 70%,
+    var(--bg-4) 100%);
+
 }
 
-.login-esquerda img{ /* IMAGEM DA TELA */
-    width: 60%; /* imagem ocupa 60% da largura do container */
-}
-
-.login-direita{  /* LADO DIREITO DA TELA */
-    width: 50vw; /* ocupa metade da largura da tela */
-    height: 100vh; /* altura total da tela */
-    display: flex; /* usa flexbox */
-    justify-content: center; /* centraliza horizontalmente */
-    align-items: center; /* centraliza verticalmente */
-    flex-direction: column;
-}
-
-.card-login{    /* CARD DE LOGIN */
-    width: 60%; /* largura do card */
-    display: flex; /* usa flexbox */
-    justify-content: center; /* centraliza conteúdo horizontalmente */
-    align-items: center; /* centraliza conteúdo verticalmente */
-    flex-direction: column; /* organiza os elementos em coluna */
-    padding: 30px 35px; /* espaço interno do card */
-    background-color:#121a2b; /* fundo azul escuro */
-    border-radius: 20px; /* bordas arredondadas */
-    box-shadow: 0px 10px 40px #00000080; /* sombra do card */
-}
-
-
-.card-login > h1 { /* Estilo do título dentro do card */
-    color:  #00e0ff;  /* azul neon */
-    font-weight: 800; /* texto mais grosso */
-    margin: 0; /* remove margem padrão */
-}
-
-.textfield{ /* CAMPOS DE INPUT */
-    width: 100%; /* ocupa toda largura do card */
-    display: flex; /* usa flexbox */
-    flex-direction: column; /* label em cima do input */
-    margin: 10px 0; /* espaçamento vertical */
-}
-
-
-.textfield > label{ /* Estilo do label (texto acima do input) */
-    color:#00e0ff; /* azul neon */
-    margin-bottom: 8px; /* espaço entre label e input */
-}
-
-.textfield > input { /* Estilo do campo de entrada */
-    width: 100%; /* ocupa toda largura */
-    border: none; /* remove borda padrão */
-    border-radius: 10px; /* bordas arredondadas */
-    padding: 15px; /* espaço interno */
-    background: #1c2740; /* fundo azul escuro */
-    color: #ffffff; /* texto branco */
-    font-size: 12pt; /* tamanho da fonte */
-    box-shadow: 0px 5px 20px #00000050; /* sombra no input */
-    outline: none; /* remove borda ao clicar */
-    box-sizing: border-box; /* padding não aumenta largura */
-}
-
-.textfield > input::placeholder{ /* Cor do texto de placeholder (dica dentro do input) */
-    color: #9bb3c9;
-}
-
-.btn-login{ /* BOTÃO DE LOGIN */
-    width: 100%; /* botão ocupa toda largura */
-    padding: 16px 0px; /* espaço interno vertical */
-    margin-top: 20px; /* espaço acima do botão */
-    border: none; /* remove borda */
-    border-radius: 8px; /* bordas arredondadas */
-    text-transform: uppercase; /* deixa o texto em maiúsculo */
-    font-weight: 800; /* texto mais grosso */
-    letter-spacing: 3px; /* espaço entre letras */
-    color: #02121f; /* cor do texto */
-    background: linear-gradient(45deg, #00cb6d, #00889a); /* gradiente verde/azul */
-    cursor: pointer; /* cursor de mão ao passar */
-    box-shadow: 0px 10px 30px -10px #009e54; /* sombra do botão */
-    transition: 0.3s; /* animação suave */
-}
-
-.btn-login:hover{ /* Efeito quando passa o mouse no botão */
-    transform: scale(1.05); /* aumenta o botão levemente */
-}
+/* =====================================================
+TOPO
+===================================================== */
 
 .topo{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background-color:#121a2b;
-    color: white;
-    display: flex;
-    align-items: center;
-    padding-left: 30px;
-    border-bottom: 1px solid #2a2e35;
-    z-index: 1000;
-    border-radius: 10px;
-    gap: 20px;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:80px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 60px;
+
+    background:rgba(6,19,38,.95);
+
+    border-bottom:1px solid rgba(34,229,195,.12);
+
+    backdrop-filter:blur(10px);
+
+    z-index:1000;
+
 }
 
-.topo > h2{
-    font-size: 30px;
-    color: #00e0ff;
+.logo{
+
+    display:flex;
+    align-items:center;
+    gap:18px;
+
 }
 
-.link-registro {
-  color:  #009e54;
-  font-weight: bold;
-  padding: 5px;
+.logo img{
+
+    width:62px;
+
 }
 
-.link-registro:hover {
-  text-decoration: underline;
+.logo h2{
+
+    color:var(--primary);
+
+    font-size:33px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
 }
-p{
-    color: #00cb6d;
+
+/* =====================================================
+MAIN
+===================================================== */
+
+.main-login{
+
+    width:100%;
+    height:100vh;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding-top:80px;
+
+}
+
+/* =====================================================
+COLUNA ESQUERDA
+===================================================== */
+
+.lado-esquerdo{
+
+    width:48%;
+
+    height:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding-left:80px;
+
+}
+
+/* =====================================================
+COLUNA DIREITA
+===================================================== */
+
+.lado-direito{
+
+    width:52%;
+
+    height:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.lado-direito img{
+
+    width:78%;
+    max-width:760px;
+
+    animation:flutuar 4s ease-in-out infinite;
+
+}
+
+@keyframes flutuar{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+
+}
+
+/* =====================================================
+CARD LOGIN
+===================================================== */
+
+/* =====================================================
+CARD LOGIN
+===================================================== */
+
+.card-login{
+
+    width:100%;
+    max-width:520px;
+
+    background:rgba(8,29,54,.98);
+
+    border:1px solid rgba(34,229,195,.12);
+
+    border-radius:24px;
+
+    padding:50px;
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,.45);
+
+}
+
+/* =====================================================
+TÍTULOS
+===================================================== */
+
+.card-login h1{
+
+    color:var(--primary);
+
+    font-size:42px;
+
+    margin-bottom:12px;
+
+    font-weight:700;
+
+}
+
+.subtitulo{
+
+    color:var(--text2);
+
+    font-size:18px;
+
+    margin-bottom:40px;
+
+    line-height:1.5;
+
+}
+
+/* =====================================================
+FORMULÁRIO
+===================================================== */
+
+form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    width:100%;
+
+}
+
+/* =====================================================
+TEXTFIELD
+===================================================== */
+
+.textfield{
+
+    display:flex;
+
+    flex-direction:column;
+
+    margin-bottom:25px;
+
+}
+
+.textfield label{
+
+    color:var(--text);
+
+    font-size:15px;
+
+    font-weight:600;
+
+    margin-bottom:10px;
+
+}
+
+/* =====================================================
+INPUT
+===================================================== */
+
+.textfield input{
+
+    width:100%;
+
+    height:58px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:14px;
+
+    padding:0 18px;
+
+    font-size:16px;
+
+    color:#FFF;
+
+    background:var(--input);
+
+    border:1px solid rgba(255,255,255,.05);
+
+    transition:.3s;
+
+}
+
+.textfield input::placeholder{
+
+    color:#8fa3ba;
+
+}
+
+.textfield input:focus{
+
+    border:1px solid var(--primary);
+
+    box-shadow:
+    0 0 0 4px rgba(34,229,195,.10);
+
+}
+
+/* =====================================================
+AUTOFILL
+===================================================== */
+
+input:-webkit-autofill{
+
+    -webkit-text-fill-color:#FFF;
+
+    transition:background-color 9999s;
+
+}
+
+/* =====================================================
+BOTÃO LOGIN
+===================================================== */
+
+.btn-login{
+
+    width:100%;
+
+    height:58px;
+
+    margin-top:15px;
+
+    border:none;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    color:#04262A;
+
+    background:linear-gradient(90deg,#25E4BF,#1FD6AF);
+
+    transition:.3s;
+
+    box-shadow:
+    0 10px 25px rgba(37,228,191,.25);
+
+}
+
+.btn-login:hover{
+
+    transform:translateY(-3px);
+
+    background:linear-gradient(90deg,#32F1CE,#27E4BF);
+
+    box-shadow:
+    0 18px 35px rgba(37,228,191,.35);
+
+}
+
+/* =====================================================
+REGISTRO
+===================================================== */
+
+.registro{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-top:28px;
+
+    color:var(--text2);
+
+    font-size:15px;
+
+}
+
+.link-registro{
+
+    color:var(--primary);
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    transition:.3s;
+
+}
+
+.link-registro:hover{
+
+    color:var(--primary-hover);
+
+    text-decoration:underline;
+
+}
+
+/* =====================================================
+ANIMAÇÕES
+===================================================== */
+
+.card-login{
+
+    animation:aparecer .7s ease;
+
+}
+
+@keyframes aparecer{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(-35px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateX(0);
+
+    }
+
+}
+
+/* =====================================================
+RESPONSIVIDADE
+===================================================== */
+
+@media(max-width:1100px){
+
+    .lado-direito img{
+
+        width:90%;
+
+    }
+
+}
+
+@media(max-width:900px){
+
+    .main-login{
+
+        flex-direction:column;
+
+        justify-content:center;
+
+        padding-top:90px;
+
+    }
+
+    .lado-direito{
+
+        display:none;
+
+    }
+
+    .lado-esquerdo{
+
+        width:100%;
+
+        padding:25px;
+
+    }
+
+    .card-login{
+
+        max-width:480px;
+
+        width:100%;
+
+        padding:40px 35px;
+
+    }
+
+}
+
+@media(max-width:600px){
+
+    .topo{
+
+        padding:0 20px;
+
+        height:70px;
+
+    }
+
+    .logo img{
+
+        width:48px;
+
+    }
+
+    .logo h2{
+
+        font-size:26px;
+
+    }
+
+    .card-login{
+
+        padding:30px 25px;
+
+    }
+
+    .card-login h1{
+
+        font-size:32px;
+
+    }
+
+    .subtitulo{
+
+        font-size:15px;
+
+        margin-bottom:30px;
+
+    }
+
+    .textfield input{
+
+        height:52px;
+
+        font-size:15px;
+
+    }
+
+    .btn-login{
+
+        height:52px;
+
+    }
+
+}
+
+/* =====================================================
+SCROLL
+===================================================== */
+
+body::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+html{
+
+    scrollbar-width:none;
+
 }
