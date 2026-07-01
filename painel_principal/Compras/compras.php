@@ -1,4 +1,3 @@
-
 <?php
 include '../config_global.php';
 include '../config_scripts.php';
@@ -14,7 +13,6 @@ $step = "0." . str_repeat("0", max(0, $casasDecimais - 1)) . "1";
 if ($casasDecimais == 0) {
     $step = "1";
 }
-
 ?>
 
 <?php include_once '../topo_notificacoes.php'; ?>
@@ -26,7 +24,7 @@ if ($casasDecimais == 0) {
     <meta charset="UTF-8">
     <title>INVEX - Compras</title>
     <link rel="stylesheet" href="compras.css">
-    <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png"width="70" height="70">
+    <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png" width="70" height="70">
 </head>
 
 <body>
@@ -42,8 +40,8 @@ if ($casasDecimais == 0) {
         <aside class="sidebar">
             <nav>
                 <a href="../painel_principal.php">🏠 Home</a>
-                <a href="../cadastro_produtos/cad_list_prods.php">➡️​ Entrada</a>
-                <a href="../saida/saida.php"> ⬅️​ Saida</a>
+                <a href="../cadastro_produtos/cad_list_prods.php">➡️ Entrada</a>
+                <a href="../saida/saida.php"> ⬅️ Saida</a>
                 <a href="../consulta/consulta.php"> 📦 Consulta</a>
                 <a href="compras.php">🛒 Compras</a>
                 <a href="../relatorios/buscar_relatorio.php">📊 Relatórios</a>
@@ -67,9 +65,9 @@ if ($casasDecimais == 0) {
 
                         <h3><?= $produto['nomeProduto'] ?></h3>
 
-                        <p>Marca: <?= $produto['marcaProduto'] ?></p>
-
-                        <p><?= $produto['descricaoProduto'] ?></p>
+                        <p class="preco"><?= $simboloMoeda ?> <?= number_format($produto['valor_unitario'], $casasDecimais, ',', '.') ?></p>
+                        
+                        <p style="font-size: 11px; color: var(--sub); margin-bottom: 10px;">Fornecedor: <?= htmlspecialchars($produto['fornecedor']) ?></p>
 
                         <p>Quantidade disponível: <?= $produto['quantidade'] ?></p>
 
@@ -104,6 +102,7 @@ if ($casasDecimais == 0) {
         </main>
 
     </div>
+
     <div id="modalCompra" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="fechar-modal" onclick="fecharModal()">&times;</span>
@@ -118,23 +117,31 @@ if ($casasDecimais == 0) {
                 <p id="modalDescricao"></p>
                 <br>
                 
-                    <div class="modal-precos">
-    <p>
-        <strong>Preço Total:</strong>
-        <span id="modalPrecoTotal">-</span>
-        <small>()</small>
-    </p>
+                <div class="modal-precos">
+                    <p><strong>🏭 Fornecedor:</strong> <span id="modalFornecedor" style="color: #00F5D4;">-</span></p>
+                    <p><strong>📦 Valor Total do Lote:</strong> <span id="modalPrecoTotal">-</span></p>
+                    <p><strong>🏷️ Valor Unitário:</strong> <span id="modalPrecoUnitario">-</span></p>
 
-    <p>
-        <strong>Preço Unitário:</strong>
-        <span id="modalPrecoUnitario">-</span>
-        <small>()</small>
-    </p>
-</div>
+                    <div id="modalDescontoInfo" style="display: none; margin-top: 15px; padding: 10px; background: rgba(255, 174, 66, 0.1); border-left: 3px solid #ffae42; border-radius: 5px;">
+                        <span id="textoDesconto" style="font-size: 14px;"></span>
+                    </div>
+
+                    <hr style="border: 1px solid #00B7C3; margin: 15px 0; opacity: 0.3;">
+
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <label for="qtdComprar"><strong>Quantas unidades você deseja?</strong></label>
+                        <input type="number" id="qtdComprar" min="1" value="1" style="width: 80px; padding: 8px; border-radius: 5px; border: 1px solid #00B7C3; background: #02152E; color: white; font-size: 16px; text-align: center;">
+                    </div>
+
+                    <p style="font-size: 1.3em;">
+                        <strong>Custo Estimado:</strong> <span id="modalCustoCalculado" style="color: #00F5D4; font-weight: bold;">-</span>
+                    </p>
+                </div>
+                
                 <br>
                 <h3>Participantes (<span id="modalQtdPart">0</span>/2):</h3>
                 <ul class="participantes-lista" id="listaParticipantes">
-                    </ul>
+                </ul>
                 
                 <div class="modal-acoes">
                     <button id="btnParticiparModal" class="btn-participar">Participar</button>
@@ -144,6 +151,10 @@ if ($casasDecimais == 0) {
         </div>
     </div>
 
+    <script>
+        // Passando a moeda configurada no PHP para o JS usar
+        const simboloMoedaGeral = "<?= $simboloMoeda ?>";
+    </script>
     <script src="compras.js"></script>
 
 </body>

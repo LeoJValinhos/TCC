@@ -221,3 +221,239 @@ function confirmarRestauracao() {
     window.location.href = 'processar_config_alertas.php?action=restaurar_original';
 }
         };
+
+        /* =========================================================================
+   SCRIPT DE FILTROS E BUSCA DINÂMICA
+   ========================================================================= */
+function filtrarAlertas() {
+    const textoBusca = document.getElementById('buscaAlerta').value.toLowerCase();
+    const tipoFiltro = document.getElementById('filtroTipoAlerta').value;
+    const cards = document.querySelectorAll('#listaAlertasContainer .card-alerta');
+    cards.forEach(card => {
+        const textoCard = card.innerText.toLowerCase();
+        const tipoCard = card.getAttribute('data-tipo');
+        if (textoCard.includes(textoBusca) && (tipoFiltro === 'todos' || tipoCard === tipoFiltro)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function ordenarAlertas() {
+    const container = document.getElementById('listaAlertasContainer');
+    const cards = Array.from(container.querySelectorAll('.card-alerta'));
+    const ordem = document.getElementById('ordenacaoAlerta').value;
+    cards.sort((a, b) => {
+        const qtdA = parseInt(a.getAttribute('data-qtd')) || 0;
+        const qtdB = parseInt(b.getAttribute('data-qtd')) || 0;
+        return ordem === 'asc' ? qtdA - qtdB : qtdB - qtdA;
+    });
+    cards.forEach(card => container.appendChild(card));
+}
+
+/* =========================================================================
+   LÓGICA DE EXCLUSÃO E HISTÓRICO VIA BANCO E LOCALSTORAGE
+   ========================================================================= */
+let elementoParaRemover = null;
+let dadosAlertaParaOcultar = {};
+
+document.addEventListener("DOMContentLoaded", function() {
+    renderizarHistoricoDOM();
+});
+
+function prepararExclusaoAlerta(idProduto, lote, tipo, botao) {
+    elementoParaRemover = botao.closest('.card-alerta');
+    dadosAlertaParaOcultar = { idProduto: idProduto, numero_lote: lote, tipo: tipo };
+    
+    const pularConfirmacao = localStorage.getItem('naoPerguntarAlerta') === 'true';
+
+    if (pularConfirmacao) {
+        confirmarExclusaoAlertaUnico();
+    } else {
+        document.getElementById('checkNaoPerguntar').checked = false;
+        document.getElementById('customModalConfirmacaoUnica').style.display = 'flex';
+    }
+}
+
+function fecharModalConfirmacaoUnica() {
+    document.getElementById('customModalConfirmacaoUnica').style.display = 'none';
+    elementoParaRemover = null;
+    dadosAlertaParaOcultar = {};
+}
+
+function confirmarExclusaoAlertaUnico() {
+    if (!elementoParaRemover) return;
+
+    if (document.getElementById('customModalConfirmacaoUnica').style.display === 'flex') {
+        if (document.getElementById('checkNaoPerguntar').checked) {
+            localStorage.setItem('naoPerguntarAlerta', 'true');
+        }
+    }
+
+    let formData = new FormData();
+    const idProd = dadosAlertaParaOcultar.idProduto || dadosAlertaParaOcultar.id_produto || '';
+    const loteProd = dadosAlertaParaOcultar.numero_lote !== undefined ? dadosAlertaParaOcultar.numero_lote : '';
+    const tipoAlerta = dadosAlertaParaOcultar.tipo || '';
+
+    formData.append('idProduto', idProd);
+    formData.append('numero_lote', loteProd);
+    formData.append('tipo', tipoAlerta);
+
+    const urlDestino = window.location.origin + '/painel_principal/configuracoes/ocultar_alertas_ajax.php';
+
+    fetch(urlDestino, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+        return response.text(); // Lê como texto puro igual o PHP mandou
+    })
+    .then(texto => {
+        // Remove espaços em branco nas pontas para garantir o match perfeito
+        if (texto.trim() === "OK_SUCESSO") {
+            const textoInfo = elementoParaRemover.querySelector('.celula-info-texto').innerHTML;
+            const tipoCard = elementoParaRemover.getAttribute('data-tipo');
+            
+            salvarNoHistoricoStorage(textoInfo, tipoCard);
+            elementoParaRemover.remove(); // Remove o card da tela na hora!
+            
+            if (typeof checarSeVazio === 'function') checarSeVazio();
+        } else {
+            alert('Erro no processamento: ' + texto);
+        }
+        fecharModalConfirmacaoUnica();
+    })
+    .catch((error) => {
+        console.error('Erro:', error);
+        alert('Erro crítico de comunicação com o servidor.');
+        fecharModalConfirmacaoUnica();
+    });
+}
+function abrirModalApagarTudo() {
+    document.getElementById('customModalApagarTudo').style.display = 'flex';
+}
+
+function fecharModalApagarTudo() {
+    document.getElementById('customModalApagarTudo').style.display = 'none';
+}
+
+function confirmarApagarTudo() {
+    const cards = document.querySelectorAll('#listaAlertasContainer .card-alerta');
+    
+    // Tratando as exclusões sequencialmente no banco
+    cards.forEach(card => {
+        const botao = card.querySelector('.btn-apagar-alerta');
+        if (botao) {
+            // Pegamos os atributos do onclick do botão nativo para replicar a exclusão
+            const onclickAttr = botao.getAttribute('onclick');
+            if (onclickAttr) {
+                // Executa a lógica de envio direto ignorando o modal
+                const match = onclickAttr.match(/prepararExclusaoAlerta\(([^)]+)\)/);
+                if (match) {
+                    const params = match[1].split(',').map(p => p.trim().replace(/['"]/g, ""));
+                    
+                    let formData = new FormData();
+                    formData.append('idProduto', params[0]);
+                    formData.append('numero_lote', params[1]);
+                    formData.append('tipo', params[2]);
+
+                    fetch('../configuracoes/ocultar_alertas_ajax.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                }
+            }
+        }
+        
+        const textoInfo = card.querySelector('.celula-info-texto').innerHTML;
+        const tipoCard = card.getAttribute('data-tipo');
+        salvarNoHistoricoStorage(textoInfo, tipoCard);
+        card.remove();
+    });
+
+    fecharModalApagarTudo();
+    checarSeVazio();
+}
+
+function salvarNoHistoricoStorage(htmlConteudo, tipo) {
+    let historico = JSON.parse(localStorage.getItem('historicoNotificacoes')) || [];
+    const dataHora = new Date().toLocaleString('pt-BR');
+    
+    historico.unshift({
+        conteudo: htmlConteudo,
+        tipo: tipo,
+        apagadoEm: dataHora
+    });
+
+    localStorage.setItem('historicoNotificacoes', JSON.stringify(historico));
+    renderizarHistoricoDOM();
+}
+
+function renderizarHistoricoDOM() {
+    const containerHistorico = document.getElementById('listaHistoricoContainer');
+    if (!containerHistorico) return;
+
+    let historico = JSON.parse(localStorage.getItem('historicoNotificacoes')) || [];
+    
+    if (historico.length === 0) {
+        containerHistorico.innerHTML = '<p style="padding:15px; color:#a0aab5; margin:0; font-style:italic;">O histórico está limpo.</p>';
+        return;
+    }
+
+    containerHistorico.innerHTML = '';
+    historico.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item-lote-linha';
+        div.style = "border-left: 5px solid #4a5a6a; display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #18222e; margin-bottom: 8px; border-radius: 4px;";
+        
+        div.innerHTML = `
+            <div style="margin: 0; color: #ced4da; font-size: 13px;">
+                ${item.conteudo}
+                <br><small style="color: #6c757d; font-size: 11px;">🗑️ Apagado em: ${item.apagadoEm}</small>
+            </div>
+        `;
+        containerHistorico.appendChild(div);
+    });
+}
+
+function abrirModalLimparHistorico() {
+    document.getElementById('customModalLimparHistorico').style.display = 'flex';
+}
+
+function fecharModalLimparHistorico() {
+    document.getElementById('customModalLimparHistorico').style.display = 'none';
+}
+
+function confirmarLimparHistorico() {
+    localStorage.removeItem('historicoNotificacoes');
+    renderizarHistoricoDOM();
+    fecharModalLimparHistorico();
+}
+
+function checarSeVazio() {
+    const container = document.getElementById('listaAlertasContainer');
+    const cards = container.querySelectorAll('.card-alerta');
+    if (cards.length === 0) {
+        container.innerHTML = '<p style="padding:15px; color:#a0aab5; margin:0; font-style:italic;">🎉 Tudo limpo por aqui!</p>';
+    }
+}
+
+/* =========================================================================
+   CONTROLE DOS MODAIS DE CONFIGURAÇÃO DE ESTOQUE
+   ========================================================================= */
+function abrirModalEstoqueGlobal() { document.getElementById('customModalEstoque').style.display = 'flex'; }
+function fecharModalEstoqueGlobal() { document.getElementById('customModalEstoque').style.display = 'none'; }
+function confirmarEstoqueGlobal() {
+    var valor = document.getElementById('inputQtdGlobalModal').value;
+    if (valor !== "" && parseInt(valor) >= 0) {
+        window.location.href = 'processar_config_alertas.php?action=estoque_global&quantidade=' + parseInt(valor);
+    } else {
+        alert("Insira um número válido maior ou igual a zero.");
+    }
+}
+
+function abrirModalRestaurar() { document.getElementById('customModalRestaurar').style.display = 'flex'; }
+function fecharModalRestaurar() { document.getElementById('customModalRestaurar').style.display = 'none'; }
+function confirmarRestauracao() { window.location.href = 'processar_config_alertas.php?action=restaurar_original'; }
