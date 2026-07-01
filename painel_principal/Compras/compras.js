@@ -1,4 +1,5 @@
 let modalIdAtual = null;
+let produtoAtualModal = null; // Variável para guardar os dados do banco e usar na conta
 
 function abrirModal(idItem) {
     modalIdAtual = idItem;
@@ -9,7 +10,14 @@ function abrirModal(idItem) {
 function fecharModal() {
     document.getElementById("modalCompra").style.display = "none";
     modalIdAtual = null;
-    location.reload(); // Recarrega para atualizar as barrinhas no fundo
+    produtoAtualModal = null;
+    location.reload(); 
+}
+
+// Função nativa do JS para formatar qualquer número do banco em R$
+function formatarMoeda(valor) {
+    let numero = parseFloat(valor) || 0;
+    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
 function carregarDadosModal() {
@@ -18,14 +26,40 @@ function carregarDadosModal() {
     .then(data => {
         if(data.erro) { alert(data.erro); fecharModal(); return; }
 
-        let prod = data.produto;
+        produtoAtualModal = data.produto; // Salva o produto para o simulador
+        let prod = produtoAtualModal;
 
-        // Preenche info
+        // Preenche info originais
         document.getElementById("modalTitulo").innerText = prod.nomeProduto;
         document.getElementById("modalMarca").innerText = "Marca: " + prod.marcaProduto;
         document.getElementById("modalDescricao").innerText = prod.descricaoProduto;
         document.getElementById("modalImagem").src = prod.imagemProduto;
         document.getElementById("modalQtdPart").innerText = prod.quantidadeParticipantes;
+
+        // PUXANDO DO BANCO (Substituindo os valores em branco)
+        document.getElementById("modalFornecedor").innerText = prod.fornecedor || "Não informado";
+        document.getElementById("modalPrecoTotal").innerText = formatarMoeda(prod.valor_total);
+        document.getElementById("modalPrecoUnitario").innerText = formatarMoeda(prod.valor_unitario);
+
+        // Lógica da caixinha de aviso de desconto
+        let divDesconto = document.getElementById("modalDescontoInfo");
+        let textoDesconto = document.getElementById("textoDesconto");
+        
+        let descValor = parseFloat(prod.descontopor_quantidade_produto) || 0;
+        let minQtd = parseInt(prod.quantidade_deproduto_minimo_desconto) || 0;
+
+        if(descValor > 0 && minQtd > 0) {
+            divDesconto.style.display = "block";
+            textoDesconto.innerHTML = `⚠️ <strong>Desconto de Atacado:</strong> Levando a partir de <strong>${minQtd} unidades</strong>, você ganha <strong>${formatarMoeda(descValor)}</strong> de desconto em CADA unidade!`;
+        } else {
+            divDesconto.style.display = "none";
+        }
+
+        // Configura o input de quantidade para calcular automático
+        let inputQtd = document.getElementById("qtdComprar");
+        inputQtd.value = 1; 
+        inputQtd.oninput = calcularEstimativa; 
+        calcularEstimativa(); 
 
         // Lista Participantes
         let ul = document.getElementById("listaParticipantes");
@@ -44,12 +78,10 @@ function carregarDadosModal() {
         let btnPart = document.getElementById("btnParticiparModal");
         let btnCanc = document.getElementById("btnCancelarModal");
 
-        // Remove listeners antigos para evitar duplicação de cliques
         btnPart.onclick = null;
         btnCanc.onclick = null;
 
         if (data.isParticipando) {
-            // Se já participa: Participar desativado, Cancelar vermelhão e ativado
             btnPart.disabled = true;
             btnPart.style.background = "#555";
             btnPart.style.color = "#aaa";
@@ -58,18 +90,15 @@ function carregarDadosModal() {
             btnCanc.classList.remove('btn-inativo');
             btnCanc.onclick = () => acaoCompra('cancelar');
         } else {
-            // Se NÃO participa:
             btnCanc.disabled = true;
             btnCanc.classList.add('btn-inativo');
 
-            // Se ainda tem vaga:
             if(prod.quantidadeParticipantes < prod.meta){
                 btnPart.disabled = false;
                 btnPart.style.background = "linear-gradient(90deg, #00B7C3, #00F5D4)";
                 btnPart.style.color = "#02152E";
                 btnPart.onclick = () => acaoCompra('participar');
             } else {
-                // Compra lotada e ele não participa
                 btnPart.disabled = true;
                 btnPart.innerText = "Lotado";
                 btnPart.style.background = "#555";
@@ -79,10 +108,39 @@ function carregarDadosModal() {
     .catch(error => console.error(error));
 }
 
+// === SIMULADOR MATEMÁTICO ===
+function calcularEstimativa() {
+    if (!produtoAtualModal) return;
+    
+    let qtdDigitada = parseInt(document.getElementById("qtdComprar").value) || 0;
+    
+    // Valores do Banco de Dados
+    let precoBase = parseFloat(produtoAtualModal.valor_unitario) || 0;
+    let desconto = parseFloat(produtoAtualModal.descontopor_quantidade_produto) || 0;
+    let qtdMinima = parseInt(produtoAtualModal.quantidade_deproduto_minimo_desconto) || 0;
+    
+    let precoAplicado = precoBase;
+    let spanCusto = document.getElementById("modalCustoCalculado");
+
+    // Aplica o desconto do banco se atingir a quantidade mínima
+    if (desconto > 0 && qtdMinima > 0 && qtdDigitada >= qtdMinima) {
+        precoAplicado = precoBase - desconto;
+        spanCusto.style.color = "#ffae42"; // Laranja para mostrar que pegou promoção
+    } else {
+        spanCusto.style.color = "#00F5D4"; // Ciano normal
+    }
+
+    let totalEstimado = qtdDigitada * precoAplicado;
+    
+    if(totalEstimado < 0) totalEstimado = 0;
+
+    spanCusto.innerText = formatarMoeda(totalEstimado);
+}
+
 function acaoCompra(acao) {
     fetch("participar_compra.php?id=" + modalIdAtual + "&acao=" + acao)
     .then(response => response.text())
     .then(retorno => {
-        carregarDadosModal(); // Atualiza o modal na hora, sem piscar a tela
+        carregarDadosModal(); 
     });
 }
