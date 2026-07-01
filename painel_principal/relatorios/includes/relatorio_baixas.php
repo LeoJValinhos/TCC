@@ -137,7 +137,7 @@ if (!$resultado) {
             <?php
             if ($resultado->num_rows > 0) {
                 while ($row = $resultado->fetch_assoc()) {
-                    $data_baixa = ($row['data_saida']) ? date('d/m/Y H:i', strtotime($row['data_saida'])) : '-';
+                    $data_baixa = formatarData($row['data_saida'], $formatoData);
                     
                     $qtd = intval($row['quantidade_saida']);
                     $custo_compra = isset($row['preco_compra']) ? floatval($row['preco_compra']) : 0;
