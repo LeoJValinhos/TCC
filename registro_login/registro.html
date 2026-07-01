@@ -2,234 +2,165 @@
 <html lang="pt-br">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- CSS -->
     <link rel="stylesheet" href="registro.css">
 
-    <!-- Ícone -->
-    <link rel="icon"
-    type="image/png"
-    href="../Imagens/Carrinho.png">
+    <link rel="icon" type="image/png" href="../Imagens/Carrinho.png">
 
     <title>Registro</title>
-
 </head>
 
 <body>
 
-    <!-- TOPO -->
     <header class="topo">
-
         <div class="logo-topo">
-            <img
-            src="../Imagens/carrinho2.png"
-            width="70"
-            height="70"
-            alt="Logo Carrinho">
-
+            <img src="../Imagens/carrinho2.png" width="70" height="70" alt="Logo Carrinho">
             <h2>INVEX</h2>
         </div>
-
     </header>
 
-    <!-- CONTAINER -->
     <div class="main-login">
 
-        <!-- FORMULÁRIO -->
         <div class="card-login">
-
             <h1>Registre-se</h1>
 
             <form action="registro.php" method="POST">
-
                 <div class="form-row">
-
                     <div class="textfield">
                         <label>Nome</label>
-                        <input type="text"
-                        name="nome"
-                        placeholder="Digite seu nome"
-                        required>
+                        <input type="text" name="nome" placeholder="Digite seu nome" required>
                     </div>
 
                     <div class="textfield">
                         <label>Sobrenome</label>
-                        <input type="text"
-                        name="sobrenome"
-                        placeholder="Digite seu sobrenome"
-                        required>
+                        <input type="text" name="sobrenome" placeholder="Digite seu sobrenome" required>
                     </div>
-
                 </div>
 
                 <div class="form-row">
-
                     <div class="textfield">
                         <label>E-mail</label>
-                        <input type="email"
-                        name="email"
-                        placeholder="Digite seu e-mail"
-                        required>
+                        <input type="email" name="email" placeholder="Digite seu e-mail" required>
                     </div>
 
                     <div class="textfield">
                         <label>Senha</label>
-                        <input type="password"
-                        name="senha"
-                        minlength="8"
-                        placeholder="mínimo 8 dígitos"
-                        required>
+                        <input type="password" name="senha" minlength="8" placeholder="mínimo 8 dígitos" required>
                     </div>
-
                 </div>
 
                 <div class="form-row">
-
                     <div class="textfield">
                         <label>Data de nascimento</label>
-                        <input type="date"
-                        name="datanascimento"
-                        required>
+                        <input type="date" name="datanascimento" required>
                     </div>
 
                     <div class="textfield">
                         <label>CPF</label>
-                        <input type="text"
-                        name="cpf"
-                        maxlength="11"
-                        placeholder="Digite seu CPF"
-                        required>
+                        <input type="text" name="cpf" maxlength="11" placeholder="Digite seu CPF" required>
                     </div>
-
                 </div>
 
                 <div class="textfield">
                     <label>Celular com DDD</label>
-                    <input type="text"
-                    name="celular"
-                    placeholder="Digite seu telefone"
-                    required>
+                    <input type="text" name="celular" maxlength="11" placeholder="Digite seu telefone" required>
                 </div>
 
                 <div class="textfield">
                     <label>Tipo de cadastro</label>
-
-                    <select name="tipo">
-                        <option>EMPRESA/ADM</option>
-                        <option>FUNCIONÁRIO</option>
+                    <select name="tipo" id="tipo" onchange="toggleEmpresa()">
+                        <option value="EMPRESA/ADM">EMPRESA/ADM</option>
+                        <option value="FUNCIONÁRIO">FUNCIONÁRIO</option>
                     </select>
                 </div>
 
-                <div class="textfield">
+                <div class="textfield" id="wrapper_possui_empresa">
                     <label>Já possui empresa?</label>
-
-                    <select
-                    name="possui_empresa"
-                    id="possui_empresa"
-                    onchange="toggleEmpresa()">
-
+                    <select name="possui_empresa" id="possui_empresa" onchange="toggleEmpresa()">
                         <option value="sim">Sim</option>
                         <option value="nao">Não</option>
-
                     </select>
                 </div>
 
                 <div id="empresa_existente">
-
                     <div class="textfield">
                         <label>Código da empresa</label>
-
-                        <input
-                        type="text"
-                        name="codigo_empresa"
-                        placeholder="Digite o código da empresa">
+                        <input type="text" name="codigo_empresa" placeholder="Digite o código da empresa">
                     </div>
 
+                    <div class="textfield" id="campo_codigo_adm" style="display:none;">
+                        <label>Código do Administrador</label>
+                        <input type="text" name="codigo_adm" placeholder="Digite o código de ADM da empresa">
+                    </div>
                 </div>
 
                 <div id="nova_empresa" style="display:none;">
-
                     <div class="textfield">
                         <label>Nome da empresa</label>
-
-                        <input
-                        type="text"
-                        name="nome_empresa"
-                        placeholder="Digite o nome da empresa">
+                        <input type="text" name="nome_empresa" placeholder="Digite o nome da empresa">
                     </div>
 
                     <div class="textfield">
                         <label>CNPJ</label>
-
-                        <input
-                        type="text"
-                        name="cnpj"
-                        placeholder="Digite o CNPJ">
+                        <input type="text" name="cnpj" maxlength="14" placeholder="Digite o CNPJ">
                     </div>
-
                 </div>
 
-                <input
-                type="submit"
-                value="Cadastrar"
-                class="btn-login">
+                <input type="submit" value="Cadastrar" class="btn-login">
 
                 <p>
                     Já tem uma conta?
-                    <a href="login.html" class="link-registro">
-                        Faça Login
-                    </a>
+                    <a href="login.html" class="link-registro">Faça Login</a>
                 </p>
-
             </form>
-
         </div>
 
-        <!-- IMAGEM -->
         <div class="lado-direito">
-
-            <img
-            src="../Imagens/carrinho2.png"
-            alt="Mascote INVEX">
-
+            <img src="../Imagens/carrinho2.png" alt="Mascote INVEX">
         </div>
 
     </div>
 
     <script>
-
         function toggleEmpresa(){
+            let tipo = document.getElementById("tipo").value;
+            let possuiSelect = document.getElementById("possui_empresa");
+            let wrapperPossui = document.getElementById("wrapper_possui_empresa");
 
-            let possui =
-            document.getElementById(
-            "possui_empresa"
-            ).value;
+            let existente = document.getElementById("empresa_existente");
+            let nova = document.getElementById("nova_empresa");
+            let campoCodigoAdm = document.getElementById("campo_codigo_adm");
 
-            let existente =
-            document.getElementById(
-            "empresa_existente"
-            );
+            // Regra: Funcionário não pode criar empresa. Força "sim" e esconde a pergunta.
+            if(tipo === "FUNCIONÁRIO"){
+                possuiSelect.value = "sim";
+                wrapperPossui.style.display = "none";
+            } else {
+                wrapperPossui.style.display = "block";
+            }
 
-            let nova =
-            document.getElementById(
-            "nova_empresa"
-            );
+            let possui = possuiSelect.value;
 
-            if(possui == "sim"){
+            if(possui === "sim"){
                 existente.style.display = "block";
                 nova.style.display = "none";
-            }
-            else{
+                
+                // Se for ADM entrando em existente, exige também o código de ADM
+                if(tipo === "EMPRESA/ADM"){
+                    campoCodigoAdm.style.display = "block";
+                } else {
+                    campoCodigoAdm.style.display = "none";
+                }
+            } else {
                 existente.style.display = "none";
                 nova.style.display = "block";
+                campoCodigoAdm.style.display = "none";
             }
         }
 
         window.onload = toggleEmpresa;
-
     </script>
 
 </body>
