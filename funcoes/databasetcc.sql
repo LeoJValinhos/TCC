@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 01-Jul-2026 às 14:09
+-- Tempo de geração: 02-Jul-2026 às 02:32
 -- Versão do servidor: 5.7.36
 -- versão do PHP: 8.1.3
 
@@ -36,16 +36,6 @@ CREATE TABLE `alertas_ocultos` (
   `data_ocultado` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Extraindo dados da tabela `alertas_ocultos`
---
-
-INSERT INTO `alertas_ocultos` (`id_oculto`, `idEmpresa`, `idProduto`, `numero_lote`, `tipo_alerta`, `data_ocultado`) VALUES
-(1, 1, 4, '3', 'vencimento', '2026-06-28 13:49:01'),
-(2, 1, 1, '4', 'vencimento', '2026-06-28 13:49:24'),
-(3, 1, 2, NULL, 'estoque', '2026-06-28 14:48:26'),
-(4, 1, 7, NULL, 'estoque', '2026-06-28 14:48:30');
-
 -- --------------------------------------------------------
 
 --
@@ -70,11 +60,10 @@ CREATE TABLE `cadastros` (
 --
 
 INSERT INTO `cadastros` (`idCadastro`, `nome`, `sobrenome`, `senha`, `email`, `datanasc`, `cpf`, `celular`, `idEmpresa`, `tipocadastro`) VALUES
-(1, 'Leonardo', 'Valinhos', 'vini4675', 'root@root', '2007-03-20', '11111111111', '22222222222', 1, 'EMPRESA/ADM'),
-(2, 'vinicius', 'sales', '012345678', 'vini@vini', '2008-07-20', '01234567812', '88888888888', 2, 'EMPRESA/ADM'),
-(3, 'aa', 'sss', '12345678', 'leo@leleco', '2007-03-20', '22132132131', '13213212332', 1, 'EMPRESA/ADM'),
-(4, 'Jorge', 'Harrison', '012345678', 'Jorge@gmail.com', '2007-03-16', '48798978779', '77987798789', 3, 'EMPRESA/ADM'),
-(5, 'Kaue', 'Silva', '12345678', 'kaue@gmail.com', '2006-03-20', '45847894153', '46878416556', 4, 'EMPRESA/ADM');
+(7, 'Vinicius', 'Sales', '12345678', 'vini@gmail.com', '2006-01-27', '78787878787', '78788787787', 6, 'EMPRESA/ADM'),
+(8, 'Leonardo', 'Valinhos', '12345678', 'Leo@gmail.com', '2007-03-20', '77987897899', '78899878979', 7, 'EMPRESA/ADM'),
+(9, 'Kaue', 'Silva', '12345678', 'kaue@gmail.com', '2000-07-15', '74787884112', '23542653246', 7, 'FUNCIONARIO'),
+(10, 'Oscar', 'Alhos', '12345678', 'Oscar@gmail.com', '2000-04-20', '12184185561', '23143214124', 7, 'FUNCIONARIO');
 
 -- --------------------------------------------------------
 
@@ -86,7 +75,7 @@ CREATE TABLE `configuracoes_alertas` (
   `id_config` int(11) NOT NULL,
   `idEmpresa` int(11) NOT NULL,
   `dias_antecedencia_vencimento` int(11) DEFAULT '30'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -106,15 +95,14 @@ CREATE TABLE `configuracoes_gerais` (
   `cor_primaria` varchar(20) NOT NULL DEFAULT '#00d9ff',
   `criado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `atualizado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `configuracoes_gerais`
 --
 
 INSERT INTO `configuracoes_gerais` (`id_config`, `idEmpresa`, `alerta_email`, `alerta_login`, `som_alerta`, `casas_decimais`, `simbolo_moeda`, `formato_data`, `cor_primaria`, `criado_em`, `atualizado_em`) VALUES
-(1, 1, 0, 0, 0, 2, '$', 'Y-m-d', '#02b8c5', '2026-06-28 23:49:11', '2026-06-30 15:47:59'),
-(2, 4, 0, 1, 1, 2, 'R$', 'd/m/Y', '#00d9ff', '2026-07-01 13:31:02', '2026-07-01 13:31:02');
+(3, 7, 0, 1, 1, 2, 'R$', 'd/m/Y', '#00d9ff', '2026-07-02 02:25:43', '2026-07-02 02:25:43');
 
 -- --------------------------------------------------------
 
@@ -138,10 +126,8 @@ CREATE TABLE `empresa` (
 --
 
 INSERT INTO `empresa` (`idEmpresa`, `nomeEmpresa`, `CNPJ`, `codigoEmpresa`, `codigoADM`, `idAdm`, `nomeAdm`, `criado_em`) VALUES
-(1, 'Leleco Interpraise', '33333333333333', '8554687', '', 3, 'aa', '2026-06-08 20:25:10'),
-(2, 'vini corp', '01829742386474', '1622009', '', 2, 'vinicius', '2026-06-11 21:44:31'),
-(3, 'JHLF', '78787897898789', '2424760', '', 4, 'Jorge', '2026-06-27 17:29:27'),
-(4, 'Kaue Intercop', '45465465565676', '3624136', '2037958', 5, 'Kaue', '2026-07-01 10:30:39');
+(6, 'Sales Corp', '87978979898978', '8048829', '8378707', 7, 'Vinicius', '2026-07-01 23:12:08'),
+(7, 'leleco interpraise', '97987987979878', '9510891', '7307961', 8, 'Leonardo', '2026-07-01 23:13:00');
 
 -- --------------------------------------------------------
 
@@ -171,19 +157,19 @@ CREATE TABLE `loja_virtual` (
 --
 
 INSERT INTO `loja_virtual` (`idItem`, `nomeProduto`, `marcaProduto`, `descricaoProduto`, `quantidade`, `imagemProduto`, `meta`, `quantidadeParticipantes`, `status`, `fornecedor`, `valor_unitario`, `valor_total`, `descontopor_quantidade_produto`, `quantidade_deproduto_minimo_desconto`) VALUES
-(55, 'Sabão em Pó', 'Brilhante', 'Sabão em pó para limpeza profunda', '200', '../../imagens/sabao_brilho.png', 2, 2, 'Concluida', 'Distribuidora Alfa Ltda', '12.50', '1250.00', '0.00', 0),
-(56, 'Amaciante de Roupas', 'Soft', 'Amaciante concentrado 1L', '150', '../../imagens/amaciante_soft.png', 2, 2, 'Concluida', 'Atacadista Central', '4.99', '499.00', '0.50', 50),
+(55, 'Sabão em Pó', 'Brilhante', 'Sabão em pó para limpeza profunda', '200', '../../imagens/sabao_brilho.png', 2, 1, 'Aguardando outro participante', 'Distribuidora Alfa Ltda', '12.50', '1250.00', '0.00', 0),
+(56, 'Amaciante de Roupas', 'Soft', 'Amaciante concentrado 1L', '150', '../../imagens/amaciante_soft.png', 2, 1, 'Aguardando outro participante', 'Atacadista Central', '4.99', '499.00', '0.50', 50),
 (57, 'Detergente Líquido', 'Limpex', 'Detergente neutro para louças 500ml', '300', '../../imagens/detergente_limpex.png', 3, 0, 'Aberta', 'Tech Importados S.A.', '89.90', '4495.00', '5.00', 20),
 (58, 'Desinfetante Pinho', 'Força', 'Desinfetante uso geral 1L', '120', '../../imagens/desinfetante_forca.png', 2, 0, 'Aberta', 'Global Alimentos', '3.50', '700.00', '0.00', 0),
-(59, 'Água Sanitária', 'Pura', 'Água sanitária para desinfecção 1L', '180', '../../imagens/agua_sanitaria_pura.png', 2, 0, 'Aberta', 'RM Logística e Transportes', '150.00', '3000.00', '15.00', 10),
+(59, 'Água Sanitária', 'Pura', 'Água sanitária para desinfecção 1L', '180', '../../imagens/agua_sanitaria_pura.png', 2, 1, 'Aguardando outro participante', 'RM Logística e Transportes', '150.00', '3000.00', '15.00', 10),
 (60, 'Esponja de Aço', 'Brilhus', 'Pacote com 4 unidades', '250', '../../imagens/esponja_brilhante.png', 4, 0, 'Aberta', 'Comercial Silva', '8.25', '825.00', '0.25', 100),
-(61, 'Limpador Multiuso', 'Uau', 'Limpador spray multiuso 500ml', '140', '../../imagens/limpador_acao.png', 2, 0, 'Aberta', 'Brasil Bebidas Distribuição', '6.00', '1200.00', '0.00', 0),
+(61, 'Limpador Multiuso', 'Uau', 'Limpador spray multiuso 500ml', '140', '../../imagens/limpador_acao.png', 2, 1, 'Aguardando outro participante', 'Brasil Bebidas Distribuição', '6.00', '1200.00', '0.00', 0),
 (62, 'Saco de Lixo 50L', 'DoverRoll', 'Pacote com 10 unidades', '160', '../../imagens/saco_lixo_resiste.png', 2, 0, 'Aberta', 'Nova Era Cosméticos', '22.40', '1120.00', '2.40', 30),
-(63, 'Arroz Integral', 'Grão de ouro', 'Pacote de arroz integral 1kg', '90', '../../imagens/arroz_grao_ouro.png', 2, 0, 'Aberta', 'Indústria Sol Nascente', '45.00', '2250.00', '0.00', 0),
+(63, 'Arroz Integral', 'Grão de ouro', 'Pacote de arroz integral 1kg', '90', '../../imagens/arroz_grao_ouro.png', 2, 2, 'Concluida', 'Indústria Sol Nascente', '45.00', '2250.00', '0.00', 0),
 (64, 'Feijão Carioca', 'Dona Dê', 'Feijão carioca tipo 1 1kg', '110', '../../imagens/feijao_dona_benta.png', 2, 0, 'Aberta', 'Prime Suprimentos', '18.00', '900.00', '1.50', 40),
 (65, 'Macarrão Espaguete', 'Amália', 'Macarrão sêmola espaguete 500g', '210', '../../imagens/macarrao_massa_boa.png', 3, 0, 'Aberta', 'JP Hortifruti Organizações', '2.30', '460.00', '0.00', 0),
 (66, 'Óleo de Soja', 'Soya', 'Óleo de soja garrafa 900ml', '170', '../../imagens/oleo_leve.png', 2, 0, 'Aberta', 'Master Limpeza Profissional', '14.90', '1490.00', '1.90', 50),
-(67, 'Açúcar Refinado', 'União', 'Açúcar refinado pacote 1kg', '130', '../../imagens/acucar_doce_vida.png', 2, 0, 'Aberta', 'Eletro Mundo Distribuidora', '299.90', '5998.00', '20.00', 5),
+(67, 'Açúcar Refinado', 'União', 'Açúcar refinado pacote 1kg', '130', '../../imagens/acucar_doce_vida.png', 2, 1, 'Aguardando outro participante', 'Eletro Mundo Distribuidora', '299.90', '5998.00', '20.00', 5),
 (68, 'Sal Refinado', 'Cisne', 'Sal refinado de cozinha 1kg', '80', '../../imagens/sal_iodado.png', 4, 0, 'Aberta', 'Distribuidora Vale do Rio', '5.50', '550.00', '0.00', 0),
 (69, 'Café Torrado e Moído', 'Pilão', 'Café a vácuo tradicional 500g', '140', '../../imagens/cafe_aroma.png', 2, 0, 'Aberta', 'Sul Medicamentos S.A.', '34.00', '3400.00', '4.00', 100),
 (70, 'Farinha de Trigo', 'Dona Benta', 'Farinha de trigo tipo 1 1kg', '100', '../../imagens/farinha_premium.png', 2, 0, 'Aberta', 'Ferramentas Forte Ltda', '65.00', '1300.00', '5.00', 15),
@@ -206,18 +192,22 @@ CREATE TABLE `participantes_loja` (
   `idParticipacao` int(11) NOT NULL,
   `idItem` int(11) NOT NULL,
   `id_primeiroParticipante` int(11) DEFAULT NULL,
-  `id_segundoParticipante` int(11) DEFAULT NULL
+  `qtd_primeiroParticipante` int(11) DEFAULT NULL,
+  `id_segundoParticipante` int(11) DEFAULT NULL,
+  `qtd_segundoParticipante` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `participantes_loja`
 --
 
-INSERT INTO `participantes_loja` (`idParticipacao`, `idItem`, `id_primeiroParticipante`, `id_segundoParticipante`) VALUES
-(1, 5, 1, 2),
-(2, 6, 1, NULL),
-(8, 55, 3, 2),
-(10, 56, 3, 4);
+INSERT INTO `participantes_loja` (`idParticipacao`, `idItem`, `id_primeiroParticipante`, `qtd_primeiroParticipante`, `id_segundoParticipante`, `qtd_segundoParticipante`) VALUES
+(15, 55, 7, 1, NULL, NULL),
+(16, 56, 7, 1, NULL, NULL),
+(17, 59, 7, 1, NULL, NULL),
+(18, 61, 7, 1, NULL, NULL),
+(19, 63, 7, 1, 8, 250),
+(20, 67, 7, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -245,17 +235,14 @@ CREATE TABLE `produtos` (
 --
 
 INSERT INTO `produtos` (`idProduto`, `NomeProduto`, `MarcaProduto`, `Descricao`, `idEmpresa`, `criadopor_nome`, `criadoem`, `criadopor_id`, `preco_padrao_compra`, `preco_padrao_venda`, `estoque_minimo`, `estoque_minimo_original`) VALUES
-(1, 'sabÃ£o em pÃ³', 'Brilho', '', 1, 'Leonardo', '2026-06-08 20:28:52', 1, '0.00', '0.00', 0, NULL),
-(2, 'detergente', 'ype', '', 1, 'Leonardo', '2026-06-08 20:29:00', 1, '0.00', '0.00', 0, NULL),
-(3, 'bolacha', 'trakinas', '', 1, 'Leonardo', '2026-06-08 20:29:06', 1, '0.00', '0.00', 0, NULL),
-(4, 'Amaciante', 'Confort', 'limpa coisas', 1, 'Leonardo', '2026-06-16 00:58:20', 1, '25.00', '30.00', 50, NULL),
-(5, 'Suco de Uva Integral 300ml', 'Aurora', 'Garrafa de vidro com suco de uva 100% integral, sem adiÃ§Ã£o de aÃ§Ãºcares ou conservantes.', 1, 'Leonardo', '2026-06-16 04:39:04', 1, '4.50', '7.50', 15, NULL),
-(6, 'Salgadinho Assado de Queijo 60g', 'Fandangos', 'Salgadinho de milho assado sabor queijo, pacote de 60 gramas.', 1, 'Leonardo', '2026-06-16 04:39:41', 1, '2.20', '4.50', 20, NULL),
-(7, 'Arroz Integral Agulhinha 5kg', 'Tio JoÃ£o', 'Arroz integral tipo 1, rico em fibras e minerais. Pacote de 5kg com grÃ£os selecionados.', 1, 'Leonardo', '2026-06-25 04:37:59', 1, '18.50', '29.90', 13, NULL),
-(8, 'CafÃ© Tradicional VÃ¡cuo 500g', 'PilÃ£o', 'CafÃ© torrado e moÃ­do tradicional, com ponto de torra acentuado e sabor forte e marcante.', 1, 'Leonardo', '2026-06-25 04:38:39', 1, '11.20', '18.50', 20, NULL),
-(9, 'Azeite de Oliva Extra Virgem 500ml', 'Gallo', 'Azeite de oliva extra virgem de acidez mÃ¡xima 0,5%. Garrafa de vidro de 500ml.', 1, 'Leonardo', '2026-06-25 04:39:22', 1, '22.00', '36.90', 8, NULL),
-(10, 'Leite Integral UHT 1L', 'ItambÃ©', 'Leite caixinha UHT integral homogeneizado. Caixa com 1 litro.', 1, 'Leonardo', '2026-06-25 04:40:04', 1, '3.07', '5.49', 40, NULL),
-(11, 'feito', 'fazendo', 'fazido', 1, 'Leonardo', '2026-06-30 10:39:26', 1, '3.00', '5.00', 100, NULL);
+(17, 'Amaciante', 'confort', '', 7, 'Leonardo', '2026-07-01 23:15:11', 8, '5.00', '10.00', 100, NULL),
+(18, 'Amaciante', 'Ype', '', 7, 'Leonardo', '2026-07-01 23:15:54', 8, '8.00', '16.00', 100, NULL),
+(19, 'Bolacha', 'Trakinas', '', 7, 'Leonardo', '2026-07-01 23:16:12', 8, '5.00', '8.00', 200, NULL),
+(20, 'Maionese', 'Hellmans', 'pote de 300g', 7, 'Leonardo', '2026-07-01 23:16:56', 8, '10.00', '16.00', 50, NULL),
+(21, 'Bolacha', 'Passatempo', '', 7, 'Leonardo', '2026-07-01 23:18:59', 8, '4.00', '8.00', 200, NULL),
+(22, 'Biscoito', 'balduco', '', 7, 'Leonardo', '2026-07-01 23:20:46', 8, '8.00', '15.00', 70, NULL),
+(23, 'Ketchup', 'Quero', '', 7, 'Leonardo', '2026-07-01 23:24:03', 8, '5.00', '9.00', 200, NULL),
+(24, 'Mostarda', 'Quero', '400G', 7, 'Leonardo', '2026-07-01 23:28:51', 8, '5.00', '9.00', 100, NULL);
 
 -- --------------------------------------------------------
 
@@ -284,17 +271,12 @@ CREATE TABLE `produtoslotes` (
 --
 
 INSERT INTO `produtoslotes` (`idlote`, `idproduto`, `quantidade`, `validade`, `criado_em`, `criadopor_id`, `criadopor_nome`, `idEmpresa`, `numero_lote`, `preco_compra`, `preco_venda`, `desconto`, `status_lote`) VALUES
-(1, 3, 198, '2028-07-09', '2026-06-08 20:29:20', 0, NULL, 1, '', '0.00', '0.00', '10.00', 'promocao'),
-(2, 4, 96, '2026-07-21', '2026-06-16 01:10:00', 0, 'Leonardo', 1, '3', '3000.00', '3600.00', '15.00', 'promocao'),
-(3, 1, 147, '2026-06-15', '2026-06-16 01:19:49', 0, NULL, 1, '4', '3000.00', '3500.00', '15.00', 'vencido'),
-(4, 7, 0, '2030-02-12', '2026-06-25 04:43:01', 0, NULL, 1, '7_2030-02-12', '18.50', '29.89', '0.00', 'normal'),
-(5, 9, 0, '2027-12-10', '2026-06-25 04:44:38', 0, NULL, 1, '9_2027-12-10', '22.00', '36.90', '0.00', 'normal'),
-(6, 8, 73, '2027-04-15', '2026-06-25 04:45:31', 0, NULL, 1, '8_2027-04-15', '11.20', '18.50', '10.00', 'promocao'),
-(7, 10, 110, '2026-11-18', '2026-06-25 04:46:28', 0, NULL, 1, '10_2026-11-18', '3.10', '5.49', '0.00', 'normal'),
-(8, 6, 100, '2028-05-05', '2026-06-25 04:47:08', 0, NULL, 1, '6_2028-05-05', '1.40', '2.65', '0.00', 'normal'),
-(9, 5, 200, '2030-12-12', '2026-06-25 04:47:58', 0, NULL, 1, '5_2030-12-12', '5.40', '7.20', '0.00', 'normal'),
-(10, 4, 987896, '2007-03-20', '2026-06-26 21:12:20', 1, 'Sistema', 1, 'LOTE-4', '10.00', '20.00', '10.00', 'promocao'),
-(11, 11, 90, '2029-02-03', '2026-06-30 10:40:10', 1, 'Leonardo', 1, 'LOTE-11', '3.00', '5.00', '0.00', 'normal');
+(13, 19, 480, '2026-07-20', '2026-07-01 23:17:44', 8, 'Leonardo', 7, 'LOTE-19', '5.00', '8.00', '0.00', 'normal'),
+(14, 20, 10, '2026-07-02', '2026-07-01 23:18:17', 8, 'Leonardo', 7, 'LOTE-20', '10.00', '16.00', '0.00', 'normal'),
+(15, 22, 500, '2026-06-28', '2026-07-01 23:21:05', 8, 'Leonardo', 7, 'LOTE-22', '7.00', '16.00', '0.00', 'vencido'),
+(16, 17, 150, '2028-01-20', '2026-07-01 23:21:43', 8, 'Leonardo', 7, 'LOTE-17', '10.00', '20.00', '0.00', 'normal'),
+(17, 23, 10, '2028-02-07', '2026-07-01 23:24:23', 8, 'Leonardo', 7, 'LOTE-23', '4.00', '9.00', '0.00', 'normal'),
+(18, 24, 150, '2029-06-30', '2026-07-01 23:29:15', 8, 'Leonardo', 7, 'LOTE-24', '6.00', '9.00', '0.00', 'normal');
 
 -- --------------------------------------------------------
 
@@ -318,25 +300,7 @@ CREATE TABLE `saida` (
 --
 
 INSERT INTO `saida` (`id_saida`, `idlote`, `id_lote`, `criadopor_id`, `criadopor_nome`, `quantidade_saida`, `motivo_saida`, `data_saida`) VALUES
-(1, 2, 2, 0, '', 2, 'Venda', '2026-06-25 00:33:55'),
-(2, 2, 2, 0, '', 2, 'Ajuste', '2026-06-25 00:39:26'),
-(3, 7, 7, 0, '', 1, 'Ajuste', '2026-06-25 04:53:22'),
-(4, 4, 4, 0, '', 1, 'Vencimento', '2026-06-25 04:53:30'),
-(5, 5, 5, 0, '', 1, 'Avaria', '2026-06-25 04:53:36'),
-(6, 7, 7, 0, '', 1, 'Ajuste', '2026-06-25 04:53:41'),
-(7, 2, 2, 0, '', 12, 'Vencimento', '2026-06-25 04:53:50'),
-(8, 5, 5, 0, '', 7, 'Ajuste', '2026-06-25 04:54:01'),
-(9, 4, 4, 0, '', 1, 'Ajuste', '2026-06-25 06:04:59'),
-(43, 2, 2, 3, 'aa', 1, 'Venda', '2026-06-27 15:58:30'),
-(44, 4, 4, 1, 'Leonardo', 48, 'Venda', '2026-06-28 11:18:12'),
-(45, 5, 5, 1, 'Leonardo', 17, 'Venda', '2026-06-28 11:48:54'),
-(46, 7, 7, 1, 'Leonardo', 8, 'Venda', '2026-06-29 03:21:23'),
-(47, 6, 6, 1, 'Leonardo', 6, 'Venda', '2026-06-29 23:59:20'),
-(48, 2, 2, 1, 'Leonardo', 1, 'Venda', '2026-06-30 10:28:35'),
-(49, 6, 6, 1, 'Leonardo', 1, 'Venda', '2026-06-30 10:34:12'),
-(50, 1, 1, 1, 'Leonardo', 1, 'Venda', '2026-06-30 10:35:31'),
-(51, 10, 10, 1, 'Leonardo', 1, 'Vencimento', '2026-06-30 10:42:21'),
-(52, 1, 1, 1, 'Leonardo', 1, 'Ajuste', '2026-06-30 12:07:06');
+(56, 13, 13, 8, 'Leonardo', 20, 'Ajuste', '2026-07-01 23:29:36');
 
 --
 -- Índices para tabelas despejadas
@@ -434,7 +398,7 @@ ALTER TABLE `alertas_ocultos`
 -- AUTO_INCREMENT de tabela `cadastros`
 --
 ALTER TABLE `cadastros`
-  MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idCadastro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `configuracoes_alertas`
@@ -446,13 +410,13 @@ ALTER TABLE `configuracoes_alertas`
 -- AUTO_INCREMENT de tabela `configuracoes_gerais`
 --
 ALTER TABLE `configuracoes_gerais`
-  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_config` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `empresa`
 --
 ALTER TABLE `empresa`
-  MODIFY `idEmpresa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idEmpresa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `loja_virtual`
@@ -464,25 +428,25 @@ ALTER TABLE `loja_virtual`
 -- AUTO_INCREMENT de tabela `participantes_loja`
 --
 ALTER TABLE `participantes_loja`
-  MODIFY `idParticipacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idParticipacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `idProduto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idProduto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de tabela `produtoslotes`
 --
 ALTER TABLE `produtoslotes`
-  MODIFY `idlote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idlote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de tabela `saida`
 --
 ALTER TABLE `saida`
-  MODIFY `id_saida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id_saida` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- Restrições para despejos de tabelas
