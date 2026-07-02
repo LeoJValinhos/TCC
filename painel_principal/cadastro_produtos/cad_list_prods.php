@@ -1,4 +1,3 @@
-
 <?php
 
 include '../config_global.php';
@@ -9,6 +8,7 @@ $simboloMoeda = $config['simbolo_moeda'];
 $casasDecimais = (int)$config['casas_decimais'];
 $formatoData = $config['formato_data'];
 $codigoMoeda = $config['codigo_moeda'] ?? 'BRL';
+
 /* =====================================================
 BUSCAR PRODUTOS PARA O SELECT DE LOTES
 ===================================================== */
@@ -22,12 +22,6 @@ $produtos_select = $conn->query("
     ORDER BY NomeProduto ASC
 ");
 ?>
-/*
-Todos os preços desta tela são armazenados em BRL.
-
-A exibição poderá ser convertida futuramente
-pela função formatMoney().
-*/
 <?php include_once '../topo_notificacoes.php'; ?>
 
 <?php
@@ -45,9 +39,11 @@ if ($casasDecimais == 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="cad_list_prods.css">
     <link rel="icon" type="image/png" href="../../Imagens/Carrinho.png">
+    
     <title>INVEX - Cadastro de produtos</title>
 
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         .vermelho-validade {
@@ -75,7 +71,6 @@ if ($casasDecimais == 0) {
 
 <body>
 
-    <!-- TOPO (FIXO) -->
     <header class="topbar">
         <div class="top-left">
             <img src="../../imagens/carrinho2.png" width="70" height="70" alt="Logo Carrinho">
@@ -85,7 +80,6 @@ if ($casasDecimais == 0) {
 
     <div class="layout">
 
-        <!-- SIDEBAR (TRAVADA NA TELA) -->
         <aside class="sidebar">
             <nav>
                 <a href="../painel_principal.php">🏠 Home</a>
@@ -100,7 +94,6 @@ if ($casasDecimais == 0) {
             <a href="../../index.html" class="logout">🚪 Sair</a>
         </aside>
 
-        <!-- CONTEÚDO PRINCIPAL (ROLA INDEPENDENTE) -->
         <main class="main">
             <div class="container">
 
@@ -114,7 +107,6 @@ if ($casasDecimais == 0) {
 
                 <div class="forms-grid">
 
-                    <!-- CADASTRO DE PRODUTOS -->
                     <div class="form-card">
                         <h3>Cadastro de itens</h3>
                         <form method="POST" action="">
@@ -140,7 +132,6 @@ if ($casasDecimais == 0) {
                         </form>
                     </div>
 
-                    <!-- CADASTRO DE LOTES -->
                     <div class="form-card">
                         <h3>Cadastrar lote</h3>
                         <form method="POST" action="">

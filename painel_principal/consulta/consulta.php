@@ -40,21 +40,17 @@ if ($casasDecimais == 0) {
 
 <style>
         .vermelho-validade {
-        background-color: #d03c3c;
-        color: white;
-        font-weight: bold;
-        border-radius: 25px;
-        text-align: center;
+            background-color: rgba(208, 60, 60, 0.15) !important;
+            color: #ff8585 !important;
+            font-weight: bold;
+            text-align: center;
         }
 
         .amarelo-validade {
-        background-color: #d2bb48;
-        color: black;
-        font-weight: bold;
-        border-radius: 25px;
-        text-align: center;
+            background-color: rgba(210, 187, 72, 0.15) !important;
+            font-weight: bold;
+            text-align: center;
         }
-
         .paginacao a {
             padding: 6px 12px;
             background: #222;
@@ -147,14 +143,9 @@ if ($casasDecimais == 0) {
                         <h1 class="titulo-lista">
                             Lista de produtos</h1>
                         <?= $htmlListaProdutos ?>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
+
+                        <hr style="border: none; border-top: 1px solid rgba(0, 245, 212, 0.2); margin: 50px 0;">
+
                         <h1 class="titulo-lista">
                             Lista de lotes</h1>
                         <?= $htmlListaLotes ?>

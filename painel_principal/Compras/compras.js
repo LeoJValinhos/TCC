@@ -145,7 +145,11 @@ function calcularEstimativa() {
 }
 
 function acaoCompra(acao) {
-    fetch("participar_compra.php?id=" + modalIdAtual + "&acao=" + acao)
+    // Pega o valor que o usuário digitou no input
+    let qtd = document.getElementById("qtdComprar").value;
+
+    // Envia a quantidade na URL junto com o id e a acao
+    fetch("participar_compra.php?id=" + modalIdAtual + "&acao=" + acao + "&qtd=" + qtd)
     .then(response => response.text())
     .then(retorno => {
         carregarDadosModal(); 

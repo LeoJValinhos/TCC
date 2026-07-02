@@ -203,6 +203,22 @@ CARDS
     0 0 10px rgba(0,183,195,.15),
     0 0 25px rgba(0,183,195,.08);
     transition:.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =====================================================
+ALINHAMENTO DOS BOTÕES NO FINAL DO CARD
+===================================================== */
+.form-card form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.form-card form input[type="submit"],
+.form-card form button {
+    margin-top: auto;
 }
 
 .form-card:hover,

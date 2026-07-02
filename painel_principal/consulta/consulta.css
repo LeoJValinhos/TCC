@@ -299,10 +299,18 @@ input[type="submit"]:hover{
 /* =====================================================
 FILTROS
 ===================================================== */
-.filtros-form{
-    display:grid;
-    gap:15px;
-    margin-bottom:25px;
+.filtros-form {
+    display: grid;
+   
+    grid-template-columns: 2fr 1fr auto; 
+    gap: 15px;
+    margin-bottom: 25px;
+    align-items: center;
+}
+
+.filtros-form button {
+    margin-top: 0;
+    height: 52px; 
 }
 
 /* =====================================================

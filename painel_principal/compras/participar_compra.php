@@ -10,6 +10,9 @@ $idItem = intval($_GET['id']);
 $acao = $_GET['acao']; // 'participar' ou 'cancelar'
 $idCadastro = $_SESSION['idCadastro'];
 
+
+$qtd = isset($_GET['qtd']) ? intval($_GET['qtd']) : 1; 
+
 // Verifica se a participação já existe
 $sql = "SELECT * FROM participantes_loja WHERE idItem = ?";
 $stmt = $conn->prepare($sql);
@@ -21,9 +24,9 @@ $participacao = $resPart->fetch_assoc();
 if($acao === 'participar'){
     
     if(!$participacao){
-        // Primeiro a participar
-        $sql = "INSERT INTO participantes_loja (idItem, id_primeiroParticipante) VALUES (?, ?)";
-        $s = $conn->prepare($sql); $s->bind_param("ii", $idItem, $idCadastro); $s->execute();
+        // Primeiro a participar (inclui a qtd)
+        $sql = "INSERT INTO participantes_loja (idItem, id_primeiroParticipante, qtd_primeiroParticipante) VALUES (?, ?, ?)";
+        $s = $conn->prepare($sql); $s->bind_param("iii", $idItem, $idCadastro, $qtd); $s->execute();
         
         $sql = "UPDATE loja_virtual SET quantidadeParticipantes = 1, status = 'Aguardando outro participante' WHERE idItem = ?";
         $s = $conn->prepare($sql); $s->bind_param("i", $idItem); $s->execute();
@@ -31,10 +34,10 @@ if($acao === 'participar'){
         // Já está participando?
         if($participacao['id_primeiroParticipante'] == $idCadastro || $participacao['id_segundoParticipante'] == $idCadastro) exit("Você já está participando.");
         
-        // Segundo a participar
+        // Segundo a participar (inclui a qtd)
         if(empty($participacao['id_segundoParticipante'])){
-            $sql = "UPDATE participantes_loja SET id_segundoParticipante = ? WHERE idItem = ?";
-            $s = $conn->prepare($sql); $s->bind_param("ii", $idCadastro, $idItem); $s->execute();
+            $sql = "UPDATE participantes_loja SET id_segundoParticipante = ?, qtd_segundoParticipante = ? WHERE idItem = ?";
+            $s = $conn->prepare($sql); $s->bind_param("iii", $idCadastro, $qtd, $idItem); $s->execute();
             
             $sql = "UPDATE loja_virtual SET quantidadeParticipantes = 2, status = 'Concluida' WHERE idItem = ?";
             $s = $conn->prepare($sql); $s->bind_param("i", $idItem); $s->execute();
@@ -45,9 +48,9 @@ if($acao === 'participar'){
     
     if($participacao){
         if($participacao['id_primeiroParticipante'] == $idCadastro){
-            // Se ele era o primeiro e tinha um segundo participante, o segundo vira o primeiro
+            // Se ele era o primeiro e tinha um segundo participante, o segundo vira o primeiro, e puxamos a quantidade dele também
             if(!empty($participacao['id_segundoParticipante'])){
-                $sql = "UPDATE participantes_loja SET id_primeiroParticipante = id_segundoParticipante, id_segundoParticipante = NULL WHERE idItem = ?";
+                $sql = "UPDATE participantes_loja SET id_primeiroParticipante = id_segundoParticipante, qtd_primeiroParticipante = qtd_segundoParticipante, id_segundoParticipante = NULL, qtd_segundoParticipante = NULL WHERE idItem = ?";
                 $s = $conn->prepare($sql); $s->bind_param("i", $idItem); $s->execute();
                 
                 $sql = "UPDATE loja_virtual SET quantidadeParticipantes = 1, status = 'Aguardando outro participante' WHERE idItem = ?";
@@ -61,8 +64,8 @@ if($acao === 'participar'){
                 $s = $conn->prepare($sql); $s->bind_param("i", $idItem); $s->execute();
             }
         } elseif($participacao['id_segundoParticipante'] == $idCadastro){
-            // Se ele era o segundo, removemos ele e volta a aguardar
-            $sql = "UPDATE participantes_loja SET id_segundoParticipante = NULL WHERE idItem = ?";
+            // Se ele era o segundo, removemos ele e sua quantidade
+            $sql = "UPDATE participantes_loja SET id_segundoParticipante = NULL, qtd_segundoParticipante = NULL WHERE idItem = ?";
             $s = $conn->prepare($sql); $s->bind_param("i", $idItem); $s->execute();
             
             $sql = "UPDATE loja_virtual SET quantidadeParticipantes = 1, status = 'Aguardando outro participante' WHERE idItem = ?";
